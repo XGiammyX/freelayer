@@ -10,7 +10,11 @@ A "yes" to any question in sections 1–3 is not automatically disqualifying —
 
 - [ ] **Does this PR introduce a new side effect?** (persist, notify, connect, transmit, fetch, sync, run AI) → If yes: does it flow through the core pipeline with a `PolicyDecision`? ([ADR-0002](adr/ADR-0002-core-enforced-policy-engine.md))
 - [ ] **Does it bypass core policy anywhere** — including debug paths, fast paths, error paths, or tests that leak into production code?
-- [ ] **Does it write to persistent storage?** → If yes: through the StoragePolicy write barrier only? ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md)) Check for direct localStorage / IndexedDB / SQLite / filesystem / Tauri FS / cache API usage.
+- [ ] **Does it write to persistent storage or disk at all?** → If yes: through the StoragePolicy write barrier only, with a resolved `StoragePolicy` and an exact-scope `PolicyDecision`? ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md)) Check for direct localStorage / sessionStorage / IndexedDB / SQLite / filesystem (`fs.writeFile*`, Deno, Bun, Tauri fs) / cache API / cookie usage — the CI guard catches the mechanical cases; review catches aliasing.
+- [ ] **Does it create a cache, thumbnail, or preview?** → Correct cache data class? Denied in strict modes per the matrix? Inherits the strictest source policy?
+- [ ] **Does it persist derived AI artifacts?** → Denied in v0 (Gate I); any change here is an ADR-0007-adjacent policy change.
+- [ ] **Does it store ScreenShield / reveal / capture state?** → Correct endpoint data class? No plaintext content in audit events? Denied at high device risk?
+- [ ] **Does every new storage call site update PBOM and add privacy-regression tests?**
 - [ ] **Does it open network access?** → If yes: through `packages/transports` as capsules only? ([ADR-0003](adr/ADR-0003-capsules-as-only-cross-device-format.md)) No new endpoints outside PBOM?
 - [ ] **Does it load remote assets?** → Must be no. No exceptions. ([ADR-0008](adr/ADR-0008-no-external-assets-or-telemetry.md))
 - [ ] **Does it log sensitive data?** Check log lines, error messages, thrown exceptions, and debug serialization for message content, keys, identities, prompts, contact data.

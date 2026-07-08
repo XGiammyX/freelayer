@@ -64,6 +64,19 @@ Enforcement:
 - **Every new privacy-mode capability must be added to the versioned policy schema** — no capability exists outside the schema, or it cannot be policy-checked.
 - **Every machine-checkable privacy claim must eventually have a privacy-regression test.** A claim that cannot be tested is documented as a design intention, not a guarantee.
 
+### Storage-specific policy results (TECH-05 — implemented and tested)
+
+The first machine-checked slice of this model now exists in `packages/storage`:
+
+- **Ghost ⇒ no persistent writes** (tested across all 30 data classes)
+- **Bunker ⇒ no persistent writes** (tested across all 30 data classes)
+- **Emergency ⇒ null backend, no normal writes** (delete stays possible — wipe direction)
+- **ScreenShield sealed/bunker ⇒ no protected preview/thumbnail/cache writes, no reveal history**
+- **AI caches follow the strictest source policy** — denied in every mode in v0 (Gate I)
+- **Room policy can tighten but never loosen device storage policy** (tested both directions)
+
+**Storage guarantees that are machine-checkable must be tested in privacy-regression tests** — `tests/privacy-regression/storage/` holds them; a claimed guarantee without a test is a documentation bug.
+
 TODO:
 
 - [ ] Define the first policy schema (versioned, in `packages/privacy` — Gate B)

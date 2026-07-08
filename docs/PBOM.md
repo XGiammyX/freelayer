@@ -47,7 +47,25 @@ None. No analytics providers, no push-notification services, no CDN assets, no f
 
 ## 4. Storage locations
 
-Not implemented yet. Will enumerate per platform (Phase 2/7): identity store, room stores, capsule spool, caches (media/preview/AI), settings — each with encryption status and wipe path. See [STORAGE_MODEL.md](STORAGE_MODEL.md). The future Vault Inspector renders this section live, in-app.
+**Current implementation (TECH-05): nothing persists.** The storage layer is policy-enforced with exactly two working backends — process-memory and null — and a throwing placeholder for future encrypted persistence.
+
+### Storage behavior — current implementation
+
+| Data / behavior | Current status |
+| --- | --- |
+| Persistent content storage | **Not implemented** |
+| Memory storage | Implemented for tests/foundation (per-instance, policy-gated) |
+| Null storage | Implemented (validates, stores nothing) |
+| Encrypted persistent storage | Placeholder only — every use throws |
+| localStorage | **Forbidden** (CI guard) |
+| IndexedDB | **Forbidden** (CI guard) |
+| Filesystem writes | **Forbidden** outside a future reviewed provider (CI guard incl. `fs.writeFile*`, Deno/Bun/Tauri) |
+| Browser cache / service-worker cache | **Forbidden** (CI guard) |
+| AI cache | Not implemented; policy hooks exist (denied in all modes v0) |
+| Preview/thumbnail cache | Not implemented; policy hooks exist (denied in Private+/sealed) |
+| ScreenShield reveal state | Not implemented; policy hooks exist (denied to persist; denied entirely at high risk) |
+
+Future per-platform enumeration (identity store, room stores, spool, wipe paths) arrives with real persistence (Phase 7). The future Vault Inspector renders this section live, in-app. Any storage behavior not listed in the PBOM is considered undocumented and therefore a bug.
 
 ## 5. Permissions
 

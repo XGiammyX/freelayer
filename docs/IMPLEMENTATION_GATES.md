@@ -41,14 +41,18 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Gate C — Storage
 
-*Opens: any feature that persists data (Phase 2/7).*
+*Opens: any feature that persists data (Phase 2/7).* **Status: PARTIAL — the policy/barrier half is done (TECH-05); real persistence remains blocked by Gate F.**
 
-- [ ] Write barrier implemented: all persistence through StoragePolicy ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md))
-- [ ] Memory-only and null providers working
-- [ ] Encrypted-persistent placeholder provider defined (real encryption arrives with Gate F)
-- [ ] "Ghost mode: zero persistent writes" test passing
-- [ ] "Bunker mode: zero persistent writes" test passing
-- [ ] No localStorage / direct storage-API usage in content paths (lint/CI check)
+- [x] Write barrier implemented: all persistence through StoragePolicy with exact-scope `PolicyDecision` ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md))
+- [x] StoragePolicy v0: 30 data classes × 7 modes, default deny, strictest wins, room tighten-only, ScreenShield/device-risk hooks
+- [x] Memory-only and null providers working, hardened, regression-tested
+- [x] Encrypted-persistent placeholder provider defined and throwing (real encryption arrives with Gate F)
+- [x] "Ghost mode: zero persistent writes" tests passing (all 30 data classes)
+- [x] "Bunker mode: zero persistent writes" tests passing (all 30 data classes)
+- [x] Cache policy exists (cache classes denied in strict modes; sealed ScreenShield denies everywhere)
+- [x] Forbidden direct-storage CI guard extended (browser storage/DB, caches, cookies, beacons, `fs.writeFile*`, Deno/Bun/Tauri) and covered by its own tests
+- [x] PBOM storage section updated to implemented reality
+- [ ] Encrypted persistence, wipe semantics, per-platform storage behavior — **blocked by Gate F** (crypto review); Gate C fully opens only with those
 
 ## Gate D — Network
 

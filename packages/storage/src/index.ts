@@ -1,118 +1,74 @@
 /**
- * @freelayer/storage — storage policy engine scaffolding (write barrier).
+ * @freelayer/storage — policy-enforced storage with a write barrier (TECH-05).
  *
- * Every write API in this package requires a PolicyDecision — this is the
- * write barrier from docs/STORAGE_MODEL.md, locked by ADR-0005. Calls without
- * a valid decision throw PolicyBypassError. This catches accidental bypass;
- * mechanical (compile-time) enforcement is tracked at Gate A/B.
+ * The core rule (docs/STORAGE_MODEL.md, ADR-0005):
  *
- * Forbidden here and everywhere (see docs/STORAGE_MODEL.md write barrier):
- * direct use of browser-local storage APIs, browser databases, page caches,
- * service-worker caches, SQLite, or the filesystem. The only providers in
- * Prompt 03 are memory-only and null. Encrypted persistence arrives after
- * crypto review (Gates C/F).
+ *   No feature chooses its own persistence.
+ *   Every storage write goes through StoragePolicy.
+ *   Every storage operation requires a valid PolicyDecision.
+ *   Storage defaults to deny.
+ *
+ * Approved providers: MemoryStorageProvider and NullStorageProvider only.
+ * Encrypted persistence is a throwing placeholder until crypto review
+ * (Gates C/F). Direct browser storage / filesystem APIs are forbidden
+ * repo-wide and enforced by scripts/check-no-forbidden-storage.mjs.
  */
 
-import { isPolicyDecision, type PolicyDecision, type PolicyCapability } from "@freelayer/privacy";
-import { ForbiddenSideEffectError, PolicyBypassError } from "@freelayer/security";
+export {
+  STORAGE_DATA_CLASSES,
+  KEY_MATERIAL_CLASSES,
+  CONTENT_CLASSES,
+  CACHE_CLASSES,
+  AI_CACHE_CLASSES,
+  ENDPOINT_CLASSES,
+  SETTINGS_CLASSES,
+  type StorageDataClass,
+} from "./dataClasses";
 
-export type StorageBackendKind = "encrypted_persistent" | "memory_only" | "null";
+export {
+  STORAGE_BACKEND_CAPABILITIES,
+  type StorageBackendCapability,
+  type StorageBackendKind,
+} from "./backends";
 
-/** Data classes from docs/STORAGE_MODEL.md — every write belongs to exactly one. */
-export const STORAGE_DATA_CLASSES = [
-  "identity_key_material",
-  "room_operation_log",
-  "materialized_room_state",
-  "document_content",
-  "file_blob",
-  "capsule_spool",
-  "cache",
-  "ai_derived_cache",
-  "settings",
-  "logs",
-  "debug_artifact",
-] as const;
+export {
+  PLAINTEXT_RESTRICTED_SENSITIVITIES,
+  type StorageClearRequest,
+  type StorageDeleteRequest,
+  type StorageListRequest,
+  type StorageOperationKind,
+  type StorageReadRequest,
+  type StorageSensitivity,
+  type StorageWriteRequest,
+} from "./operations";
 
-export type StorageDataClass = (typeof STORAGE_DATA_CLASSES)[number];
+export {
+  resolveStoragePolicy,
+  type DeviceRiskLevel,
+  type ScreenShieldLevel,
+  type StoragePolicy,
+  type StoragePolicyInput,
+} from "./policy";
 
-export interface StorageWriteRequest {
-  readonly dataClass: StorageDataClass;
-  readonly key: string;
-  readonly value: Uint8Array;
-}
+export {
+  assertStorageDeleteAllowed,
+  assertStorageManagementAllowed,
+  assertStorageReadAllowed,
+  assertStorageWriteAllowed,
+} from "./barrier";
 
-export interface StorageReadRequest {
-  readonly dataClass: StorageDataClass;
-  readonly key: string;
-}
+export {
+  ForbiddenCacheWriteError,
+  ForbiddenDebugArtifactError,
+  ForbiddenPersistentWriteError,
+  StorageBackendNotImplementedError,
+  StorageBypassAttemptError,
+  StoragePolicyDeniedError,
+} from "./errors";
 
-/** All operations require a PolicyDecision issued by core (ADR-0002/0005). */
-export interface StorageProvider {
-  readonly backendKind: StorageBackendKind;
-  write(request: StorageWriteRequest, decision: PolicyDecision): Promise<void>;
-  read(request: StorageReadRequest, decision: PolicyDecision): Promise<Uint8Array | null>;
-  wipeAll(decision: PolicyDecision): Promise<void>;
-}
-
-/** Reject calls that lack a valid, allowing decision for the right capability. */
-function requireDecision(decision: PolicyDecision, capability: PolicyCapability): void {
-  if (!isPolicyDecision(decision)) {
-    throw new PolicyBypassError(
-      "Storage call without a valid PolicyDecision. Side effects must go through core (ADR-0002).",
-    );
-  }
-  if (decision.capability !== capability) {
-    throw new PolicyBypassError(
-      `Storage call carried a decision for capability "${decision.capability}", expected "${capability}".`,
-    );
-  }
-  if (decision.verdict !== "allowed") {
-    throw new ForbiddenSideEffectError("Active policy denies this storage operation.");
-  }
-}
-
-/** In-memory provider. State lives only in this instance; nothing survives recreation. */
-export class MemoryStorageProvider implements StorageProvider {
-  readonly backendKind: StorageBackendKind = "memory_only";
-  private readonly entries = new Map<string, Uint8Array>();
-
-  private static keyOf(dataClass: StorageDataClass, key: string): string {
-    return `${dataClass}/${key}`;
-  }
-
-  // Methods are async so policy-guard failures surface as rejections — the
-  // contract a Promise-returning API promises — never as synchronous throws.
-  async write(request: StorageWriteRequest, decision: PolicyDecision): Promise<void> {
-    requireDecision(decision, "persistence");
-    this.entries.set(MemoryStorageProvider.keyOf(request.dataClass, request.key), request.value);
-  }
-
-  async read(request: StorageReadRequest, decision: PolicyDecision): Promise<Uint8Array | null> {
-    requireDecision(decision, "persistence");
-    const value = this.entries.get(MemoryStorageProvider.keyOf(request.dataClass, request.key));
-    return value ?? null;
-  }
-
-  async wipeAll(decision: PolicyDecision): Promise<void> {
-    requireDecision(decision, "persistence");
-    this.entries.clear();
-  }
-}
-
-/** Null provider: accepts (policy-approved) writes, stores nothing, reads return null. */
-export class NullStorageProvider implements StorageProvider {
-  readonly backendKind: StorageBackendKind = "null";
-
-  async write(_request: StorageWriteRequest, decision: PolicyDecision): Promise<void> {
-    requireDecision(decision, "persistence");
-  }
-
-  async read(_request: StorageReadRequest, decision: PolicyDecision): Promise<Uint8Array | null> {
-    requireDecision(decision, "persistence");
-    return null;
-  }
-
-  async wipeAll(decision: PolicyDecision): Promise<void> {
-    requireDecision(decision, "persistence");
-  }
-}
+export {
+  EncryptedPersistentStorageProviderPlaceholder,
+  MemoryStorageProvider,
+  NullStorageProvider,
+  type StorageProvider,
+} from "./providers";

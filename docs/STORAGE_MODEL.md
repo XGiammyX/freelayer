@@ -1,5 +1,23 @@
 # FreeLayer Storage Model
 
+[← Docs Index](README.md) · [Privacy Model](PRIVACY_MODEL.md) · [PBOM](PBOM.md) · [ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md)
+
+> [!NOTE]
+> **TECH-05 implemented the foundation of this model**: StoragePolicy v0, the write barrier, and hardened memory/null providers exist and are regression-tested. Encrypted persistence remains deliberately unimplemented (Gate F).
+
+## Implementation status (TECH-05)
+
+| Piece | Status |
+| --- | --- |
+| StoragePolicy v0 (`resolveStoragePolicy`, mode × data-class matrix) | **Implemented** — default deny, strictest wins, room tighten-only, ScreenShield/device-risk hooks |
+| Write barrier (`assertStorageWriteAllowed` + read/delete/list/clear asserts) | **Implemented** — requires request + exact-scope `PolicyDecision` + resolved policy |
+| MemoryStorageProvider | **Implemented, hardened** — per-instance memory, no browser/filesystem APIs, values never logged |
+| NullStorageProvider | **Implemented, hardened** — validates everything, stores nothing |
+| Encrypted persistent storage | **Not implemented** — throwing placeholder only (`EncryptedPersistentStorageProviderPlaceholder`) |
+| 30 typed data classes + 8 sensitivity levels | **Implemented** (supersedes the initial 11-class list below, which remains as the summary table) |
+| Privacy/security regression tests | **Added** — 37 storage tests incl. Ghost/Bunker zero-persistence sweeps and error-redaction checks |
+| Emergency wipe, crypto-shredding, Vault Inspector | Not implemented (Phase 7) |
+
 ## Purpose
 
 Define how FreeLayer stores data locally: the storage-policy engine, backend types, cache rules, and destruction guarantees. Storage is where privacy promises most often quietly break; this model exists to prevent that.
@@ -37,7 +55,9 @@ No package or app may write to:
 
 unless the write is approved by StoragePolicy and carries a valid `PolicyDecision` issued by core ([ADR-0002](adr/ADR-0002-core-enforced-policy-engine.md)).
 
-Direct use of these APIs in feature code is a review-blocking defect regardless of intent. Enforcement: reviewer checklist now ([SECURITY_REVIEW_CHECKLIST.md](SECURITY_REVIEW_CHECKLIST.md)); mechanical lint/CI guards by Phase 10.
+Direct use of these APIs in feature code is a review-blocking defect regardless of intent. Enforcement: the `check:no-forbidden-storage` CI guard (browser storage, browser databases, page/service-worker caches, cookies, beacons, `fs.writeFile*`, `Deno.writeFile`, `Bun.write`, Tauri fs plugins) plus reviewer checklist; AST-grade tooling remains a Phase 10 upgrade.
+
+**As implemented (TECH-05):** every write presents `(StorageWriteRequest, PolicyDecision, StoragePolicy)`. The barrier rejects, in order: missing/forged decisions, denied verdicts, wrong capability, wrong side-effect scope (a decision for `storage.read` cannot authorize `storage.write`; `generic` is never accepted), policy `allowWrite=false`, cache writes without `allowCache`, debug artifacts, content-grade payloads in logs/audit events, unimplemented backends (the encrypted placeholder throws), and persistent writes without `persistentAllowed`. **Default is deny** — a class/mode pair nothing explicitly allows is denied. Error messages never contain stored values (security-regression-tested).
 
 ## Storage side-effect classification
 
@@ -120,6 +140,15 @@ The write barrier and destruction claims are verified, not assumed (Gate C and b
 - Cache inheritance: derived data never outlives the strictest policy of its source
 - Emergency wipe: key destruction (crypto-shredding) verified — wiped data unreadable without relying on physical overwrite
 - Vault Inspector consistency: everything on disk is enumerated by the inspector, and nothing enumerated is missing from [PBOM.md](PBOM.md)
+
+## Current implementation limitations
+
+Stated plainly:
+
+- **No encryption-at-rest exists.** The encrypted backend is a placeholder that throws; Standard-mode content writes therefore fail hard by design until Gate F.
+- **No OS keychain, no filesystem storage, no SQLite/IndexedDB** — nothing persists at all in the current implementation.
+- **Memory-only is not forensic protection**: the OS may swap process memory to disk; no forensic claims are made anywhere.
+- Emergency wipe and crypto-shredding are direction, not implementation (Phase 7).
 
 ## Risks
 

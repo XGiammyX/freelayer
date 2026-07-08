@@ -145,7 +145,7 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 
 ### Storage / network / metadata
 
-- ⬜ TECH-05 Storage Policy + Write Barrier Hardening *(next)*
+- ✅ TECH-05 Storage Policy + Write Barrier Hardening — exit criteria met: StoragePolicy v0 exists (30 classes × 7 modes, default deny); Memory/Null providers hardened; encrypted persistent placeholder throws; write barrier requires exact-scope `PolicyDecision`; forbidden-storage guardrail extended (browser storage/DB/caches/cookies/beacons/fs/Deno/Bun/Tauri) and self-tested; 37 storage regression tests pass (incl. the 20 required privacy invariants); PBOM + Trust Center updated; no direct storage APIs in source (CI-guarded)
 - ⬜ TECH-06 Memory/Null Storage Hardening
 - ⬜ TECH-07 Ghost/Bunker Zero-Persistent-Writes Tests
 - ⬜ TECH-08 NetworkPolicy

@@ -58,6 +58,29 @@ export function resolveStrictestPolicy(profiles: readonly PolicyProfile[]): Poli
 export type PolicyDecisionId = Brand<string, "PolicyDecisionId">;
 
 /**
+ * The specific side effect a decision authorizes. A decision issued for one
+ * operation must not authorize another — side-effect modules compare this
+ * against the concrete request (e.g. the storage write barrier requires an
+ * exact match). "generic" exists for scaffolding/tests that predate scoped
+ * decisions; strict barriers (storage) do NOT accept it.
+ */
+export type PolicySideEffectScope =
+  | "storage.write"
+  | "storage.read"
+  | "storage.delete"
+  | "storage.list"
+  | "storage.clear"
+  | "storage.export"
+  | "storage.import"
+  | "storage.cache.write"
+  | "storage.cache.read"
+  | "storage.audit.write"
+  | "network.send"
+  | "network.receive"
+  | "ai.infer"
+  | "generic";
+
+/**
  * Runtime marker for PolicyDecision objects. Honest scope: `Symbol.for` is
  * forgeable by code in the same process — this guard catches *accidental*
  * bypass (a feature calling a side-effect module directly), not a hostile
@@ -71,6 +94,8 @@ export interface PolicyDecision {
   readonly [POLICY_DECISION_MARK]: true;
   readonly id: PolicyDecisionId;
   readonly capability: PolicyCapability;
+  /** The concrete operation this decision authorizes (exact-match in strict barriers). */
+  readonly sideEffect: PolicySideEffectScope;
   readonly verdict: PolicyVerdict;
   readonly mode: PrivacyMode;
   /** Logical sequence number — ordering hint, not trusted time. */
@@ -92,12 +117,14 @@ export function issuePolicyDecision(
   capability: PolicyCapability,
   verdict: PolicyVerdict,
   mode: PrivacyMode,
+  sideEffect: PolicySideEffectScope = "generic",
 ): PolicyDecision {
   decisionSeq += 1;
   return {
     [POLICY_DECISION_MARK]: true,
     id: `pd-${decisionSeq}` as PolicyDecisionId,
     capability,
+    sideEffect,
     verdict,
     mode,
     issuedAtLogical: decisionSeq,

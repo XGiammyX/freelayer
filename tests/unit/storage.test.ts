@@ -1,58 +1,110 @@
 import { describe, expect, it } from "vitest";
-import { issuePolicyDecision, type PolicyDecision } from "@freelayer/privacy";
-import { PolicyBypassError, ForbiddenSideEffectError } from "@freelayer/security";
-import { MemoryStorageProvider, NullStorageProvider } from "@freelayer/storage";
+import { issuePolicyDecision } from "@freelayer/privacy";
+import {
+  EncryptedPersistentStorageProviderPlaceholder,
+  MemoryStorageProvider,
+  NullStorageProvider,
+  resolveStoragePolicy,
+  StorageBackendNotImplementedError,
+  type StorageWriteRequest,
+  type StorageReadRequest,
+} from "@freelayer/storage";
 
-const allowed = () => issuePolicyDecision("persistence", "allowed", "standard");
+const writeDecision = () =>
+  issuePolicyDecision("persistence", "allowed", "private", "storage.write");
+const readDecision = () => issuePolicyDecision("persistence", "allowed", "private", "storage.read");
+const deleteDecision = () =>
+  issuePolicyDecision("persistence", "allowed", "private", "storage.delete");
+const clearDecision = () =>
+  issuePolicyDecision("persistence", "allowed", "private", "storage.clear");
 
-const request = {
-  dataClass: "settings" as const,
-  key: "test-key",
-  value: new Uint8Array([1, 2, 3]),
-};
+const policy = () =>
+  resolveStoragePolicy({ mode: "private", dataClass: "message_content", sensitivity: "content" });
 
-describe("NullStorageProvider", () => {
-  it("stores nothing: reads return null even after a policy-approved write", async () => {
-    const provider = new NullStorageProvider();
-    await provider.write(request, allowed());
-    const read = await provider.read({ dataClass: "settings", key: "test-key" }, allowed());
-    expect(read).toBeNull();
-  });
+const writeReq = (value: unknown): StorageWriteRequest => ({
+  operation: "storage.write",
+  dataClass: "message_content",
+  key: "m1",
+  value,
+  sensitivity: "content",
+  reason: "unit test",
 });
 
-describe("MemoryStorageProvider", () => {
-  it("holds values in memory within one instance", async () => {
+const readReq: StorageReadRequest = {
+  operation: "storage.read",
+  dataClass: "message_content",
+  key: "m1",
+  reason: "unit test",
+};
+
+describe("MemoryStorageProvider (hardened)", () => {
+  it("writes and reads within one instance under an allowing policy", async () => {
     const provider = new MemoryStorageProvider();
-    await provider.write(request, allowed());
-    const read = await provider.read({ dataClass: "settings", key: "test-key" }, allowed());
-    expect(read).toEqual(new Uint8Array([1, 2, 3]));
+    await provider.write(writeReq("hello"), writeDecision(), policy());
+    await expect(provider.read(readReq, readDecision(), policy())).resolves.toBe("hello");
   });
 
   it("does not persist across instance recreation", async () => {
     const first = new MemoryStorageProvider();
-    await first.write(request, allowed());
+    await first.write(writeReq("hello"), writeDecision(), policy());
     const second = new MemoryStorageProvider();
-    const read = await second.read({ dataClass: "settings", key: "test-key" }, allowed());
-    expect(read).toBeNull();
+    await expect(second.read(readReq, readDecision(), policy())).resolves.toBeNull();
   });
 
-  it("rejects calls without a valid PolicyDecision (anti-bypass)", async () => {
+  it("delete removes a key and clear removes everything", async () => {
     const provider = new MemoryStorageProvider();
-    const forged = { verdict: "allowed" } as unknown as PolicyDecision;
-    await expect(provider.write(request, forged)).rejects.toBeInstanceOf(PolicyBypassError);
-  });
-
-  it("rejects a decision issued for the wrong capability", async () => {
-    const provider = new MemoryStorageProvider();
-    const wrongCapability = issuePolicyDecision("network", "allowed", "standard");
-    await expect(provider.write(request, wrongCapability)).rejects.toBeInstanceOf(
-      PolicyBypassError,
+    await provider.write(writeReq("hello"), writeDecision(), policy());
+    await provider.delete(
+      { operation: "storage.delete", dataClass: "message_content", key: "m1", reason: "t" },
+      deleteDecision(),
+      policy(),
     );
+    await expect(provider.read(readReq, readDecision(), policy())).resolves.toBeNull();
+
+    await provider.write(writeReq("again"), writeDecision(), policy());
+    await provider.clear({ operation: "storage.clear", reason: "t" }, clearDecision(), policy());
+    await expect(provider.read(readReq, readDecision(), policy())).resolves.toBeNull();
   });
 
-  it("rejects a denied decision (policy forbids the side effect)", async () => {
+  it("lists only keys of the requested data class", async () => {
     const provider = new MemoryStorageProvider();
-    const denied = issuePolicyDecision("persistence", "denied", "ghost");
-    await expect(provider.write(request, denied)).rejects.toBeInstanceOf(ForbiddenSideEffectError);
+    await provider.write(writeReq("hello"), writeDecision(), policy());
+    const listDecision = issuePolicyDecision("persistence", "allowed", "private", "storage.list");
+    await expect(
+      provider.list(
+        { operation: "storage.list", dataClass: "message_content", reason: "t" },
+        listDecision,
+        policy(),
+      ),
+    ).resolves.toEqual(["m1"]);
+  });
+});
+
+describe("NullStorageProvider (hardened)", () => {
+  it("accepts allowed writes but stores nothing; list returns empty", async () => {
+    const provider = new NullStorageProvider();
+    const nullPolicy = { ...policy(), backend: "null" as const };
+    await provider.write(writeReq("secret"), writeDecision(), nullPolicy);
+    await expect(provider.read(readReq, readDecision(), nullPolicy)).resolves.toBeNull();
+    const listDecision = issuePolicyDecision("persistence", "allowed", "private", "storage.list");
+    await expect(
+      provider.list(
+        { operation: "storage.list", dataClass: "message_content", reason: "t" },
+        listDecision,
+        nullPolicy,
+      ),
+    ).resolves.toEqual([]);
+  });
+});
+
+describe("EncryptedPersistentStorageProviderPlaceholder", () => {
+  it("throws not-implemented for every operation", async () => {
+    const provider = new EncryptedPersistentStorageProviderPlaceholder();
+    await expect(provider.read(readReq, readDecision(), policy())).rejects.toBeInstanceOf(
+      StorageBackendNotImplementedError,
+    );
+    await expect(provider.write(writeReq("x"), writeDecision(), policy())).rejects.toThrow(
+      "Encrypted persistent storage is not implemented yet",
+    );
   });
 });
