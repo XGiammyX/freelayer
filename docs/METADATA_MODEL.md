@@ -55,6 +55,23 @@ Signals, when enabled, are themselves carried as encrypted capsule content — n
 | AI prompts/cache | Derived plaintext of room content | Follow room storage policy; see [LOCAL_AI.md](LOCAL_AI.md) |
 | Media/preview caches | Content residue after deletion | Cache policy bound to mode; emergency wipe covers caches |
 
+### 6. Endpoint exposure metadata (local-only)
+
+Endpoint defense generates its own metadata ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md)):
+
+| Item | Nature | Initial direction |
+| --- | --- | --- |
+| Screenshot events (where detectable) | Local event | Local audit only, redacted |
+| Screen recording / capture active | Local state | Drives redaction; never uploaded |
+| Reveal timing / protected-view duration | Local behavioral metadata | Memory-only in strict modes; never uploaded |
+| Clipboard events (sensitive copy) | Local event | Clipboard Firewall state; expiry tracked locally |
+| Focus/blur events on protected surfaces | Local event | Drives auto-redact; not persisted in strict modes |
+| Task-switcher exposure state | Local state | Redaction coordination only |
+| External display / cast state | Local state | Device Risk input |
+| Platform capability state | Local state | Shown in UI; PBOM-listed |
+
+**These are local-only by rule: no upload, no telemetry (ADR-0008), audit events redacted, PBOM entries required, storage policy applies** ([STORAGE_MODEL.md](STORAGE_MODEL.md)) — local metadata still leaks through logs/caches if mishandled, which is why it falls under the same write-barrier and no-plaintext-logging discipline as content.
+
 ## Metadata regression invariants
 
 Initial machine-checkable invariants, to be enforced as privacy-regression tests when the relevant components exist ([PRIVACY_MODEL.md — Policy conflict rule](PRIVACY_MODEL.md)):

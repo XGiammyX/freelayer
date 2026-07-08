@@ -38,6 +38,13 @@ FreeLayer's bet:
 | Metadata Firewall | Typing, receipts, presence, previews and assets are policy-controlled |
 | Ghost Vault | Future offline identity mode |
 | Local AI | Future local-only AI, disabled by default |
+| Endpoint Defense / ScreenShield | Planned protection for data **on screen**: protected rendering, capture-aware views, clipboard/input restrictions |
+
+### Endpoint Defense / ScreenShield
+
+FreeLayer's privacy model does not stop when content is decrypted. ScreenShield is the planned endpoint-defense layer for protected rendering, capture-aware views, clipboard/input restrictions, device-risk warnings and platform-specific secure surfaces.
+
+It reduces exposure; it cannot protect against a fully compromised device or an external camera. Design: [docs/ENDPOINT_DEFENSE_MODEL.md](docs/ENDPOINT_DEFENSE_MODEL.md) · [docs/SCREENSHIELD.md](docs/SCREENSHIELD.md) · platform truth: [docs/PLATFORM_LIMITATIONS.md](docs/PLATFORM_LIMITATIONS.md). Not implemented — research/design stage ([ADR-0012](docs/adr/ADR-0012-endpoint-defense-layer.md)).
 
 ## What makes FreeLayer different
 

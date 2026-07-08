@@ -65,6 +65,28 @@ TODO:
 - [ ] Define the first 20 privacy-regression invariants (drawing on [METADATA_MODEL.md — Metadata regression invariants](METADATA_MODEL.md) and [STORAGE_MODEL.md — Required future tests](STORAGE_MODEL.md))
 - [ ] Map each privacy mode to its allowed side effects (mode × side-effect-category matrix)
 
+## Endpoint Defense / ScreenShield policy (future direction)
+
+ScreenShield ([SCREENSHIELD.md](SCREENSHIELD.md), ADR-0012) adds endpoint-exposure fields to the policy schema. Planned fields (design only — no code yet):
+
+- `screenShieldLevel` — `off | standard | protected | sealed | bunker`
+- `allowClipboard`
+- `allowScreenshots` *(where the platform can enforce; otherwise detection/redaction)*
+- `allowScreenRecording`
+- `allowTaskSwitcherPreview`
+- `allowAccessibilityExposure` ([ACCESSIBILITY_PRIVACY_TRADEOFFS.md](ACCESSIBILITY_PRIVACY_TRADEOFFS.md))
+- `allowProtectedContentAIExposure`
+- `protectedRevealMode` — `tap | hold | timed`
+- `autoRedactOnBlur`
+- `platformAssuranceRequired` — minimum platform assurance to reveal ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md))
+
+**Conflict rule: when ScreenShield conflicts with room or device policy, strictest policy wins** — the same rule as everything else. Examples:
+
+- Standard device + ScreenShield room → **ScreenShield restrictions apply**.
+- Bunker device + ScreenShield-off room → **Bunker still redacts**.
+- Web/PWA + sealed content → **low-assurance warning or reveal denied**, per `platformAssuranceRequired`.
+- Capture detected + protected room → **redact**.
+
 ## Identity Firewall
 
 - Local identities generated on-device; multiple identities per install.

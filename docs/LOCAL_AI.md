@@ -71,6 +71,19 @@ No mitigation eliminates prompt injection; these rules bound its blast radius (n
 - **AI Privacy Guard**: a policy layer that (a) checks the active mode before any inference, (b) scopes model input to the requesting room only — no cross-room context assembly, (c) tags all outputs with provenance ("AI-derived, from room X, model Y, date"), and (d) routes outputs through the same storage-policy machinery as any content.
 - Derived artifacts are **suggestions, not records**, until a human confirms them (an extracted decision does not enter the decision ledger by itself).
 
+## AI and screen exposure (Endpoint Defense — ADR-0012)
+
+Rules coordinating AI with ScreenShield ([SCREENSHIELD.md](SCREENSHIELD.md), [PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md)):
+
+- Local AI must **not** receive ScreenShield-protected content unless policy explicitly allows it (`allowProtectedContentAIExposure`).
+- AI must not process sealed/bunker content by default.
+- **AI must never bypass ProtectedContent** — there is no AI side-door to plaintext that the rendering surface would deny.
+- AI/GUI agents that observe screenshots are an explicit threat ([THREAT_MODEL.md](THREAT_MODEL.md)): screen-observing assistants are screen capture with a different name.
+- Document Q&A over protected documents requires its own policy decision, separate from room-level AI opt-in.
+- Screenshots sent to **external** AI tools are outside FreeLayer's control — user education must warn about this explicitly; no technical control can follow content off-device.
+
+Prompt-injection relation: malicious room content can manipulate local AI (below), and malicious *visible UI* can manipulate screen-based agents the same way — ScreenShield and the AI Privacy Guard must coordinate: capture-exclusion limits what screen agents see; the Privacy Guard limits what local AI receives.
+
 ## Risks
 
 - **Cache betrayal**: embeddings/indexes are content in disguise; treating them casually would silently break Ghost-adjacent guarantees. (Mitigated structurally by rule 5.)
