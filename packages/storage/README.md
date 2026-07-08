@@ -1,6 +1,8 @@
 # @freelayer/storage
 
-**Status: StoragePolicy v0 + write barrier implemented and regression-tested (TECH-05). No persistence exists — encrypted-at-rest is a throwing placeholder until crypto review (Gate F).**
+**Status: StoragePolicy v0 + write barrier (TECH-05), providers hardened (TECH-06). No persistence exists — encrypted-at-rest is a throwing placeholder until crypto review (Gate F).**
+
+TECH-06 hardening: provider contract v2 (result objects; `list()` metadata-only; honest `kind`/`persistent`/`implemented`), clone-at-boundaries memory provider (uncloneable values rejected — no reference leaks), structurally stateless null provider, `validateStorageKey` misuse detector (never echoes keys), redacted error model, and sentinel leak tests proving stored values never reach errors, console output, or lists. Research basis: [docs/research/STORAGE_HARDENING_RESEARCH.md](../../docs/research/STORAGE_HARDENING_RESEARCH.md).
 
 ## What this package does
 

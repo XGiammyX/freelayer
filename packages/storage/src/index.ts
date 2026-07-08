@@ -61,12 +61,30 @@ export {
   ForbiddenCacheWriteError,
   ForbiddenDebugArtifactError,
   ForbiddenPersistentWriteError,
+  InvalidStorageKeyError,
   StorageBackendNotImplementedError,
   StorageBypassAttemptError,
+  StorageDecisionMismatchError,
   StoragePolicyDeniedError,
+  StorageSensitiveValueLeakError,
+  UnsupportedStorageValueError,
 } from "./errors";
 
+export { validateStorageKey, type ValidatedStorageKey } from "./keys";
+export { cloneStorageValue } from "./values";
+
+export type {
+  StorageClearResult,
+  StorageDeleteResult,
+  StorageListEntry,
+  StorageListResult,
+  StorageReadResult,
+  StorageWriteResult,
+} from "./results";
+
 export {
+  createMemoryStorageProvider,
+  createNullStorageProvider,
   EncryptedPersistentStorageProviderPlaceholder,
   MemoryStorageProvider,
   NullStorageProvider,

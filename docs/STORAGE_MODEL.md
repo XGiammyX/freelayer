@@ -5,6 +5,19 @@
 > [!NOTE]
 > **TECH-05 implemented the foundation of this model**: StoragePolicy v0, the write barrier, and hardened memory/null providers exist and are regression-tested. Encrypted persistence remains deliberately unimplemented (Gate F).
 
+## Hardening status (TECH-06)
+
+TECH-06 hardened the non-persistent providers into genuinely misuse-resistant foundations (research notes: [research/STORAGE_HARDENING_RESEARCH.md](research/STORAGE_HARDENING_RESEARCH.md)):
+
+- **Provider contract v2** — explicit result objects; `list()` returns **metadata only** (key, class, sensitivity, local timestamps, policy mode — never values); honest `kind`/`persistent`/`implemented` flags.
+- **MemoryStorageProvider** — per-instance records; **clone-at-boundaries** via `structuredClone` (mutating an object after write, or a read result, cannot touch stored state); uncloneable values (functions, symbols, DataCloneError cases) are **rejected, not stored by reference**.
+- **NullStorageProvider** — validates everything (decision, scope, policy, key) and holds zero value state, structurally verified in tests.
+- **Key validation** — `validateStorageKey` misuse detector: rejects empty/whitespace/oversized/null-byte/traversal/absolute-path/drive-path/URL-scheme/newline/sentinel keys; errors say only "Invalid storage key." and never echo the key.
+- **Redacted error model** — dedicated `InvalidStorageKeyError`, `StorageDecisionMismatchError`, `UnsupportedStorageValueError`; stable generic messages; sentinel-based tests prove no stored value reaches errors, console output, or list results.
+- **Zero-persistence harness** — asserts strict modes never resolve persistent backends, provider flags are honest, runtime-provided web storage (Node now ships `localStorage` globals) is left completely untouched, and a full provider workout leaks nothing.
+- **Endpoint artifact rule** — capture-audit, device-risk, watermark/canary and reveal/redaction classes reject content/key-material payloads at the barrier (they are behavioral metadata, not content containers).
+- **Honest limits, restated:** memory-only does not defeat OS swap, memory dumps, or a compromised process; cloning prevents accidental aliasing, not attackers. No forensic guarantee exists or is claimed.
+
 ## Implementation status (TECH-05)
 
 | Piece | Status |

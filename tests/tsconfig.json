@@ -4,5 +4,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["unit", "privacy-regression", "security-regression"]
+  "include": ["unit", "privacy-regression", "security-regression", "helpers"]
 }

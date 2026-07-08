@@ -69,3 +69,35 @@ export class ForbiddenDebugArtifactError extends Error {
     super(describe(ctx));
   }
 }
+
+/** The storage key failed validation. Deliberately generic — never echoes the key. */
+export class InvalidStorageKeyError extends Error {
+  override readonly name = "InvalidStorageKeyError";
+  constructor() {
+    super("Invalid storage key.");
+  }
+}
+
+/** The PolicyDecision exists but was issued for a different capability/side effect. */
+export class StorageDecisionMismatchError extends Error {
+  override readonly name = "StorageDecisionMismatchError";
+  constructor(detail: string) {
+    super(`Storage decision mismatch: ${detail}`);
+  }
+}
+
+/** The value cannot be safely cloned; storing it by reference would leak. */
+export class UnsupportedStorageValueError extends Error {
+  override readonly name = "UnsupportedStorageValueError";
+  constructor() {
+    super("Unsupported storage value type.");
+  }
+}
+
+/** Raised by leak-detection tooling when a sensitive value reaches an output channel. */
+export class StorageSensitiveValueLeakError extends Error {
+  override readonly name = "StorageSensitiveValueLeakError";
+  constructor(channel: string) {
+    super(`Sensitive value detected in ${channel}. This is a privacy bug.`);
+  }
+}

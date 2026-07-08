@@ -104,6 +104,14 @@ Stated without hedging:
 - Ghost Vault reduces online **key** exposure but not the content exposure of whatever the online device renders.
 - **ScreenShield reduces capture risk; it does not eliminate it** ([SCREENSHIELD.md](SCREENSHIELD.md)).
 
+## Storage-layer threats (TECH-05/06)
+
+- **Storage bypass** — direct browser storage (`localStorage`-class, IndexedDB, CacheStorage, cookies), filesystem writes, or SQLite outside approved providers. Mitigation: write barrier + forbidden-storage CI guard; note that modern Node exposes web-storage globals even outside browsers, making the guard load-bearing everywhere.
+- **Provider misuse** — missing/forged/wrong-scope decisions, policy-for-one-backend used on another, app-level direct provider use. Mitigation: barrier validation, backend-match checks, boundary rules ([audits/STORAGE_BOUNDARY_AUDIT.md](audits/STORAGE_BOUNDARY_AUDIT.md)).
+- **Sensitive errors/logs** — stored values leaking through exceptions, console output, list metadata, key names, or CI artifacts. Mitigation: redacted error model, metadata-only listing, key validation, sentinel-based regression tests.
+- **In-memory reference/mutation leaks** — callers mutating stored state through retained references. Mitigation: clone-at-boundaries; uncloneable values rejected. Honest limit: none of this protects memory from a compromised process or OS swap.
+- **PWA storage limitations** — browser-controlled quotas/eviction and origin-shared storage make strict no-persistence claims weaker on web than desktop (research notes).
+
 ## Overlay / tapjacking
 
 Overlay attacks trick users into acting on hidden UI. Sensitive actions (reveal, send, wipe, key operations, mode changes) require anti-overlay measures — touch-filtering-class defenses per OWASP MASTG — where the platform provides them.
