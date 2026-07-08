@@ -10,7 +10,7 @@ FreeLayer is an open-source project exploring a new kind of communication platfo
 [![Privacy regression](https://github.com/XGiammyX/freelayer/actions/workflows/privacy-regression.yml/badge.svg)](https://github.com/XGiammyX/freelayer/actions/workflows/privacy-regression.yml)
 [![CodeQL](https://github.com/XGiammyX/freelayer/actions/workflows/codeql.yml/badge.svg)](https://github.com/XGiammyX/freelayer/actions/workflows/codeql.yml)
 
-**New here?** Start with [FreeLayer in plain English](docs/PUBLIC_EXPLANATION.md) · [Trust Center](docs/TRUST_CENTER.md) · [Roadmap](docs/ROADMAP.md) · [Docs index](docs/README.md)
+**New here?** Start with [FreeLayer in plain English](docs/PUBLIC_EXPLANATION.md) · [Wiki](https://github.com/XGiammyX/freelayer/wiki) · [Trust Center](docs/TRUST_CENTER.md) · [Roadmap](docs/ROADMAP.md) · [Docs index](docs/README.md)
 
 ---
 

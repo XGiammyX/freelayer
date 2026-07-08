@@ -8,7 +8,7 @@ This directory is the **reviewed source of truth for the GitHub wiki** (<https:/
 pnpm wiki:publish
 ```
 
-**One-time bootstrap (GitHub limitation):** the wiki's git repository does not exist until the first page is created once through the web UI. Open the [wiki tab](https://github.com/XGiammyX/freelayer/wiki), click "Create the first page", save it with any content, then run the command above — it will overwrite the placeholder with these pages and keep them in sync on every future run.
+**The wiki is live** (bootstrapped 2026-07-09; the one-time UI step GitHub requires is done). Every run of the command above syncs the pages here to <https://github.com/XGiammyX/freelayer/wiki>, overwriting any direct wiki-UI edits. `README.md` in this directory is excluded — it documents the directory, it is not a wiki page.
 
 ## Rules
 

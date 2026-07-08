@@ -18,7 +18,8 @@ const SOURCE = join(process.cwd(), "wiki");
 
 const git = (args, cwd) => execFileSync("git", args, { cwd, stdio: "pipe" }).toString();
 
-const pages = readdirSync(SOURCE).filter((f) => f.endsWith(".md"));
+// README.md documents the wiki/ directory itself and is not a wiki page.
+const pages = readdirSync(SOURCE).filter((f) => f.endsWith(".md") && f !== "README.md");
 if (pages.length === 0) {
   console.error("[publish-wiki] wiki/ contains no pages — nothing to publish.");
   process.exit(1);
