@@ -1,5 +1,10 @@
 # Architecture Decision Records
 
+[← Docs Index](../README.md) · [Architecture](../ARCHITECTURE.md) · [Governance](../../GOVERNANCE.md)
+
+> [!IMPORTANT]
+> This directory is the **project constitution**. Where an ADR and any other document conflict, the ADR wins — and changing one requires a superseding ADR through governance review, never an edit.
+
 ## Purpose
 
 This directory is FreeLayer's **project constitution**. Each ADR records a binding architectural decision: its context, the decision itself, its consequences, and — because this is a privacy/security project — its explicit security and privacy impact.

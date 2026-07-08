@@ -1,5 +1,10 @@
 # FreeLayer Compared, Simply
 
+[← Docs Index](README.md) · [Research-grade comparison](COMPETITOR_COMPARISON.md) · [Plain English overview](PUBLIC_EXPLANATION.md)
+
+> [!NOTE]
+> Respectful by rule: no project is attacked here, and **FreeLayer is not implemented yet** — every row describes a design direction, never a claim of being better today.
+
 *Audience: people asking "why does this need to exist?" For the research-grade version with per-project caveats, see [COMPETITOR_COMPARISON.md](COMPETITOR_COMPARISON.md).*
 
 > **Two honest rules first.** (1) This is not an attack on any project — the tools below are excellent at what they do, ship real software to real users, and many directly inspire FreeLayer. (2) **FreeLayer is not implemented yet.** Every "FreeLayer aims to…" is a design direction with a gate in front of it, not a claim of being better today. Rows needing re-verification against current official docs are marked *TODO verify*.

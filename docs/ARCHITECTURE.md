@@ -1,5 +1,10 @@
 # FreeLayer Architecture
 
+[← Docs Index](README.md) · [ADRs (constitution)](adr/README.md) · [Implementation Gates](IMPLEMENTATION_GATES.md)
+
+> [!NOTE]
+> Design-stage document: it describes the **target architecture**, and the parts that exist today are typed scaffolding with fail-closed placeholders — see the [Trust Center](TRUST_CENTER.md) for verified status.
+
 ## Purpose
 
 This document describes FreeLayer's high-level architecture: the monorepo layout, the responsibilities of each app and package, and the structural principles that every implementation phase must respect.

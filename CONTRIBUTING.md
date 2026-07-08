@@ -1,5 +1,10 @@
 # Contributing to FreeLayer
 
+[Docs Index](docs/README.md) · [Contributor Tasks](docs/CONTRIBUTOR_TASKS.md) · [Security-sensitive rules](docs/CONTRIBUTING_SECURITY.md) · [Code of Conduct](CODE_OF_CONDUCT.md)
+
+> [!TIP]
+> Design review, threat-model critique, and comparison verification are as valuable as code right now — see [ready-made tasks](docs/CONTRIBUTOR_TASKS.md).
+
 Thank you for your interest in FreeLayer. The project is in the **research and foundation stage**, which means design review, threat-model critique, and documentation improvements are currently as valuable as code.
 
 ## Ways to contribute

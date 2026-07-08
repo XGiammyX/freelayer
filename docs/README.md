@@ -1,8 +1,11 @@
-# FreeLayer Documentation Index
+# 📚 FreeLayer Documentation
 
-Everything is public and versioned. Statuses are honest: most of what these documents describe is **design, not implemented software** — the [Trust Center](TRUST_CENTER.md) is always the source of truth for what actually exists.
+> [!NOTE]
+> Everything here is public and versioned. Statuses are honest: most of what these documents describe is **design, not implemented software** — the [Trust Center](TRUST_CENTER.md) is always the source of truth for what actually exists.
 
-## Start here
+**Quick paths:** new reader → [Plain English](PUBLIC_EXPLANATION.md) · evaluator → [Trust Center](TRUST_CENTER.md) · contributor → [Tasks](CONTRIBUTOR_TASKS.md) · engineer → [Architecture](ARCHITECTURE.md)
+
+## 🚀 Start here
 
 - [FreeLayer in plain English](PUBLIC_EXPLANATION.md) — what this project is, with no jargon.
 - [Trust Center](TRUST_CENTER.md) — can you trust FreeLayer today? (No — and here is exactly why.)
@@ -12,7 +15,7 @@ Everything is public and versioned. Statuses are honest: most of what these docu
 - [Project Positioning](PROJECT_POSITIONING.md) — what FreeLayer is, is not, and for whom.
 - [Contributor Tasks](CONTRIBUTOR_TASKS.md) — concrete ways to help right now.
 
-## Architecture
+## 🏛️ Architecture
 
 - [Architecture](ARCHITECTURE.md) — layering, the non-bypassable rules, and the operation pipeline.
 - [Privacy Model](PRIVACY_MODEL.md) — the seven privacy modes and the strictest-policy-wins rule.
@@ -28,7 +31,7 @@ Everything is public and versioned. Statuses are honest: most of what these docu
 - [Platform Limitations](PLATFORM_LIMITATIONS.md) — per-platform truth about capture protection.
 - [Accessibility / Privacy Trade-offs](ACCESSIBILITY_PRIVACY_TRADEOFFS.md) — where security and accessibility tension is real, and how it's decided.
 
-## Core systems
+## ⚙️ Core systems
 
 - [CapsuleNet](CAPSULENET.md) — sealed capsules, hostile-input parsing, and the blind-courier rules.
 - [Sovereign Rooms](SOVEREIGN_ROOMS.md) — rooms as private operational spaces; the sync-model decision.
@@ -36,7 +39,7 @@ Everything is public and versioned. Statuses are honest: most of what these docu
 - [Local AI](LOCAL_AI.md) — local-only, disabled-by-default AI and its gates.
 - [PBOM](PBOM.md) — the Privacy Bill of Materials: everything the software actually does.
 
-## Contributing and security
+## 🔐 Contributing and security
 
 - [Contributing](../CONTRIBUTING.md) — process, standards, and the hard lines.
 - [Contributing (security-sensitive)](CONTRIBUTING_SECURITY.md) — stricter rules for crypto/privacy/storage paths.
@@ -47,7 +50,7 @@ Everything is public and versioned. Statuses are honest: most of what these docu
 - [ADRs — the project constitution](adr/README.md) — the binding decisions (ADR-0001 … ADR-0012).
 - [Security policy](../SECURITY.md) — how to report vulnerabilities privately.
 
-## Infrastructure and audits
+## 🛠️ Infrastructure and audits
 
 - [GitHub Repository Setup](GITHUB_REPOSITORY_SETUP.md) — how the repo is configured and protected.
 - [GitHub Security Settings](GITHUB_SECURITY_SETTINGS.md) — per-setting verified checklist.

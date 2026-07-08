@@ -1,5 +1,10 @@
 # Endpoint Defense Model
 
+[← Docs Index](README.md) · [ScreenShield](SCREENSHIELD.md) · [Platform Limitations](PLATFORM_LIMITATIONS.md) · [Device Risk](DEVICE_RISK_MODEL.md)
+
+> [!IMPORTANT]
+> This layer **reduces** exposure after decryption — screenshots, clipboard, capture, risky devices. It never claims to defeat a compromised device or an external camera, and neither may anything built on it (ADR-0012).
+
 ## Purpose
 
 Define FreeLayer's model for protecting sensitive data **after decryption** — while it is displayed, copied, typed, previewed, cached, or otherwise exposed to the local device environment. CapsuleNet protects data in transit and Storage Policy protects data at rest; this model covers **data in use**. The user-facing system built on it is **ScreenShield** ([SCREENSHIELD.md](SCREENSHIELD.md)); the constitutional decision is [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md).

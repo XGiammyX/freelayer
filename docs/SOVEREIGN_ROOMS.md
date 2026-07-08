@@ -1,5 +1,10 @@
 # Sovereign Rooms — RoomOS
 
+[← Docs Index](README.md) · [CapsuleNet](CAPSULENET.md) · [Privacy Model](PRIVACY_MODEL.md) · [Glossary](GLOSSARY.md)
+
+> [!NOTE]
+> The primary product model (ADR-0006): rooms are private operational spaces on members' devices — chat is one object type inside them. Design stage; implementation blocked by Gate H, including the deliberately-open CRDT decision.
+
 ## Purpose
 
 Sovereign Rooms are **encrypted, local-first operational spaces built on top of FreeLayer capsules** — and they are FreeLayer's **primary product model** ([ADR-0006](adr/ADR-0006-sovereign-rooms-as-primary-product-model.md)). Product, protocol, and storage design orient around rooms; a 1:1 conversation is a minimal room, not a separate system.

@@ -1,5 +1,10 @@
 # PBOM — Privacy Bill of Materials
 
+[← Docs Index](README.md) · [Trust Center](TRUST_CENTER.md) · [Data Leakage Map](DATA_LEAKAGE_MODEL.md)
+
+> [!NOTE]
+> Like an SBOM, but for privacy-relevant behavior: everything the software actually does with your data, in one auditable inventory. **Anything not listed here is a bug.**
+
 ## Purpose
 
 A single, auditable inventory of everything FreeLayer software does that touches privacy: network endpoints, storage, permissions, telemetry (none), dependencies, AI behavior, caches, and logs. Like an SBOM, but for privacy-relevant behavior. From the first alpha, the PBOM is a release artifact; divergence between PBOM and actual behavior is treated as a bug of the highest severity.

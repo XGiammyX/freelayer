@@ -1,5 +1,10 @@
 # ScreenShield
 
+[← Docs Index](README.md) · [Endpoint Defense Model](ENDPOINT_DEFENSE_MODEL.md) · [Platform Limitations](PLATFORM_LIMITATIONS.md) · [Accessibility trade-offs](ACCESSIBILITY_PRIVACY_TRADEOFFS.md)
+
+> [!NOTE]
+> Design only — no protection level is implemented (Gate K). Where a platform cannot protect, ScreenShield's rule is to say so honestly rather than pretend.
+
 ## Definition
 
 **ScreenShield is the user-facing endpoint protection system for sensitive rooms, messages, files and documents.** It packages the Endpoint Defense controls ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md)) into levels a person can understand, choose, and trust — with the platform's real capabilities reported honestly rather than implied.

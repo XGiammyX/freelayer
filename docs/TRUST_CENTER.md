@@ -1,5 +1,10 @@
 # FreeLayer Trust Center
 
+[← Docs Index](README.md) · [Threat Model](THREAT_MODEL.md) · [PBOM](PBOM.md) · [Security policy](../SECURITY.md)
+
+> [!IMPORTANT]
+> **Can I trust FreeLayer today? No — not with real secrets.** This page exists to tell you exactly why, what exists, what doesn't, and what has actually been verified.
+
 ## Purpose
 
 One honest page answering: *how much should you trust FreeLayer right now?* This document is updated at every phase boundary and every security-relevant event. It states what has been verified, what hasn't, and what "verified" even means at each stage.
