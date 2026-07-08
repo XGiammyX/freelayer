@@ -12,7 +12,7 @@ Full repository health re-verified after TECH-05/06 landed. **Result: completely
 - **Security settings (re-read via API):** secret scanning, push protection, Dependabot security updates — all enabled.
 - **Fresh-clone reproducibility test:** cloned the public repo into a clean directory; `pnpm install --frozen-lockfile` plus typecheck, lint, test (78/78), build, all five guards, and `audit:privacy` — **11/11 PASS**. A brand-new contributor gets a fully working, fully green checkout.
 - **Issues:** 0 open.
-- **The one pending manual step:** the **wiki** remains uninitialized — GitHub creates the wiki git repository only when a first page is created through the web UI (verified again this audit: clone/publish still return "Repository not found"). All 10 wiki pages are ready in [`wiki/`](../wiki/README.md); after the one-click bootstrap, `pnpm wiki:publish` publishes everything.
+- **Wiki: LIVE (2026-07-09).** The one-click UI bootstrap was completed by the maintainer; `pnpm wiki:publish` then published all pages, the stray source-directory README was removed from the wiki, and public rendering was verified (Home + full sidebar + footer + foundation-stage warning). The wiki now shows exactly the 10 intended pages, synced from [`wiki/`](../wiki/README.md).
 
 ## Summary
 
