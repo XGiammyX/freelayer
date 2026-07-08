@@ -37,7 +37,7 @@
     "@freelayer/transports": "workspace:*",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
-    "typescript": "^5.7.2",
-    "vitest": "^3.0.5"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }
