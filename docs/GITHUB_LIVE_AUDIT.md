@@ -1,5 +1,19 @@
 # GitHub Live Audit — INFRA-02
 
+## Re-audit addendum — 2026-07-09 (post-TECH-06, commit `1c75230`)
+
+Full repository health re-verified after TECH-05/06 landed. **Result: completely healthy.**
+
+- **PRs:** 19 total — every one properly merged or properly closed with rationale; **0 open**. The one anomaly found (stray PR #18, an accidental re-push of the already-merged INFRA-02 branch) was closed with an explanatory comment and its branch deleted.
+- **Branches:** remote has exactly `main`; all topic branches cleaned up.
+- **Workflow runs:** last 40 runs — **40 successes, 0 failures**, across CI, Privacy regression, CodeQL, Dependency review, and Dependabot Updates.
+- **Security tab:** 0 open CodeQL alerts, 0 Dependabot alerts, 0 secret-scanning alerts.
+- **Branch protection (re-read via API):** 4 required checks (strict), 1 required review, force-pushes and deletions blocked.
+- **Security settings (re-read via API):** secret scanning, push protection, Dependabot security updates — all enabled.
+- **Fresh-clone reproducibility test:** cloned the public repo into a clean directory; `pnpm install --frozen-lockfile` plus typecheck, lint, test (78/78), build, all five guards, and `audit:privacy` — **11/11 PASS**. A brand-new contributor gets a fully working, fully green checkout.
+- **Issues:** 0 open.
+- **The one pending manual step:** the **wiki** remains uninitialized — GitHub creates the wiki git repository only when a first page is created through the web UI (verified again this audit: clone/publish still return "Repository not found"). All 10 wiki pages are ready in [`wiki/`](../wiki/README.md); after the one-click bootstrap, `pnpm wiki:publish` publishes everything.
+
 ## Summary
 
 Full health check of the live public repository. **Result: healthy.** All local checks pass, all live workflows green, zero open PRs, branch protection verified, no contradictions between public claims and verified status after this pass's fixes.
