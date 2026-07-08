@@ -74,6 +74,43 @@ All externally-influenced input is treated as hostile until validated by the app
 
 Rules and gates for this surface live in [CAPSULENET.md — Capsule parsing is hostile-input parsing](CAPSULENET.md) and Gate E of [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md).
 
+## Endpoint display/capture threats
+
+Once content is decrypted and rendered, a distinct threat family applies ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md), ADR-0012):
+
+- **Screenshots** — user- or software-initiated; preventable on some platforms (Android FLAG_SECURE-class, Windows capture-exclusion), only detectable-after-the-fact on others (iOS), neither on web.
+- **Screen recording** — including OS features that periodically capture the desktop (Recall-class).
+- **Screen sharing / remote desktop** — conferencing and support tools stream protected content; redact where detectable.
+- **Task switcher thumbnails** — OS snapshots of the last rendered frame.
+- **Casting / external displays** — non-secure displays receive rendered frames.
+- **OCR tools** — any capture becomes searchable text.
+- **Camera pointed at the screen** — unsolvable; mitigated only by reveal-minimization (hold-to-view, section-by-section rendering).
+
+Mitigations are platform-dependent and reported honestly ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)); web/PWA is structurally low-assurance for sensitive views.
+
+## Spyware and compromised endpoint
+
+Stated without hedging:
+
+- If the endpoint is compromised, plaintext may be captured — full stop.
+- Keyloggers and screen recorders operating with sufficient privilege defeat app-level protections.
+- Root/jailbreak/kernel malware is **out of scope for full protection**; detection of it is unreliable and adversarial (advisory at most).
+- Accessibility-service abuse reads screens and injects input through legitimate OS channels; FreeLayer cannot distinguish it from assistive technology it must support ([ACCESSIBILITY_PRIVACY_TRADEOFFS.md](ACCESSIBILITY_PRIVACY_TRADEOFFS.md)).
+- Ghost Vault reduces online **key** exposure but not the content exposure of whatever the online device renders.
+- **ScreenShield reduces capture risk; it does not eliminate it** ([SCREENSHIELD.md](SCREENSHIELD.md)).
+
+## Overlay / tapjacking
+
+Overlay attacks trick users into acting on hidden UI. Sensitive actions (reveal, send, wipe, key operations, mode changes) require anti-overlay measures — touch-filtering-class defenses per OWASP MASTG — where the platform provides them.
+
+## Browser extension risk (web/PWA)
+
+Extensions with host permissions read and modify the DOM and can capture tabs, invisibly to the page. No web mitigation exists; consequence: PWA sensitive views carry a permanent low-assurance label, and sealed/bunker content is restricted or denied on web.
+
+## AI/GUI agent screenshot risk
+
+Screen-observing AI agents (OS assistants, GUI automation, Recall-class recorders) are functionally screen capture and are treated as a privacy boundary: capture-exclusion where available, capture-aware redaction otherwise, and explicit user education that content exposed to external AI tools leaves FreeLayer's control ([LOCAL_AI.md](LOCAL_AI.md)).
+
 ## Component-specific risk notes
 
 ### Transports

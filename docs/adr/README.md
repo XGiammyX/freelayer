@@ -60,3 +60,4 @@ Numbering is sequential and permanent. Superseded ADRs stay in place, marked as 
 | [ADR-0009](ADR-0009-security-sensitive-pr-review-rules.md) | Security-sensitive PR review rules | Accepted |
 | [ADR-0010](ADR-0010-documentation-updated-with-code.md) | Documentation updated with code | Accepted |
 | [ADR-0011](ADR-0011-license-strategy.md) | License strategy: AGPL-3.0-or-later code, CC BY-SA 4.0 docs | Accepted |
+| [ADR-0012](ADR-0012-endpoint-defense-layer.md) | Endpoint Defense Layer / ScreenShield as an official pillar | Accepted |

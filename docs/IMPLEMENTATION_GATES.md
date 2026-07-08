@@ -115,6 +115,41 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 - [ ] AI output provenance format defined
 - [ ] [PBOM.md](PBOM.md) AI section complete (models, hashes, caches, embedding indexes, absence of network calls)
 
+## Gate K — Endpoint Defense / ScreenShield
+
+*Opens in stages (ADR-0012). ProtectedContent/ScreenShield design precedes serious messaging UI.*
+
+**Required before protected messaging UI:**
+
+- [x] Endpoint Defense Model exists ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md))
+- [x] ScreenShield design exists ([SCREENSHIELD.md](SCREENSHIELD.md))
+- [x] ProtectedContent policy exists ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md))
+- [x] Platform limitations documented ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md))
+- [x] Device Risk Model exists ([DEVICE_RISK_MODEL.md](DEVICE_RISK_MODEL.md))
+- [x] Accessibility/privacy trade-offs documented ([ACCESSIBILITY_PRIVACY_TRADEOFFS.md](ACCESSIBILITY_PRIVACY_TRADEOFFS.md))
+- [x] ScreenShield policy fields added to the privacy model ([PRIVACY_MODEL.md](PRIVACY_MODEL.md))
+- [x] Future tests defined ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md), [PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md))
+- [ ] ScreenShield policy schema implemented (TECH-EDL-02) and ProtectedContent contract specified (TECH-EDL-03)
+
+**Required before implementing platform-specific protection:**
+
+- [ ] Platform API research complete for the target platform (beyond the RESEARCH-EDL-01 baseline in [ENDPOINT_RESEARCH_NOTES.md](ENDPOINT_RESEARCH_NOTES.md))
+- [ ] Platform capability reporting design (honest `protected/degraded/unavailable/failed` states)
+- [ ] Failure-mode UX design (what users see when protection is unavailable or fails)
+- [ ] Test strategy per platform
+- [ ] PBOM entries for the platform's endpoint behavior
+- [ ] Trust Center status update per platform
+
+**Required before any Bunker/protected-content release:**
+
+- [ ] ProtectedContent enforced (no other rendering path for sensitive content)
+- [ ] No-raw-sensitive-rendering lint rule active
+- [ ] Clipboard guard tests passing
+- [ ] Screenshot/capture tests passing where the platform supports them
+- [ ] Task switcher redaction tests passing where the platform supports them
+- [ ] Accessibility exposure policy tested with real assistive technology
+- [ ] Platform limitations visible to users in product UI
+
 ## Gate J — Release
 
 *Opens: any public release, including alpha (Phase 11).*

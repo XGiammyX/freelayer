@@ -116,6 +116,34 @@ Signed builds, reproducibility investigation, release process, known-limitations
 
 ---
 
+## Work categories
+
+Roadmap items fall into four categories; the technical phase numbering above is unchanged by the others:
+
+- **TECH** — product/engineering phases (the numbered phases above; e.g. TECH-05 Storage Policy + Write Barrier Hardening)
+- **INFRA** — repository/CI/publication work
+- **RESEARCH** — research and architecture passes that precede implementation
+- **AUDIT** — regression suites, audits, verification passes
+
+## Endpoint Defense / ScreenShield track (ADR-0012)
+
+**Dependency: ProtectedContent/ScreenShield must be designed before serious messaging UI and protected document UI** — retrofitting endpoint defense onto a shipped UI is how it fails.
+
+- ✅ RESEARCH-EDL-01 — Endpoint Defense + ScreenShield Research and Architecture *(this pass)*
+- ⬜ TECH-EDL-02 — ScreenShield Policy Schema
+- ⬜ TECH-EDL-03 — ProtectedContent Rendering Contract
+- ⬜ TECH-EDL-04 — Secure Surface Adapter Interfaces
+- ⬜ TECH-EDL-05 — Clipboard Firewall
+- ⬜ TECH-EDL-06 — Secure Input Firewall
+- ⬜ TECH-EDL-07 — Anti-Overlay/Tapjacking Guard
+- ⬜ TECH-EDL-08 — Device Risk Engine
+- ⬜ TECH-EDL-09 — Capture-Aware Rooms
+- ⬜ TECH-EDL-10 — Protected View / Sealed View
+- ⬜ TECH-EDL-11 — Panic / Auto-Redact / Decoy
+- ⬜ TECH-EDL-12 — Leak Canary / Dynamic Watermark
+- ⬜ AUDIT-EDL-13 — ScreenShield Regression Tests
+- ⬜ AUDIT-EDL-14 — Endpoint Defense Audit
+
 ## Infrastructure track (separate from the technical phases)
 
 The technical phase numbering above is unchanged by infrastructure work. Infra milestones:

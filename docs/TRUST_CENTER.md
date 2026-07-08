@@ -42,6 +42,21 @@ This line is updated only when verified reality changes — never ahead of it.
 
 Unchanged by publication: **no release, no production-ready crypto, no chat, no AI — do not use for real secrets.**
 
+### Endpoint Defense / ScreenShield (RESEARCH-EDL-01)
+
+The Endpoint Defense Layer is now an official **design pillar** (ADR-0012) — and nothing more yet:
+
+| Area | Status |
+| --- | --- |
+| ScreenShield design | Initial docs |
+| Platform protections | Research stage |
+| ProtectedContent | Not implemented |
+| Clipboard Firewall | Not implemented |
+| Secure Input Firewall | Not implemented |
+| Device Risk Engine | Not implemented |
+
+Plainly: **no endpoint protections are implemented, no screenshot blocking exists, and there is no spyware-protection guarantee — device compromise remains a major limitation.** Future trust status will be platform-specific ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)).
+
 ### Mechanical guardrails (baseline, added in Phase 1)
 
 CI and `pnpm audit:privacy` run four static guards: an **import-boundary check** (apps cannot import storage/transports/crypto/ai directly; dependency direction between packages), a **no-external-assets check**, a **no-telemetry check**, and a **forbidden-storage-API check**. Side-effect placeholders (storage, transports) reject calls that lack a `PolicyDecision`, verified by unit tests. Honest scope: these are baseline static scans and runtime accident-guards — they reduce bypass risk as far as practically possible at this stage, but they are not a security proof; stronger (AST/compile-time) enforcement is tracked at Gates A/B and Phase 10.

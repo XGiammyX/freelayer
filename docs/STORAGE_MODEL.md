@@ -91,6 +91,21 @@ Emergency mode triggers: wipe of designated data classes (keys first, then conte
 
 A built-in screen enumerating everything FreeLayer holds on disk: what, where, under which policy, encrypted how, wipeable how. Doubles as a live, user-verifiable PBOM. *(Phase 7+ design item.)*
 
+## Derived endpoint artifacts (Endpoint Defense — ADR-0012)
+
+Endpoint defense produces derived data that is content in disguise and follows the same discipline:
+
+| Artifact | Rule |
+| --- | --- |
+| Redaction state | Memory-only; rebuildable; never plaintext-revealing |
+| Reveal timers / reveal history | **Must not persist in strict modes**; memory-only elsewhere unless policy allows |
+| Thumbnails | **No persistent thumbnails of protected content, ever** |
+| Protected previews | **No preview cache in Ghost/Bunker**; cache-class rules elsewhere |
+| Copied sensitive content | Clipboard is not storage, but is treated as leakage — Clipboard Firewall governs it; expiring copies where allowed |
+| Screen-capture audit events | Local-only; **must not include plaintext content** (redacted detail only) |
+| Watermark/canary state | Policy-gated; storage-class `settings`/`cache` per design |
+| Device risk state | Local-only; memory-only in Ghost/Bunker |
+
 ## Required future tests
 
 The write barrier and destruction claims are verified, not assumed (Gate C and beyond — [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)):

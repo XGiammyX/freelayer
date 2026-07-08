@@ -58,6 +58,7 @@ Binding on every feature, in every phase, with no exceptions short of a supersed
 12. No feature may parse capsule/room/document input outside the approved protocol parser ([CAPSULENET.md](CAPSULENET.md)).
 13. No feature may weaken the active device mode or room policy ([PRIVACY_MODEL.md — Policy conflict rule](PRIVACY_MODEL.md)).
 14. No feature may bypass the PBOM update requirement ([PBOM.md](PBOM.md), [ADR-0010](adr/ADR-0010-documentation-updated-with-code.md)).
+15. Sensitive content must never be rendered directly by app views — future UI renders it only through `<ProtectedContent />` or an equivalent policy-controlled surface ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md), [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md)). *(Documented now; component is a Gate K deliverable.)*
 
 ### Operation pipeline
 
@@ -85,6 +86,26 @@ Reviewers enforce these rules through [SECURITY_REVIEW_CHECKLIST.md](SECURITY_RE
 > - enforce dependency direction through lint/build rules
 > - make side-effect modules require `PolicyDecision` types at compile time
 > - add forbidden-import rules so apps cannot import `storage`/`transports`/`crypto`/`ai` directly
+
+## Endpoint Defense Layer / ScreenShield
+
+*(Official pillar — [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md). Design only; implementation blocked by Gate K.)*
+
+**ScreenShield protects sensitive content at the moment it is rendered, copied, input, previewed, cached or exposed to the local device environment.** It covers: screen rendering; screen capture/recording; task switcher thumbnails; remote screen sharing; external displays/casting; clipboard; keyboard/autocomplete/cache; overlays/tapjacking; browser extensions; OS-level capture APIs; protected content rendering; panic/auto-redact flows; and device risk assessment. Design: [ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md), [SCREENSHIELD.md](SCREENSHIELD.md).
+
+The data lifecycle model this completes:
+
+```text
+Data in transit  → CapsuleNet
+Data at rest     → Storage Policy
+Data in memory/use → Endpoint Defense Layer
+Data in UI       → ProtectedContent
+Data in rooms    → Sovereign Rooms
+Data in AI       → AI Privacy Guard
+Data in development → GitHub Trust Pipeline
+```
+
+Honest scope: exposure reduction, never capture-proof claims — a compromised endpoint exposes plaintext ([THREAT_MODEL.md](THREAT_MODEL.md)).
 
 ## Apps
 

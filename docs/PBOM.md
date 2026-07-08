@@ -84,7 +84,21 @@ Rules: [DEPENDENCY_POLICY.md](DEPENDENCY_POLICY.md). Future: SBOM per release (P
 3. Platform-layer leakage (OS swap, backups, PWA eviction) limits no-persistence guarantees ([STORAGE_MODEL.md](STORAGE_MODEL.md)).
 4. GitHub itself: FreeLayer is developed and published on GitHub (<https://github.com/XGiammyX/freelayer>) with GitHub Actions as CI. This is a **development-platform** choice, not a runtime dependency — the shipped software contacts no GitHub endpoint. Developing in public exposes contributor metadata (account names, commit timestamps, review activity) to GitHub and the public; contributors should participate with an identity they are comfortable exposing. No GitHub repository secrets exist, and none were created by the publication pass.
 
-## 12. Side-effect category coverage
+## 12. Endpoint defense behavior (ADR-0012)
+
+**Not implemented — design planned. No telemetry, no upload, ever.** Once implemented, each item below gets a real entry here; **endpoint defense behavior absent from the PBOM is a bug** (same completeness rule as everything else):
+
+- Screen capture protections (per platform: what is enforced vs. detected vs. unavailable)
+- Platform capability checks (what is probed, what is reported to the user)
+- Clipboard access (Clipboard Firewall behavior, expiry semantics)
+- Keyboard/input controls (secure-input flags on sensitive fields)
+- Task switcher redaction behavior
+- Accessibility exposure policy (what assistive technology receives, under which policy)
+- Local audit events (what is recorded locally, always redacted, never uploaded)
+- Watermark/canary behavior (off by default; exact marking when enabled)
+- Device risk signals (full list of local-only signals evaluated)
+
+## 13. Side-effect category coverage
 
 Not implemented yet. Once the core operation pipeline exists (Gate B), every side-effect category it recognizes (persist, notify, connect, transmit, fetch, preview, derive, sync, run AI) will map to the PBOM sections that inventory it — so "the pipeline allows X" and "the PBOM documents X" can be diffed mechanically (Phase 10 auto-diff). Tauri capabilities (Phase 9 lockdown) are inventoried under section 5 as part of this coverage.
 
