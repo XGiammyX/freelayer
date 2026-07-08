@@ -11,6 +11,7 @@
 
 import { isPolicyDecision, type PolicyCapability, type PolicyDecision } from "@freelayer/privacy";
 import { STORAGE_BACKEND_CAPABILITIES } from "./backends";
+import { ENDPOINT_CLASSES } from "./dataClasses";
 import {
   PLAINTEXT_RESTRICTED_SENSITIVITIES,
   type StorageDeleteRequest,
@@ -25,6 +26,7 @@ import {
   ForbiddenPersistentWriteError,
   StorageBackendNotImplementedError,
   StorageBypassAttemptError,
+  StorageDecisionMismatchError,
   StoragePolicyDeniedError,
 } from "./errors";
 
@@ -55,12 +57,12 @@ function assertDecisionValid(
   }
   const capability = expectedCapability(operation);
   if (decision.capability !== capability) {
-    throw new StorageBypassAttemptError(
+    throw new StorageDecisionMismatchError(
       `decision capability "${decision.capability}" does not match required "${capability}"`,
     );
   }
   if (decision.sideEffect !== operation) {
-    throw new StorageBypassAttemptError(
+    throw new StorageDecisionMismatchError(
       `decision side-effect "${decision.sideEffect}" does not match operation "${operation}"`,
     );
   }
@@ -105,15 +107,19 @@ export function assertStorageWriteAllowed(
     });
   }
 
-  // Logs and audit events must never carry content-grade payloads.
+  // Logs, audit events, and endpoint artifacts (capture audit, device risk,
+  // watermark/canary, reveal/redaction state) must never carry content-grade
+  // payloads — they are behavioral metadata, not content containers.
   if (
-    (request.dataClass === "logs" || request.operation === "storage.audit.write") &&
+    (request.dataClass === "logs" ||
+      request.operation === "storage.audit.write" ||
+      ENDPOINT_CLASSES.includes(request.dataClass)) &&
     PLAINTEXT_RESTRICTED_SENSITIVITIES.includes(request.sensitivity)
   ) {
     throw new ForbiddenDebugArtifactError({
       operation: request.operation,
       dataClass: request.dataClass,
-      detail: "logs/audit events must not contain content or key material",
+      detail: "logs/audit/endpoint artifacts must not contain content or key material",
     });
   }
 

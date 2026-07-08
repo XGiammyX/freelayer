@@ -54,9 +54,11 @@ None. No analytics providers, no push-notification services, no CDN assets, no f
 | Data / behavior | Current status |
 | --- | --- |
 | Persistent content storage | **Not implemented** |
-| Memory storage | Implemented for tests/foundation (per-instance, policy-gated) |
-| Null storage | Implemented (validates, stores nothing) |
+| Memory storage | Implemented/**hardened** (per-instance, policy-gated, clone-at-boundaries, key-validated, metadata-only listing) |
+| Null storage | Implemented/**hardened** (validates decision/scope/policy/key, stores nothing, zero value state) |
 | Encrypted persistent storage | Placeholder only — every use throws |
+| Storage logs | No sensitive values — barrier rejects content-grade payloads; sentinel-tested |
+| Storage errors | Redacted — generic stable messages, never values/keys; sentinel-tested |
 | localStorage | **Forbidden** (CI guard) |
 | IndexedDB | **Forbidden** (CI guard) |
 | Filesystem writes | **Forbidden** outside a future reviewed provider (CI guard incl. `fs.writeFile*`, Deno/Bun/Tauri) |

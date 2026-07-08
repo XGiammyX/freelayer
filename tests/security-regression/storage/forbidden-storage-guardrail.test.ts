@@ -36,8 +36,20 @@ describe("check-no-forbidden-storage guardrail", () => {
     expect(output).toContain("writeFileSync");
   });
 
+  it("fails on page-cache usage", () => {
+    const { status, output } = runScanner("tests/fixtures/forbidden-storage");
+    expect(status).toBe(1);
+    expect(output).toContain("caches.open");
+  });
+
   it("passes a clean directory", () => {
     const { status, output } = runScanner("tests/fixtures/clean");
+    expect(status).toBe(0);
+    expect(output).toContain("OK");
+  });
+
+  it("does not fail on markdown mentions of forbidden APIs", () => {
+    const { status, output } = runScanner("tests/fixtures/clean-md");
     expect(status).toBe(0);
     expect(output).toContain("OK");
   });

@@ -95,7 +95,9 @@ The storage layer now has foundation-level policy tests, but **FreeLayer still d
 | Encrypted persistent storage | **Not implemented** — throwing placeholder (Gate F) |
 | Real message/room storage | **Does not exist** — no crypto, nothing persists, not safe for real secrets |
 
-**What the 37 new tests prove:** Ghost/Bunker cannot obtain a persistent backend for any of the 30 data classes; Emergency denies normal writes; AI/preview/thumbnail caches are denied per matrix; sealed ScreenShield and high device risk tighten storage; room policy tightens but never loosens; forged/denied/wrong-scope decisions are rejected; storage errors never contain stored values; the forbidden-storage CI guard catches direct browser-storage/database/filesystem usage.
+**TECH-06 hardening:** the memory/null providers are now misuse-resistant — clone-at-boundaries (no reference leaks through write/read), key validation (traversal/URL/sentinel keys rejected without echo), metadata-only listing, honest `persistent/implemented` flags, and a zero-persistence harness that also verifies runtime-provided web storage stays untouched. 25 additional tests (78 total) cover these plus sentinel leak-detection across errors, console, and lists. **Still true: no encrypted persistent storage, no production storage, not safe for real secrets, and memory-only is not forensic protection** (OS swap and compromised processes are out of scope, stated).
+
+**What the TECH-05 tests prove:** Ghost/Bunker cannot obtain a persistent backend for any of the 30 data classes; Emergency denies normal writes; AI/preview/thumbnail caches are denied per matrix; sealed ScreenShield and high device risk tighten storage; room policy tightens but never loosens; forged/denied/wrong-scope decisions are rejected; storage errors never contain stored values; the forbidden-storage CI guard catches direct browser-storage/database/filesystem usage.
 **What still has no tests:** anything involving real persistence, encryption-at-rest, wipe semantics, or platform storage behavior — none of it exists yet.
 
 ### Mechanical guardrails (baseline, added in Phase 1)

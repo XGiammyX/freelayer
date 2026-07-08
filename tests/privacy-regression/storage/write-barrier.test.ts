@@ -6,11 +6,11 @@ import { describe, expect, it } from "vitest";
 import { issuePolicyDecision, type PolicyDecision } from "@freelayer/privacy";
 import {
   assertStorageWriteAllowed,
-  ForbiddenCacheWriteError,
   MemoryStorageProvider,
   resolveStoragePolicy,
   StorageBackendNotImplementedError,
   StorageBypassAttemptError,
+  StorageDecisionMismatchError,
   StoragePolicyDeniedError,
   type StorageWriteRequest,
 } from "@freelayer/storage";
@@ -47,20 +47,20 @@ describe("Write barrier — decision requirements", () => {
     const wrongScope = issuePolicyDecision("persistence", "allowed", "private", "storage.read");
     expect(() =>
       assertStorageWriteAllowed(memoryWrite(), wrongScope, privateContentPolicy()),
-    ).toThrow(StorageBypassAttemptError);
+    ).toThrow(StorageDecisionMismatchError);
   });
 
   it("rejects a decision with the wrong capability", () => {
     const wrongCapability = issuePolicyDecision("network", "allowed", "private", "storage.write");
     expect(() =>
       assertStorageWriteAllowed(memoryWrite(), wrongCapability, privateContentPolicy()),
-    ).toThrow(StorageBypassAttemptError);
+    ).toThrow(StorageDecisionMismatchError);
   });
 
   it("does not accept generic decisions for storage operations", () => {
     const generic = issuePolicyDecision("persistence", "allowed", "private", "generic");
     expect(() => assertStorageWriteAllowed(memoryWrite(), generic, privateContentPolicy())).toThrow(
-      StorageBypassAttemptError,
+      StorageDecisionMismatchError,
     );
   });
 });

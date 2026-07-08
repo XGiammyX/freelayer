@@ -146,7 +146,7 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 ### Storage / network / metadata
 
 - ✅ TECH-05 Storage Policy + Write Barrier Hardening — exit criteria met: StoragePolicy v0 exists (30 classes × 7 modes, default deny); Memory/Null providers hardened; encrypted persistent placeholder throws; write barrier requires exact-scope `PolicyDecision`; forbidden-storage guardrail extended (browser storage/DB/caches/cookies/beacons/fs/Deno/Bun/Tauri) and self-tested; 37 storage regression tests pass (incl. the 20 required privacy invariants); PBOM + Trust Center updated; no direct storage APIs in source (CI-guarded)
-- ⬜ TECH-06 Memory/Null Storage Hardening
+- ✅ TECH-06 Memory/Null Storage Hardening — exit criteria met: provider contract v2 (results, metadata-only lists, honest flags); memory provider clone-at-boundaries with uncloneable-value rejection; null provider structurally stateless; key validation (no echo); redacted error model with sentinel leak tests across errors/console/lists; zero-persistence regression harness (incl. runtime web-storage-untouched check); guardrail v2 (service worker, `promises.writeFile`, Deno/Bun, sqlite, Tauri fs) with fixture self-tests incl. markdown-safe behavior; research notes + precheck + audits ([audits/TECH_06_STORAGE_HARDENING_AUDIT.md](audits/TECH_06_STORAGE_HARDENING_AUDIT.md)); 78 tests green
 - ⬜ TECH-07 Ghost/Bunker Zero-Persistent-Writes Tests
 - ⬜ TECH-08 NetworkPolicy
 - ⬜ TECH-09 Zero-Egress Tests

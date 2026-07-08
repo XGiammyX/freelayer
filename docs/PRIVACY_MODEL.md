@@ -77,6 +77,8 @@ The first machine-checked slice of this model now exists in `packages/storage`:
 
 **Storage guarantees that are machine-checkable must be tested in privacy-regression tests** — `tests/privacy-regression/storage/` holds them; a claimed guarantee without a test is a documentation bug.
 
+TECH-06 additions: **storage errors and logs are privacy channels** — the barrier rejects content-grade payloads in logs/audit/endpoint classes, error messages are generic and value-free (sentinel-tested), and the zero-persistence harness re-verifies Ghost/Bunker/Emergency invariants plus untouched runtime web storage on every run. ScreenShield storage hooks (reveal state, capture audit, device-risk, watermark/canary) are policy-typed and tested even though ScreenShield itself is unimplemented.
+
 TODO:
 
 - [ ] Define the first policy schema (versioned, in `packages/privacy` — Gate B)
