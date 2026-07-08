@@ -10,7 +10,7 @@ _Last audited: 2026-07-08 (INFRA-02)._
 
 | Workflow | File | Triggers | Permissions | Notes |
 | --- | --- | --- | --- | --- |
-| CI | `ci.yml` | push/PR → `main` | `contents: read` | typecheck, lint, test, build + 4 privacy guards + `audit:privacy`; concurrency-cancelled per ref |
+| CI | `ci.yml` | push/PR → `main` | `contents: read` | typecheck, lint, test, build + 4 privacy guards + doc-link integrity + `audit:privacy`; concurrency-cancelled per ref |
 | Privacy regression | `privacy-regression.yml` | push/PR → `main` | `contents: read` | manifest/source greps + full `audit:privacy` |
 | CodeQL | `codeql.yml` | push/PR → `main` + weekly cron | `contents: read`, `security-events: write` | write scope required for uploading scan results — minimal and justified |
 | Dependency review | `dependency-review.yml` | PR → `main` | `contents: read`, `pull-requests: write` | write scope only for the on-failure PR comment — acceptable; could be dropped if comments are disabled |

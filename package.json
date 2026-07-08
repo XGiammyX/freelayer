@@ -21,6 +21,8 @@
     "check:no-external-assets": "node scripts/check-no-external-assets.mjs",
     "check:no-telemetry": "node scripts/check-no-telemetry.mjs",
     "check:no-forbidden-storage": "node scripts/check-no-forbidden-storage.mjs",
+    "check:doc-links": "node scripts/check-doc-links.mjs",
+    "wiki:publish": "node scripts/publish-wiki.mjs",
     "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:boundaries",
     "audit:security": "node -e \"console.log('[audit:security] Baseline only: see audit:privacy checks and docs/SECURITY_REVIEW_CHECKLIST.md. Dedicated security-regression suite arrives with implementation phases (docs/ROADMAP.md Phase 10).'); process.exit(0)\"",
     "audit:supply-chain": "pnpm audit --audit-level=high || echo \"[audit:supply-chain] pnpm audit reported issues. Dependency rules: docs/DEPENDENCY_POLICY.md.\"",

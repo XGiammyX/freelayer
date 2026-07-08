@@ -1,5 +1,10 @@
 # FreeLayer Threat Model
 
+[← Docs Index](README.md) · [Privacy Model](PRIVACY_MODEL.md) · [Data Leakage Map](DATA_LEAKAGE_MODEL.md) · [Trust Center](TRUST_CENTER.md)
+
+> [!IMPORTANT]
+> Read the "what FreeLayer does NOT protect against" section before anything else. An honest threat model states its limits first — compromised devices, malicious members, and global traffic analysis are outside what any app can fully solve.
+
 ## Purpose
 
 Define what FreeLayer protects, against whom, and — just as importantly — what it does **not** protect. Every feature design must be checked against this document.

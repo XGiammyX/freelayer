@@ -1,5 +1,10 @@
 # FreeLayer Roadmap
 
+[← Docs Index](README.md) · [Implementation Gates](IMPLEMENTATION_GATES.md) · [Trust Center](TRUST_CENTER.md)
+
+> [!NOTE]
+> No dates, deliberately: phases ship when their exit criteria are met, and gates — not schedules — decide when implementation may start. ✅ marks verified-done work only.
+
 ## Purpose
 
 Sequence the work from empty repository to alpha release, with explicit gates: research before design, design before implementation, tests and audit before trust.

@@ -69,7 +69,7 @@ gh pr checks <pr-number>        # checks on a PR
 ## Feature decisions
 
 - **Discussions: not enabled (deliberate).** Issues and PRs are the working channels while the contributor base is small; enabling Discussions is revisited when conversation volume justifies it. Recorded here per INFRA-02 so "not enabled" reads as a choice, not an oversight.
-- **Wiki: not enabled.** Documentation lives versioned in `docs/`, where it is reviewed like code.
+- **Wiki: enabled as a navigation layer.** The wiki hosts short, friendly overview pages that link into the versioned `docs/` — **canonical truth always stays in `docs/`**, where changes are reviewed like code. Wiki content is authored in the repository's [`wiki/`](../wiki/README.md) directory (reviewed via PR) and published with `pnpm wiki:publish`. **One-time bootstrap required (GitHub limitation):** the wiki git repo exists only after the first page is created once via the web UI — see [`wiki/README.md`](../wiki/README.md). Wiki pages must never contradict `docs/`.
 - **GitHub Pages: not enabled yet.** The `apps/docs` placeholder may become a Pages site later; that will be its own reviewed change with PBOM notes.
 
 ## Manual setup still required

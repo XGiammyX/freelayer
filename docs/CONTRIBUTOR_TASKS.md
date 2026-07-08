@@ -1,5 +1,10 @@
 # Contributor Tasks
 
+[← Docs Index](README.md) · [Contributing guide](../CONTRIBUTING.md) · [Security-sensitive rules](CONTRIBUTING_SECURITY.md)
+
+> [!TIP]
+> At this stage, verifying one comparison row against official docs is as valuable as a code PR — and a perfect first contribution.
+
 Concrete, self-contained ways to help right now. At this stage, **research and documentation verification are as valuable as code.** Before starting: read [CONTRIBUTING.md](../CONTRIBUTING.md); for anything security-flavored, also [CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md).
 
 These are prepared as issue-ready tasks; GitHub issues will be created from them as the contributor base grows.

@@ -1,5 +1,10 @@
 # Glossary
 
+[← Docs Index](README.md) · [Plain English overview](PUBLIC_EXPLANATION.md)
+
+> [!TIP]
+> New to the project? Read [FreeLayer in plain English](PUBLIC_EXPLANATION.md) first — this table is the reference version.
+
 Every FreeLayer term: what it means simply, what it means technically, and whether it exists yet.
 
 | Term | Simple explanation | Technical explanation | Status |

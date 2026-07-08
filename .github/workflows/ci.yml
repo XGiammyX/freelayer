@@ -58,6 +58,9 @@ jobs:
       - name: No forbidden storage APIs
         run: pnpm check:no-forbidden-storage
 
+      - name: Documentation link integrity
+        run: pnpm check:doc-links
+
       - name: Privacy audit (aggregated guards)
         run: pnpm audit:privacy
 

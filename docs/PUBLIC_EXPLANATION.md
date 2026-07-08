@@ -1,5 +1,10 @@
 # FreeLayer in plain English
 
+[← Docs Index](README.md) · [Trust Center](TRUST_CENTER.md) · [Glossary](GLOSSARY.md) · [Roadmap](ROADMAP.md)
+
+> [!WARNING]
+> **Foundation stage.** FreeLayer is architecture and scaffolding today — not a finished app. Do not use it for real secrets yet.
+
 *No jargon until it's needed. For the technical version of everything here, see the [docs index](README.md).*
 
 ## What is FreeLayer?

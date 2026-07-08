@@ -1,5 +1,10 @@
 # CapsuleNet — Encrypted Capsules and the Blind Courier
 
+[← Docs Index](README.md) · [Network Model](NETWORK_MODEL.md) · [Crypto Design](CRYPTO_DESIGN.md) · [Glossary](GLOSSARY.md)
+
+> [!NOTE]
+> The capsule is FreeLayer's central abstraction: a sealed envelope any courier can carry without reading. No wire format is implemented — blocked by Gate E, and every future parser treats capsules as hostile input.
+
 ## Purpose
 
 Specify FreeLayer's central abstraction: the **capsule**, an encrypted, self-contained, transport-agnostic data object; and the **Blind Courier** principle that lets any medium carry capsules without being trusted.

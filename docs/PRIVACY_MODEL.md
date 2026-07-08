@@ -1,5 +1,10 @@
 # FreeLayer Privacy Model
 
+[← Docs Index](README.md) · [Threat Model](THREAT_MODEL.md) · [Metadata Model](METADATA_MODEL.md) · [ScreenShield](SCREENSHIELD.md)
+
+> [!NOTE]
+> The rule that makes this model real: **strictest policy wins**, enforced by core — not by settings screens. Modes are typed today; the enforcing engine is Gate B work.
+
 ## Purpose
 
 Define FreeLayer's privacy goals and the mechanisms that enforce them: Privacy Modes, the Identity Firewall, the Metadata Firewall, storage policy, and AI policy. This is the contract every feature is built against.

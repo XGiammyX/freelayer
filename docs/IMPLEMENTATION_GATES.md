@@ -1,5 +1,10 @@
 # Implementation Gates
 
+[← Docs Index](README.md) · [Roadmap](ROADMAP.md) · [ADRs](adr/README.md)
+
+> [!NOTE]
+> Gates decide **whether** work may start; the roadmap decides **when**. A closed gate blocks implementation regardless of schedule pressure — that ordering is the project's core discipline.
+
 ## Purpose
 
 Hard preconditions between design and implementation. A gate is **closed** until every criterion is met; work belonging behind a closed gate does not begin, regardless of schedule pressure. Gates encode the project rule that every major feature follows **research → design → implementation → tests → audit** — they are the checkpoints where that order is enforced.

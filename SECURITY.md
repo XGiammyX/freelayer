@@ -1,5 +1,8 @@
 # Security Policy
 
+> [!IMPORTANT]
+> **Found an exploitable vulnerability? Do not open a public issue.** Use GitHub's private reporting: Security tab → "Report a vulnerability". Details below.
+
 ## Project status
 
 FreeLayer is in the **research and foundation stage**. There is no released software, no implemented cryptography, and nothing has been audited. Do not use anything in this repository to protect real communications.
