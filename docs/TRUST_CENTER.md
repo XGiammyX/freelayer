@@ -83,6 +83,21 @@ The Endpoint Defense Layer is now an official **design pillar** (ADR-0012) — a
 
 Plainly: **no endpoint protections are implemented, no screenshot blocking exists, and there is no spyware-protection guarantee — device compromise remains a major limitation.** Future trust status will be platform-specific ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)).
 
+### Storage layer (TECH-05)
+
+The storage layer now has foundation-level policy tests, but **FreeLayer still does not provide production-grade encrypted storage** — nothing persists at all.
+
+| Piece | Status |
+| --- | --- |
+| StoragePolicy v0 (mode × data-class matrix, default deny, strictest wins) | Implemented + regression-tested |
+| Write barrier (exact-scope `PolicyDecision` required per operation) | Implemented + regression-tested |
+| MemoryStorageProvider / NullStorageProvider | Implemented, hardened (no browser/filesystem APIs, values never in errors/logs) |
+| Encrypted persistent storage | **Not implemented** — throwing placeholder (Gate F) |
+| Real message/room storage | **Does not exist** — no crypto, nothing persists, not safe for real secrets |
+
+**What the 37 new tests prove:** Ghost/Bunker cannot obtain a persistent backend for any of the 30 data classes; Emergency denies normal writes; AI/preview/thumbnail caches are denied per matrix; sealed ScreenShield and high device risk tighten storage; room policy tightens but never loosens; forged/denied/wrong-scope decisions are rejected; storage errors never contain stored values; the forbidden-storage CI guard catches direct browser-storage/database/filesystem usage.
+**What still has no tests:** anything involving real persistence, encryption-at-rest, wipe semantics, or platform storage behavior — none of it exists yet.
+
 ### Mechanical guardrails (baseline, added in Phase 1)
 
 CI and `pnpm audit:privacy` run four static guards: an **import-boundary check** (apps cannot import storage/transports/crypto/ai directly; dependency direction between packages), a **no-external-assets check**, a **no-telemetry check**, and a **forbidden-storage-API check**. Side-effect placeholders (storage, transports) reject calls that lack a `PolicyDecision`, verified by unit tests. Honest scope: these are baseline static scans and runtime accident-guards — they reduce bypass risk as far as practically possible at this stage, but they are not a security proof; stronger (AST/compile-time) enforcement is tracked at Gates A/B and Phase 10.

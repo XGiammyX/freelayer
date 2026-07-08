@@ -53,6 +53,10 @@ Standing rules, binding regardless of gate status:
 - **AI models and embeddings are privacy-sensitive artifacts** — inventoried in PBOM, governed by storage policy, covered by the supply-chain policy.
 - **AI cache inherits the strictest policy of its source content** ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md)).
 
+## AI storage classes (TECH-05 hooks)
+
+The storage policy matrix now types AI artifacts explicitly: `ai_prompt_cache`, `ai_embedding_index`, `ai_output_cache` — all **derived content**. Current state: **no AI cache implementation exists**, and the matrix denies AI-cache writes in *every* mode (including Standard/Private) until AIPolicy exists (Gate I); Ghost/Bunker/Emergency deny them permanently by mode. When AI storage eventually happens, it requires **AIPolicy + StoragePolicy together** — an allowing AIPolicy cannot override a denying StoragePolicy, and vice versa.
+
 ## Prompt injection and hostile room content
 
 Room content is hostile input for AI purposes, exactly as it is for parsers ([THREAT_MODEL.md — Hostile input parsing](THREAT_MODEL.md)):

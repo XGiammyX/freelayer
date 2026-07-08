@@ -84,6 +84,8 @@ The final stage is procedural rather than runtime: any change in observable beha
 
 Reviewers enforce these rules through [SECURITY_REVIEW_CHECKLIST.md](SECURITY_REVIEW_CHECKLIST.md) until they are enforced mechanically. This reduces bypass risk as far as practically possible; it does not make bypass impossible, which is why mechanical enforcement remains a tracked requirement.
 
+**Storage as a side-effect module (TECH-05):** apps never call storage directly (rule 1); provider selection is policy-driven — `resolveStoragePolicy` picks the backend per mode × data class, and providers reject policies resolved for a different backend. Every operation requires a `PolicyDecision` scoped to exactly that operation. The encrypted persistent provider is **deliberately unavailable** (throws) until crypto review (Gate F), so no code path can quietly persist content early.
+
 **Current enforcement status (Phase 1 baseline):** `scripts/check-boundaries.mjs` statically verifies rules 1/12 (apps may import only `ui`/`sdk`/`core`/`privacy`; per-package allowed-import lists encode the layering) and runs in CI plus `pnpm audit:privacy`, alongside the external-assets, telemetry, and forbidden-storage guards (rules 7–10). Side-effect scaffolding in `@freelayer/storage` and `@freelayer/transports` rejects calls without a valid `PolicyDecision` at runtime (rule 6), verified by unit tests. One structural note: the `PolicyDecision` *contract* is defined in `packages/privacy` — so side-effect modules can verify decisions without importing core (dependencies stay downward) — and `packages/core` re-exports it for apps and the SDK. These guardrails are a baseline, not a security proof: they catch accidental bypass, not determined circumvention.
 
 > **TODO (mechanical enforcement — planned at Gate A, completed by Phase 10, [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)):**
@@ -149,6 +151,10 @@ Honest scope: exposure reduction, never capture-proof claims — a compromised e
 - **Policy-engine bypass**: a feature performing side effects without consulting core policy. Mitigation: side-effect capable modules (storage, transports, ai) accept operations only from `core`; enforced by lint rules and reviews. *(TODO: enforce mechanically)*
 - **Layer erosion**: apps reaching into low-level packages. Mitigation: dependency-direction lint in CI.
 - **Relay centralization drift**: convenience pushing users toward a handful of relays, recreating a de-facto center. Mitigation: first-class non-relay transports, relay diversity documentation.
+- **Storage-policy bypass**: a feature writing outside the barrier. Mitigation: forbidden-storage CI guard, exact-scope decisions, default-deny matrix, regression tests.
+- **Derived-cache leakage**: previews/thumbnails/AI artifacts outliving stricter sources. Mitigation: cache classes in the policy matrix, denied in strict modes, ScreenShield tightening hooks.
+- **Endpoint-derived storage artifacts**: reveal state/capture events as behavioral metadata. Mitigation: dedicated data classes, high-risk denial, no-plaintext audit rule.
+- **Debug/log leaks**: content in logs or crash dumps. Mitigation: barrier rejects content-grade payloads in logs/audit classes; debug artifacts denied in v0.
 - **Web platform limits**: PWAs cannot fully guarantee storage behavior (eviction, OS swap). Documented in [STORAGE_MODEL.md](STORAGE_MODEL.md).
 
 ## Open questions

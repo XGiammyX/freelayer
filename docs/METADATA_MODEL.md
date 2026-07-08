@@ -72,6 +72,8 @@ Endpoint defense generates its own metadata ([ENDPOINT_DEFENSE_MODEL.md](ENDPOIN
 
 **These are local-only by rule: no upload, no telemetry (ADR-0008), audit events redacted, PBOM entries required, storage policy applies** ([STORAGE_MODEL.md](STORAGE_MODEL.md)) — local metadata still leaks through logs/caches if mishandled, which is why it falls under the same write-barrier and no-plaintext-logging discipline as content.
 
+Storage itself also *generates* metadata: the existence of a capsule spool, cache entries, reveal state, device-risk state, capture audit events, storage keys/names, bundle-export timestamps, and materialized room state all describe behavior even when encrypted. Mitigations (TECH-05 onward): coarse timestamps where needed, no plaintext in logs/audit (barrier-enforced), no caches in strict modes (matrix-enforced), PBOM enumeration of every storage class, and privacy-regression tests over the machine-checkable parts.
+
 ## Metadata regression invariants
 
 Initial machine-checkable invariants, to be enforced as privacy-regression tests when the relevant components exist ([PRIVACY_MODEL.md — Policy conflict rule](PRIVACY_MODEL.md)):

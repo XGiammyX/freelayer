@@ -1,6 +1,6 @@
 # @freelayer/privacy
 
-**Status: type-level policy schema, strictest-wins resolver (fail-closed), and the `PolicyDecision` contract; the full engine is Gate B (Phase 2).**
+**Status: type-level policy schema, strictest-wins resolver (fail-closed), and the `PolicyDecision` contract — now with per-operation side-effect scoping (TECH-05): a decision names the exact operation it authorizes (`storage.write`, `storage.cache.read`, …), and strict barriers reject mismatches and `generic` scopes. The full engine is Gate B (Phase 2).**
 
 The Privacy Modes engine and metadata firewall policies: Standard, Private, Ghost, Bunker, Offline Capsule, Emergency, Sovereign Room — expressed as a versioned policy schema evaluated by `@freelayer/core` for every side-effectful operation.
 
