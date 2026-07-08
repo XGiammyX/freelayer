@@ -62,6 +62,25 @@ Active immediately: opened version-bump PRs for GitHub Actions (setup-node 4→6
 
 Applied to `main` after this report was committed (so the report itself could land): require PR with 1 approval, required status checks (CI, privacy guards, CodeQL analyze, dependency review) with strict up-to-date, conversation resolution required, force pushes and deletions blocked, `enforce_admins` **off** as the documented solo-development trade-off ([GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md)). Verified state is recorded in [GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md) — if it says TODO there, it is not enabled.
 
+## Post-validation closure: Dependabot review (per DEPENDENCY_POLICY.md)
+
+All ten day-one Dependabot PRs were reviewed. **No PR was merged by automation**: `main` requires review, and merge decisions are left to the maintainer — the agent-assisted pass deliberately did not bypass the protection it had just enabled. Dispositions:
+
+| PR | Change | CI | Review outcome |
+| --- | --- | --- | --- |
+| #1 | actions/checkout 4→7 | ✅ green | Adopt — superseded by the SHA-pinning PR, which pins v7 by commit SHA |
+| #2 | codeql-action 3→4 | ✅ green | Adopt — superseded by the SHA-pinning PR (v4 pinned) |
+| #3 | dependency-review-action 4→5 | ✅ green | Adopt — superseded by the SHA-pinning PR (v5 pinned) |
+| #4 | pnpm/action-setup 4→6 | ✅ green | Adopt — superseded by the SHA-pinning PR (v6 pinned) |
+| #5 | actions/setup-node 4→6 | ✅ green | Adopt — superseded by the SHA-pinning PR (v6 pinned) |
+| #6 | TypeScript ^7 + vitest ^4 (grouped) | ❌ 1 failing | **Defer TypeScript 7** (breaking major; needs a real migration evaluation). Vitest 4 evaluated separately in the combined npm PR |
+| #7 | @vitejs/plugin-react 4→6 | ❌ 1 failing | Fails against Vite 6 — must land together with the Vite major; included in the combined npm PR |
+| #8 | react + @types/react → 19 | ✅ green | Adopt — included in the combined npm PR |
+| #9 | react-dom + @types/react-dom → 19 | ✅ green | Adopt — included in the combined npm PR |
+| #10 | vite 6→8 | ✅ green | Adopt — included in the combined npm PR (with plugin-react 6) |
+
+After the two superseding PRs merge, the corresponding Dependabot PRs can be closed; Dependabot treats closure as "ignore this version" and will propose the next one.
+
 ## Next recommended step
 
 **Prompt 05 — Storage Policy + Write Barrier Hardening.**

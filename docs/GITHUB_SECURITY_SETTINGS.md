@@ -37,7 +37,7 @@ _Last verified: 2026-07-08, during Infra-01 live validation ([LIVE_CI_REPORT.md]
 - Never create repository secrets for CI at this stage — nothing needs them, and their absence is itself a verifiable property.
 - Never grant a workflow write permissions it does not demonstrably need.
 - `pull_request_target` is not used; introducing it requires a documented security justification and elevated review.
-- **TODO:** pin actions by commit SHA after workflows stabilize.
+- Actions are pinned by commit SHA with version comments (see [GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md)); version bumps land by updating the pin, reviewed like any dependency change.
 
 ## How to re-verify
 

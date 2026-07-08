@@ -24,7 +24,7 @@ The authoritative record of how the FreeLayer GitHub repository is configured, w
 
 Permissions follow least privilege: `contents: read` everywhere, plus only `security-events: write` for CodeQL uploads and `pull-requests: write` for dependency-review PR comments. No deployment, no publishing, no secrets.
 
-> **TODO (workflow hardening):** pin third-party/official actions by commit SHA once workflows stabilize; currently pinned by major version tag.
+All actions are **pinned by commit SHA** with the version noted in a comment (supply-chain hardening); Dependabot continues to propose updates against the pins. Pinned versions: checkout v7, pnpm/action-setup v6, setup-node v6, codeql-action v4, dependency-review-action v5 — each adopted only after its Dependabot bump PR ran green on live CI.
 
 ## Branch protection target for `main`
 
