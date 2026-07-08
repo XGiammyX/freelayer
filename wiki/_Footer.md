@@ -1,0 +1,1 @@
+FreeLayer — foundation stage · not ready for real secrets · code AGPL-3.0-or-later, docs CC BY-SA 4.0 · canonical docs live in [`docs/`](https://github.com/XGiammyX/freelayer/blob/main/docs/README.md)
