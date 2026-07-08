@@ -50,7 +50,7 @@ Progress (Prompt 03):
 - ✅ Side-effect scaffolding: storage/transport placeholders require a `PolicyDecision` and fail closed; baseline tests verify it.
 - ⬜ Desktop: placeholder only — Tauri shell still to come (kept minimal deliberately; permissions surface deferred).
 - ⬜ ESLint-based dependency-direction enforcement (current check is a static-scan baseline).
-- ⬜ First real CI run on GitHub (workflows updated; repository not yet pushed).
+- ✅ First real CI run on GitHub — green on `main` and PRs since INFRA-01 ([LIVE_CI_REPORT.md](LIVE_CI_REPORT.md)).
 
 - Exit: `pnpm build/typecheck/lint/test` run real work; shells launch; privacy-regression workflow checks real artifacts. **Not complete yet** — desktop shell and hosted CI verification remain.
 
@@ -124,6 +124,60 @@ Roadmap items fall into four categories; the technical phase numbering above is 
 - **INFRA** — repository/CI/publication work
 - **RESEARCH** — research and architecture passes that precede implementation
 - **AUDIT** — regression suites, audits, verification passes
+
+## Task tracks (prompt-level roadmap)
+
+The macro phases above stay authoritative for sequencing; this is the finer-grained task view, tagged by category. ✅ = done.
+
+### Foundation / governance
+
+- ✅ TECH-01 Repository Foundation
+- ✅ TECH-02 Architecture Decision Lock
+- ✅ TECH-03 Monorepo/App Shell + Mechanical Guardrails
+- ⬜ TECH-04 Policy Engine (Gate B)
+- ✅ INFRA-01 GitHub Publication + Live CI
+- ✅ INFRA-02 GitHub Live Audit + Public Experience Polish
+
+### Storage / network / metadata
+
+- ⬜ TECH-05 Storage Policy + Write Barrier Hardening *(next)*
+- ⬜ TECH-06 Memory/Null Storage Hardening
+- ⬜ TECH-07 Ghost/Bunker Zero-Persistent-Writes Tests
+- ⬜ TECH-08 NetworkPolicy
+- ⬜ TECH-09 Zero-Egress Tests
+- ⬜ TECH-10 Metadata Firewall (signals off, invariant tests)
+
+### Identity Firewall (Gate G)
+
+- ⬜ Local identities · ephemeral identities · per-contact/room aliases · one-time invites · QR verification · recovery kit design
+
+### CapsuleNet (Gate E)
+
+- ⬜ Wire format draft · hostile-input parser · fuzz harness · test vectors · inbox/spool/quarantine · QR/file/bundle transports
+
+### Crypto (Gate F)
+
+- ⬜ Library evaluation · protocol profiles (offline exchange, interactive messaging) · crypto ADR · facade implementation · test vectors · external review
+
+### Messaging (Phase 5)
+
+- ⬜ Contact model · conversation model · protected rendering (depends on ScreenShield/ProtectedContent) · mock/file capsule send/receive · end-to-end delivery acks
+
+### Sovereign Rooms (Gate H)
+
+- ⬜ Operation-log vs CRDT evaluation memo → ADR · membership/key rotation design · messages/notes/tasks/decisions objects · room bundles
+
+### Documents / files (Phase 7)
+
+- ⬜ Protected documents · file capsules · metadata stripping on import · local search index (policy-governed)
+
+### Local AI (Gate I)
+
+- ⬜ Runtime research · AIPolicy · AI Privacy Guard · prompt-injection annex · local summaries MVP
+
+### Hardening / release (Phases 9–11)
+
+- ⬜ Tauri hardening · PWA hardening · parser fuzzing · SBOM/PBOM automation · signed releases · alpha checklist (Gate J)
 
 ## Endpoint Defense / ScreenShield track (ADR-0012)
 

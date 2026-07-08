@@ -1,5 +1,7 @@
 # Landscape Comparison
 
+*This is the research-grade comparison. For the readable public version, see [PUBLIC_COMPARISON.md](PUBLIC_COMPARISON.md).*
+
 > **Disclaimer:** This comparison exists to explain FreeLayer's design choices, not to attack other open-source projects. Projects listed here are valuable contributions to private and decentralized communication. FreeLayer learns from all of them, and several solve problems FreeLayer has not solved yet.
 
 ## Purpose

@@ -6,11 +6,11 @@ This document describes FreeLayer's high-level architecture: the monorepo layout
 
 ## Current status
 
-**Design stage.** No package contains implementation code. This document defines the target shape so that early decisions do not paint the project into a corner.
+**Foundation stage.** All 12 packages and 4 app shells exist as typed scaffolding: interfaces, policy placeholders that fail closed, and side-effect stubs that require a `PolicyDecision`. No product behavior is implemented — no crypto, no networking, no rooms, no AI. This document defines the target shape so that early decisions do not paint the project into a corner.
 
 ## Architecture decision records
 
-Binding decisions are recorded as ADRs in [docs/adr/](adr/). Accepted ADRs are **constitutionally binding**: where an ADR and any other document conflict, the ADR wins until superseded through governance review. The principles and rules in this document are locked by [ADR-0001](adr/ADR-0001-no-project-owned-infrastructure.md) through [ADR-0010](adr/ADR-0010-documentation-updated-with-code.md); changing them requires a superseding ADR, not an edit.
+Binding decisions are recorded as ADRs in [docs/adr/](adr/). Accepted ADRs are **constitutionally binding**: where an ADR and any other document conflict, the ADR wins until superseded through governance review. The principles and rules in this document are locked by [ADR-0001](adr/ADR-0001-no-project-owned-infrastructure.md) through [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md); changing them requires a superseding ADR, not an edit.
 
 ## Core principles
 

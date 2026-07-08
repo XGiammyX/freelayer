@@ -6,6 +6,29 @@ One document that answers, without marketing: what FreeLayer is, what it is not,
 
 > FreeLayer is not trying to become a centralized SaaS. It is trying to become a client-owned communication layer where private rooms, encrypted capsules and policy-controlled side effects are the foundation.
 
+## Positioning statement
+
+**FreeLayer is a privacy-first communication layer for people and teams who want private rooms, encrypted objects and user-owned workflows without making a central server the source of truth.**
+
+Tagline options (pick per context, never overclaim):
+
+- *Private rooms. Sealed capsules. No central backend.*
+- *Communication that belongs to your devices.*
+- *Private collaboration without a company-owned room server.*
+- *A local-first communication layer for sensitive work.*
+
+## Mission
+
+Make private collaboration possible without a trusted center: the room on your devices, the envelope sealed before it travels, the rules enforced where you can audit them. Build it slowly, publicly, and honestly — with every limitation written down before every feature.
+
+## The killer idea
+
+**The sealed capsule over any courier.** Once every cross-device object is a sealed envelope, the network stops being the product: a relay, an email, a QR code, and a USB stick become interchangeable delivery channels, and no single channel — or its operator — can hold your communication hostage. Everything else (rooms without homeservers, identifier-free identity, core-enforced policy, endpoint defense) becomes buildable on top of that one move.
+
+## What problem is being solved
+
+Private *messaging* mostly exists; private *collaboration* mostly doesn't. The moment groups need documents, tasks and decisions, they trade privacy for cloud workspaces — and even good encrypted messengers still anchor to servers, identifiers and unexamined endpoint exposure. FreeLayer targets that whole gap at the architecture level, not with one feature.
+
 ## What FreeLayer is
 
 - An **open-source, serverless, local-first, privacy-controlled communication platform** — in the research and foundation stage.
@@ -47,6 +70,14 @@ Rooms are the unit of trust in real life — a family, a team, a working group. 
 ## Why CapsuleNet matters
 
 One sealed format for everything that crosses a device boundary means transports are interchangeable and censorship-resistance is structural: a relay is convenient, a QR code is sovereign. The transport is a blind courier — trusted with nothing but ciphertext ([ADR-0003](adr/ADR-0003-capsules-as-only-cross-device-format.md)).
+
+## Why endpoint defense
+
+Encryption that stops at delivery answers half the question. Screenshots, clipboards, screen recording, capture-hungry OS features and risky devices are where private content actually leaks after decryption — so FreeLayer treats "data on screen" as a first-class layer (ScreenShield, [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md)): protected rendering, capture-aware redaction, honest platform limits. Reduction, never magic — a compromised device stays compromised.
+
+## Why local AI only
+
+AI over private rooms is useful (summaries, tasks, document Q&A) and dangerous (a second copy of everything, plus a network temptation). FreeLayer's answer is structural: local-only by default, disabled by default, policy-gated, zero network calls in the default build ([ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md)) — the AI serves the room and reports to no one.
 
 ## Why GitHub / open-source transparency matters
 
