@@ -25,13 +25,13 @@ pnpm install
 
 | Command | Status |
 | --- | --- |
-| `pnpm typecheck` | Runs via Turborepo; no-op until packages contain code |
-| `pnpm lint` | Same |
-| `pnpm test` | Same |
-| `pnpm build` | Same |
-| `pnpm format` | Formats the repository with Prettier |
-| `pnpm audit:privacy` | Placeholder — prints scope, exits 0 |
-| `pnpm audit:security` | Placeholder — prints scope, exits 0 |
+| `pnpm typecheck` | Strict TypeScript across all packages/apps + tests |
+| `pnpm lint` | Prettier formatting baseline |
+| `pnpm test` | Vitest unit suite (policy fail-closed, write-barrier guards, placeholder rejections) |
+| `pnpm build` | Package typechecks + Vite production build of the web shell |
+| `pnpm format` | Formats sources with Prettier |
+| `pnpm audit:privacy` | Runs all four privacy guards (boundaries, external assets, telemetry, forbidden storage) |
+| `pnpm audit:security` | Baseline pointer — dedicated security-regression suite arrives with implementation phases |
 | `pnpm audit:supply-chain` | Runs `pnpm audit` |
 
 ## Future installation channels (planned, not promised on a date)

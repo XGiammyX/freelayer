@@ -66,6 +66,12 @@ gh pr checks <pr-number>        # checks on a PR
 
 **Rule: never disable privacy/security checks just to merge faster.** A red `check:boundaries`, `check:no-external-assets`, `check:no-telemetry`, `check:no-forbidden-storage`, or `audit:privacy` is a defect in the change, not in the check. Fixing the cause is the only accepted path to green ([CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md) — no silent privacy change rule).
 
+## Feature decisions
+
+- **Discussions: not enabled (deliberate).** Issues and PRs are the working channels while the contributor base is small; enabling Discussions is revisited when conversation volume justifies it. Recorded here per INFRA-02 so "not enabled" reads as a choice, not an oversight.
+- **Wiki: not enabled.** Documentation lives versioned in `docs/`, where it is reviewed like code.
+- **GitHub Pages: not enabled yet.** The `apps/docs` placeholder may become a Pages site later; that will be its own reviewed change with PBOM notes.
+
 ## Manual setup still required
 
 Tracked with statuses in [GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md). Anything not verifiable by CLI is listed there as *Manual setup required* rather than claimed.

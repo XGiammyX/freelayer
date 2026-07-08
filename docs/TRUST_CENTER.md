@@ -4,11 +4,32 @@
 
 One honest page answering: *how much should you trust FreeLayer right now?* This document is updated at every phase boundary and every security-relevant event. It states what has been verified, what hasn't, and what "verified" even means at each stage.
 
-## Security status — plain answer
+## Can I trust FreeLayer today?
 
-> **Do not trust FreeLayer with real secrets today.**
+> **No. Not with real secrets yet.**
 >
 > FreeLayer is in the research and foundation stage. There is no implemented cryptography, no released software, and no audit. Every security property described in this repository is a **design intention**, not a verified guarantee.
+
+In plain language:
+
+- **What exists:** the public repository, the architecture constitution (12 ADRs), a typed monorepo with a small local-only status page, mechanical privacy guardrails in CI, and this documentation.
+- **What does not exist:** encryption, messaging, rooms, networking, AI, endpoint protections, releases.
+- **What is tested:** the scaffolding — policy resolution fails closed, storage/transport placeholders reject calls without policy approval, and CI guards fail on telemetry/external assets/boundary violations (verified on live CI).
+- **What is not tested:** every actual security property — there is no crypto to test and no protocol to fuzz.
+- **What GitHub checks exist:** CI, privacy-regression guards, CodeQL, dependency review, Dependabot, secret scanning + push protection, branch protection with required checks.
+- **What is still only design:** everything a user would call "the product."
+- **What limitations are permanent:** compromised devices, malicious room members, cameras pointed at screens, and global traffic analysis are outside what FreeLayer (or anyone) can fully solve — see [THREAT_MODEL.md](THREAT_MODEL.md).
+
+## Claim-by-claim status
+
+| Claim | Current status |
+| --- | --- |
+| No telemetry | Guardrail active: `check:no-telemetry` fails CI on known SDKs; none exist |
+| No external assets | Guardrail active: `check:no-external-assets` fails CI on CDN/font patterns; none exist |
+| No crypto | Intentionally not implemented — the only provider throws (ADR-0004) |
+| No central backend | Architecture rule (ADR-0001); nothing in the repo contacts a FreeLayer server because none exists |
+| ScreenShield | Research/design only (ADR-0012) — no screenshot blocking implemented |
+| Safe for secrets | **No** |
 
 ## Trust level
 
