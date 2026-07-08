@@ -8,7 +8,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Current status
 
-**Gates B–J closed. Gate A nearly satisfied** (Prompt 03): monorepo, guards, and tests pass locally; the one open item is a green run on hosted CI, which requires the repository to be pushed.
+**Gate A satisfied** (Prompt 03 + Infra-01): monorepo builds, all guards and tests pass locally and on hosted CI ([LIVE_CI_REPORT.md](LIVE_CI_REPORT.md)). **Gates B–J remain closed.** Infra Gate 1 satisfied — see below.
 
 ---
 
@@ -17,7 +17,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 *Opens: workspace implementation (Phase 1).*
 
 - [x] Monorepo exists and builds: 12 packages + 4 apps compile with strict TypeScript (verified locally)
-- [ ] CI green: workflows run typecheck/lint/test/build + all four guards — **updated but not yet executed on hosted CI** (repository not pushed)
+- [x] CI green: typecheck/lint/test/build + all four guards passing on hosted GitHub Actions (verified 2026-07-08 — [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md))
 - [x] Zero external assets verified (CI guard `check:no-external-assets` — [NO_EXTERNAL_ASSETS_POLICY.md](NO_EXTERNAL_ASSETS_POLICY.md); fails on planted violations)
 - [x] Zero telemetry verified (CI guard `check:no-telemetry`)
 - [x] License finalized: AGPL-3.0-or-later code, CC BY-SA 4.0 docs ([ADR-0011](adr/ADR-0011-license-strategy.md))
@@ -132,16 +132,16 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 *Infrastructure gate (separate from the technical A–J ladder). Opens: accepting external contributions at scale.*
 
-- [ ] Public repository exists (<https://github.com/XGiammyX/freelayer>)
-- [ ] README is complete and honest (landing page with status warnings, comparison, architecture)
-- [ ] GitHub Actions run live (verified runs, not just workflow files)
-- [ ] CI validation PR exists with checks executed
-- [ ] Branch protection enabled or documented ([GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md))
-- [ ] CodeQL present or documented
-- [ ] Dependency review present or documented
-- [ ] GitHub security settings checklist exists ([GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md))
+- [x] Public repository exists (<https://github.com/XGiammyX/freelayer>)
+- [x] README is complete and honest (landing page with status warnings, comparison, architecture)
+- [x] GitHub Actions run live — CI, privacy regression, and CodeQL green on `main` first run
+- [x] CI validation PR exists with all checks passing (PR #11, left open)
+- [x] Branch protection enabled on `main` (verified via API — [GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md))
+- [x] CodeQL present and running (green on main + PR)
+- [x] Dependency review present and running (green on PR)
+- [x] GitHub security settings checklist exists with verified statuses ([GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md))
 
-Status is updated from [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md) after live validation.
+Live results: [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md). Also satisfied for Gate A: the previously open "CI green on hosted CI" criterion.
 
 ---
 

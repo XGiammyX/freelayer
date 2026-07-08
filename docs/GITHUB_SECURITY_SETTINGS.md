@@ -6,27 +6,27 @@ Per-setting status of the repository's security configuration. **A status is cla
 
 Status labels: **Verified enabled** · **Workflow present** · **Manual setup required** · **Not available** · **TODO**
 
-_Last verified: pending first live validation — statuses below are updated by the publication pass and recorded in [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md)._
+_Last verified: 2026-07-08, during Infra-01 live validation ([LIVE_CI_REPORT.md](LIVE_CI_REPORT.md))._
 
 | Setting | Status | Notes |
 | --- | --- | --- |
-| Public repository | TODO | Verify after `gh repo create` |
-| Default branch `main` | TODO | Verify after push |
-| Branch protection on `main` | TODO | Apply via API or document manual steps ([GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md)) |
-| Required pull requests | TODO | Part of branch protection |
-| Required status checks | TODO | CI / privacy guards / CodeQL / dependency review |
-| CodeQL / code scanning | Workflow present | `.github/workflows/codeql.yml`, security-extended; verify first run |
-| Dependabot alerts | TODO | Enable via API/Settings → Code security |
-| Dependabot security updates | TODO | Enable via API/Settings → Code security |
-| Dependabot version updates | Workflow present | `.github/dependabot.yml` (weekly npm + actions) |
-| Dependency Review Action | Workflow present | `.github/workflows/dependency-review.yml`; runs on PRs |
-| Secret scanning | TODO | Default-on for public repos; verify in Settings → Code security |
-| Push protection | TODO | Verify/enable in Settings → Code security |
+| Public repository | Verified enabled | `gh repo view`: PUBLIC, <https://github.com/XGiammyX/freelayer> |
+| Default branch `main` | Verified enabled | `gh repo view`: defaultBranchRef = main |
+| Branch protection on `main` | Verified enabled | Applied via API; see below for the exact rule set |
+| Required pull requests | Verified enabled | 1 approving review; `enforce_admins` off (documented solo-dev trade-off) |
+| Required status checks | Verified enabled | `Typecheck, lint, test, build` · `Static privacy guards` · `Analyze (JavaScript/TypeScript)` · `Review dependency changes` (strict up-to-date) |
+| CodeQL / code scanning | Verified enabled | First runs green on `main` and PR #11 (security-extended) |
+| Dependabot alerts | Verified enabled | Enabled via API (HTTP 204) |
+| Dependabot security updates | Verified enabled | `security_and_analysis.dependabot_security_updates: enabled` |
+| Dependabot version updates | Verified enabled | First version-bump PRs opened on day one |
+| Dependency Review Action | Verified enabled | Green on PR #11 |
+| Secret scanning | Verified enabled | `security_and_analysis.secret_scanning: enabled` |
+| Push protection | Verified enabled | `security_and_analysis.secret_scanning_push_protection: enabled` |
 | CODEOWNERS | Verified enabled (file) | `.github/CODEOWNERS`; `@maintainers` placeholder — replace when an org/team exists |
 | PR template | Verified enabled (file) | `.github/PULL_REQUEST_TEMPLATE.md` with privacy/security checklist |
 | Issue templates | Verified enabled (files) | 4 forms + config routing vulnerabilities to private reporting |
 | SECURITY.md | Verified enabled (file) | Private reporting via Security Advisories |
-| Private vulnerability reporting | TODO | Enable via API/Settings → Advisories |
+| Private vulnerability reporting | Verified enabled | Enabled via API (HTTP 204) |
 | Least-privilege Actions permissions | Verified enabled (files) | `contents: read` baseline; `security-events: write` only in CodeQL; `pull-requests: write` only in dependency review |
 | No deploy tokens | Verified enabled | No deployment exists anywhere in the repository |
 | No GitHub secrets | Verified enabled | This prompt creates none; workflows reference none |
