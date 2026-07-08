@@ -1,0 +1,109 @@
+# FreeLayer Trust Center
+
+## Purpose
+
+One honest page answering: *how much should you trust FreeLayer right now?* This document is updated at every phase boundary and every security-relevant event. It states what has been verified, what hasn't, and what "verified" even means at each stage.
+
+## Security status — plain answer
+
+> **Do not trust FreeLayer with real secrets today.**
+>
+> FreeLayer is in the research and foundation stage. There is no implemented cryptography, no released software, and no audit. Every security property described in this repository is a **design intention**, not a verified guarantee.
+
+## Trust level
+
+**Current trust level: Design/foundation only. Do not use for real secrets.**
+
+This line is updated only when verified reality changes — never ahead of it.
+
+## Current maturity
+
+| Area | Status |
+| --- | --- |
+| Architecture Decision Lock (Phase 0.5) | **Complete** — ADR-0001…ADR-0011 accepted; see [docs/adr/](adr/) (external design review still pending) |
+| Monorepo / app shell (Phase 1) | **Started** — typed scaffolding + minimal local-only web status page; no product behavior |
+| Product features | **None implemented** — no chat, no rooms, no capsules, no real networking |
+| Cryptography | **Not implemented** — deliberately ([CRYPTO_DESIGN.md](CRYPTO_DESIGN.md), [ADR-0004](adr/ADR-0004-no-crypto-implementation-before-review.md)); the only provider throws |
+| Local AI | **Not implemented** — the only provider rejects ([ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md)) |
+| Design documents | Initial drafts, not externally reviewed |
+| External audit | None |
+| Releases | None |
+| Security posture | **Design-only** — every property is a documented intention; none are verified |
+
+### Repository and CI (Infra-01)
+
+| Item | Status |
+| --- | --- |
+| Public repository | <https://github.com/XGiammyX/freelayer> — GitHub is the development platform only; the runtime has no GitHub dependency |
+| CI (typecheck/lint/test/build + 4 privacy guards) | Live status: see [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md) and the badges on the README |
+| CodeQL | Workflow present (security-extended); results under the Security tab |
+| Dependency review | Workflow present; runs on every PR |
+| Branch protection | See [GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md) / [GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md) for the verified state |
+
+Unchanged by publication: **no release, no production-ready crypto, no chat, no AI — do not use for real secrets.**
+
+### Mechanical guardrails (baseline, added in Phase 1)
+
+CI and `pnpm audit:privacy` run four static guards: an **import-boundary check** (apps cannot import storage/transports/crypto/ai directly; dependency direction between packages), a **no-external-assets check**, a **no-telemetry check**, and a **forbidden-storage-API check**. Side-effect placeholders (storage, transports) reject calls that lack a `PolicyDecision`, verified by unit tests. Honest scope: these are baseline static scans and runtime accident-guards — they reduce bypass risk as far as practically possible at this stage, but they are not a security proof; stronger (AST/compile-time) enforcement is tracked at Gates A/B and Phase 10.
+
+### Critical gates before implementation
+
+Implementation is blocked behind explicit gates ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md), Gates A–J):
+
+- accepted ADRs (constitution in place — [docs/adr/](adr/))
+- the core policy engine (Gate B)
+- the storage write barrier (Gate C)
+- the network side-effect barrier (Gate D)
+- capsule parser fuzzing (Gate E)
+- crypto design review (Gate F)
+- AI Privacy Guard before any AI (Gate I)
+- PBOM update discipline on every behavior change ([ADR-0010](adr/ADR-0010-documentation-updated-with-code.md))
+
+No feature work begins ahead of its gate, regardless of schedule pressure.
+
+## What is tested
+
+- Workspace typecheck, lint, unit tests, and production build all run real work and pass locally.
+- 16 baseline unit tests: fail-closed policy resolution (strictest wins; empty input → all denied), storage providers rejecting calls without/against a `PolicyDecision`, memory provider non-persistence across instances, null provider storing nothing, crypto and AI placeholders rejecting all operations, redaction and audit helpers.
+- Four static privacy guards (boundaries, external assets, telemetry, forbidden storage APIs), verified to fail on planted violations.
+
+## What is NOT tested yet
+
+- Everything else: no cryptographic verification (there is no crypto), no protocol testing (there is no protocol), no fuzzing, no wire-level privacy assertions, no runtime egress verification, no platform hardening checks. The guards are static pattern scans, not proofs. If a claim in `docs/` matters to you, assume it is unverified.
+
+## Security automation roadmap
+
+(Phases per [ROADMAP.md](ROADMAP.md))
+
+- **Now (Phase 0):** CodeQL, dependency review, Dependabot, static privacy guards
+- **Phase 4–5:** protocol test vectors; fuzz targets for capsule parsing
+- **Phase 10:** full privacy-regression suite (zero-write and zero-egress assertions), security-regression suite, SBOM generation, PBOM auto-diff
+- **Phase 11:** signed releases; reproducible-build investigation
+
+## Responsible disclosure
+
+See [SECURITY.md](../SECURITY.md). Private reporting via GitHub Security Advisories; no bounty yet; reporters credited here unless anonymity is preferred.
+
+**Disclosure history:** none yet.
+
+## Known limitations (standing)
+
+- No protection for compromised devices.
+- No defense claimed against global passive adversaries.
+- Metadata reduction has documented limits ([METADATA_MODEL.md](METADATA_MODEL.md)).
+- Serverless delivery is best-effort; availability is weaker than centralized systems.
+- No-persistence modes are application-layer guarantees, not forensic ones ([STORAGE_MODEL.md](STORAGE_MODEL.md)).
+
+## Signed releases and supply chain (future)
+
+Planned for Phase 11: maintainer-signed builds and checksums; SBOM per release; provenance attestation research; reproducible builds as a research goal (full reproducibility across Tauri targets is hard — treated honestly as research, not promised).
+
+## PBOM
+
+The Privacy Bill of Materials — what the software actually collects, stores, contacts, and requires — lives in [PBOM.md](PBOM.md) and is a release artifact from the first alpha onward.
+
+## TODO
+
+- [ ] Update at each phase boundary (checklist item in phase exit criteria)
+- [ ] Publish maintainer signing keys before first release
+- [ ] External design review of THREAT_MODEL.md and CRYPTO_DESIGN.md (earliest meaningful audit step — before implementation, not after)

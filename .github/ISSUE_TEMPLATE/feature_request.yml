@@ -1,0 +1,69 @@
+name: Feature request
+description: Propose a feature or design change for FreeLayer
+title: "[feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        FreeLayer is in the research/foundation stage — proposals that engage with the
+        design documents in `docs/` are far more likely to move forward.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem or design gap does this address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should FreeLayer do? Sketch the behavior, not just the goal.
+    validations:
+      required: true
+
+  - type: textarea
+    id: privacy-impact
+    attributes:
+      label: Privacy and security impact
+      description: >
+        How does this interact with Privacy Modes, the metadata firewall, and the
+        threat model? Features that add metadata, persistence, network endpoints,
+        or external services need explicit justification.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: pillar
+    attributes:
+      label: Related pillar
+      multiple: true
+      options:
+        - Sovereign Rooms / RoomOS
+        - CapsuleNet / Blind Courier
+        - Ghost Vault / Cold Identity
+        - Privacy Modes Engine
+        - Identity Firewall
+        - Metadata Firewall
+        - Local AI
+        - Tooling / infrastructure
+        - Other
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Including "how do other projects solve this?" (see docs/COMPETITOR_COMPARISON.md).
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: This proposal does not require a FreeLayer-owned backend, central account, or telemetry.
+          required: true
+        - label: I checked the roadmap (docs/ROADMAP.md) and existing issues for overlap.
+          required: true

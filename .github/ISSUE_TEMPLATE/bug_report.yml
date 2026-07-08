@@ -1,0 +1,71 @@
+name: Bug report
+description: Report a defect in FreeLayer code, tooling, or CI
+title: "[bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        **If this bug has security implications (data exposure, privacy-mode bypass,
+        key handling, etc.), STOP — do not file it here.** Follow [SECURITY.md](../../blob/main/SECURITY.md) instead.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: area
+    attributes:
+      label: Affected area
+      description: App, package, doc, or workflow (e.g. `packages/capsules`, `.github/workflows/ci.yml`).
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Node.js version, pnpm version, browser (if relevant).
+      placeholder: |
+        OS: Windows 11
+        Node: 20.x
+        pnpm: 9.x
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: >
+        Paste relevant logs. **Redact anything sensitive** — never paste keys,
+        identity material, message content, or personal data.
+      render: shell
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: This issue has no security implications (otherwise I will use SECURITY.md).
+          required: true
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I redacted all sensitive data from this report.
+          required: true

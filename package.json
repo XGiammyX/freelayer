@@ -1,0 +1,43 @@
+{
+  "name": "freelayer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Serverless private communication. Sovereign rooms. Encrypted capsules. No central backend.",
+  "license": "AGPL-3.0-or-later",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck && tsc -p tests/tsconfig.json",
+    "lint": "pnpm run format:check",
+    "test": "vitest run",
+    "format": "prettier --write \"{apps,packages,scripts,tests}/**/*.{ts,tsx,mjs,json,css,html}\"",
+    "format:check": "prettier --check \"{apps,packages,scripts,tests}/**/*.{ts,tsx,mjs,json,css,html}\"",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "check:no-external-assets": "node scripts/check-no-external-assets.mjs",
+    "check:no-telemetry": "node scripts/check-no-telemetry.mjs",
+    "check:no-forbidden-storage": "node scripts/check-no-forbidden-storage.mjs",
+    "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:boundaries",
+    "audit:security": "node -e \"console.log('[audit:security] Baseline only: see audit:privacy checks and docs/SECURITY_REVIEW_CHECKLIST.md. Dedicated security-regression suite arrives with implementation phases (docs/ROADMAP.md Phase 10).'); process.exit(0)\"",
+    "audit:supply-chain": "pnpm audit --audit-level=high || echo \"[audit:supply-chain] pnpm audit reported issues. Dependency rules: docs/DEPENDENCY_POLICY.md.\"",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "@freelayer/ai": "workspace:*",
+    "@freelayer/core": "workspace:*",
+    "@freelayer/crypto": "workspace:*",
+    "@freelayer/privacy": "workspace:*",
+    "@freelayer/sdk": "workspace:*",
+    "@freelayer/security": "workspace:*",
+    "@freelayer/storage": "workspace:*",
+    "@freelayer/transports": "workspace:*",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  }
+}

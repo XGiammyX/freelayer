@@ -1,0 +1,24 @@
+# CODEOWNERS — elevated-review paths (see GOVERNANCE.md)
+#
+# @maintainers is a placeholder team. Replace with a real GitHub team or
+# user handles once the organization is created.
+
+# Default: everything gets maintainer review.
+*                           @maintainers
+
+# Security-sensitive packages — two approvals required (enforced by branch
+# protection + GOVERNANCE.md policy).
+/packages/crypto/           @maintainers
+/packages/security/         @maintainers
+/packages/privacy/          @maintainers
+/packages/storage/          @maintainers
+/packages/capsules/         @maintainers
+/packages/rooms/            @maintainers
+
+# Security-sensitive design documents.
+/docs/CRYPTO_DESIGN.md      @maintainers
+/docs/THREAT_MODEL.md       @maintainers
+/docs/PRIVACY_MODEL.md      @maintainers
+
+# CI is part of the supply chain.
+/.github/workflows/         @maintainers

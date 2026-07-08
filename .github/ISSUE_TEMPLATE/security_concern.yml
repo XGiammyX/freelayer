@@ -1,0 +1,64 @@
+name: Security concern (non-exploitable)
+description: Discuss a design-level security or privacy concern that is NOT an exploitable vulnerability
+title: "[security]: "
+labels: ["security", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Read this first
+
+        **If you have found an exploitable vulnerability — anything that could expose
+        user data, bypass a privacy mode, recover key material, deanonymize users, or
+        compromise the supply chain — DO NOT describe it in this public issue.**
+
+        Report it privately following [SECURITY.md](../../blob/main/SECURITY.md)
+        (GitHub Security Advisories → "Report a vulnerability").
+
+        This template is only for **design-level discussion**: threat-model gaps,
+        questionable assumptions, missing mitigations, documentation errors in the
+        security models. When in doubt, report privately first — we will move the
+        discussion public together if it is safe.
+
+  - type: dropdown
+    id: severity-check
+    attributes:
+      label: Is this exploitable today or against the documented design?
+      options:
+        - "No — this is a design/documentation discussion"
+        - "Unsure — I will also send a private report per SECURITY.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: concern
+    attributes:
+      label: Concern
+      description: >
+        Describe the design-level concern. Do NOT include working exploits,
+        proof-of-concept code against users, or operational attack instructions.
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-docs
+    attributes:
+      label: Affected design documents
+      description: e.g. docs/THREAT_MODEL.md, docs/METADATA_MODEL.md, docs/CRYPTO_DESIGN.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested mitigation or research direction
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: This issue contains no exploit details, PoC code, or operational attack instructions.
+          required: true
+        - label: I have read SECURITY.md and confirmed this does not belong in a private report.
+          required: true

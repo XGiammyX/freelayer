@@ -1,0 +1,65 @@
+name: Privacy regression
+
+# Placeholder workflow — enforces the project's privacy hard constraints in CI.
+# Today it runs cheap static guards; the real suite will live in
+# tests/privacy-regression/ and grow with each implementation phase.
+# See docs/PRIVACY_MODEL.md and docs/PBOM.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  privacy-guards:
+    name: Static privacy guards
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Forbidden telemetry/analytics dependencies
+        run: |
+          # Fails if a known telemetry/analytics SDK appears in any manifest.
+          # This list is a starting point, not an exhaustive control.
+          PATTERN='"(posthog|@sentry/|mixpanel|amplitude|@segment/|hotjar|@datadog/|newrelic|@bugsnag/|fullstory)'
+          if grep -rInE "$PATTERN" --include="package.json" .; then
+            echo "::error::Telemetry/analytics dependency detected. FreeLayer ships no telemetry by default."
+            exit 1
+          fi
+          echo "OK: no known telemetry dependencies found."
+
+      - name: Forbidden external asset references
+        run: |
+          # Fails on CDN/external font/script references in app source and HTML.
+          PATTERN='(fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com)'
+          if grep -rInE "$PATTERN" apps packages --include="*.html" --include="*.ts" --include="*.tsx" --include="*.css" 2>/dev/null; then
+            echo "::error::External asset reference detected. FreeLayer loads no external assets by default."
+            exit 1
+          fi
+          echo "OK: no external asset references found."
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Privacy audit (import boundaries, external assets, telemetry, forbidden storage)
+        run: pnpm run audit:privacy
+
+      # Future jobs (tracked in docs/ROADMAP.md, Phase 10):
+      # - run tests/privacy-regression/ against built packages
+      # - assert Ghost/Bunker modes produce zero disk writes (fs instrumentation)
+      # - assert no network egress during offline-capsule flows (network sandbox)
+      # - diff docs/PBOM.md against detected endpoints/permissions

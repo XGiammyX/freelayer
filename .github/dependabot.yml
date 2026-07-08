@@ -1,0 +1,30 @@
+version: 2
+updates:
+  # Keep GitHub Actions pinned and current — CI is part of the supply chain.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - ci
+
+  # npm/pnpm workspace dependencies.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    # Security-relevant packages have elevated review requirements —
+    # see GOVERNANCE.md. Dependabot PRs touching them still require
+    # two maintainer approvals via CODEOWNERS.
+    groups:
+      dev-tooling:
+        patterns:
+          - "turbo"
+          - "typescript"
+          - "prettier"
+          - "eslint*"
+          - "vitest*"

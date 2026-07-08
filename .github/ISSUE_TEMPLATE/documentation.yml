@@ -1,0 +1,48 @@
+name: Documentation
+description: Report an error, gap, or unsupported claim in FreeLayer documentation
+title: "[docs]: "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Documentation is the product right now — precision matters. Reports of
+        **unsupported claims or overpromising language** are especially welcome:
+        FreeLayer must never claim perfect anonymity, unbreakable encryption,
+        or production readiness.
+
+  - type: input
+    id: location
+    attributes:
+      label: Document and section
+      placeholder: e.g. docs/THREAT_MODEL.md — "Transport limitations"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type of problem
+      options:
+        - Factual error
+        - Unsupported / overpromising claim
+        - Missing content or gap
+        - Outdated content
+        - Unclear wording
+        - Broken link or formatting
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+      description: Quote the current text where possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: Proposed wording or content. Sources appreciated for factual claims.
