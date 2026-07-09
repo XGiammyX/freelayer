@@ -26,16 +26,18 @@
 
   <!-- Wordmark -->
   <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
-    <text x="330" y="128" font-size="76" font-weight="750" letter-spacing="-1.5" fill="#e6edf3">Free<tspan fill="#2dd4bf">Layer</tspan></text>
-    <text x="334" y="176" font-size="24" font-weight="500" letter-spacing="6.5" fill="#9aa7b4">PRIVATE COMMUNICATION WITHOUT A CENTRAL SERVER</text>
+    <text x="330" y="122" font-size="76" font-weight="750" letter-spacing="-1.5" fill="#e6edf3">Free<tspan fill="#2dd4bf">Layer</tspan></text>
+    <!-- textLength pins the tagline to an exact width so it can never
+         overflow the canvas, whatever font the viewer's system renders. -->
+    <text x="332" y="170" font-size="21" font-weight="500" fill="#9aa7b4" textLength="730" lengthAdjust="spacing">PRIVATE COMMUNICATION WITHOUT A CENTRAL SERVER</text>
   </g>
 
   <!-- courier dots: capsule travelling any path -->
   <g fill="#2dd4bf">
-    <circle cx="336" cy="205" r="3.5" opacity="0.9"/>
-    <circle cx="366" cy="205" r="3.5" opacity="0.65"/>
-    <circle cx="396" cy="205" r="3.5" opacity="0.45"/>
-    <circle cx="426" cy="205" r="3.5" opacity="0.3"/>
-    <circle cx="456" cy="205" r="3.5" opacity="0.18"/>
+    <circle cx="336" cy="202" r="3.5" opacity="0.9"/>
+    <circle cx="366" cy="202" r="3.5" opacity="0.65"/>
+    <circle cx="396" cy="202" r="3.5" opacity="0.45"/>
+    <circle cx="426" cy="202" r="3.5" opacity="0.3"/>
+    <circle cx="456" cy="202" r="3.5" opacity="0.18"/>
   </g>
 </svg>
