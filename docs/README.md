@@ -55,6 +55,7 @@
 - [GitHub Repository Setup](GITHUB_REPOSITORY_SETUP.md) — how the repo is configured and protected.
 - [GitHub Security Settings](GITHUB_SECURITY_SETTINGS.md) — per-setting verified checklist.
 - [GitHub Actions Audit](GITHUB_ACTIONS_AUDIT.md) — workflows, permissions, third-party actions.
+- [GitHub Actions Egress Audit](audits/GITHUB_ACTIONS_EGRESS_AUDIT.md) — what CI contacts (GitHub-only) vs app runtime.
 - [GitHub Live Audit](GITHUB_LIVE_AUDIT.md) — latest live health check of the public repository.
 - [Live CI Report](LIVE_CI_REPORT.md) — first live validation record.
 - [Installation](INSTALLATION.md) — development setup (there is nothing to install as a user yet).

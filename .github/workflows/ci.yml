@@ -61,6 +61,12 @@ jobs:
       - name: No forbidden network APIs
         run: pnpm check:no-forbidden-network
 
+      - name: No network-client dependencies
+        run: pnpm check:no-network-deps
+
+      - name: Build artifact zero-egress (after build)
+        run: pnpm check:build-zero-egress
+
       - name: Documentation link integrity
         run: pnpm check:doc-links
 

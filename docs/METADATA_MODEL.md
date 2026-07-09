@@ -91,6 +91,8 @@ Each transport carries an honest, plain-language leakage label (`describeNetwork
 | tor_proxy (future) | no (from relay) | yes | yes | no | no | medium |
 | unknown | assumed yes | yes | yes | yes | yes | unknown — **denied** |
 
+TECH-09: **zero egress by default reduces the metadata surface at the root** — with no automatic network calls on load, there is no IP/timing/fingerprint leak from remote assets, no update-check or telemetry beacon, and no link-preview fetch to correlate. Any future egress reintroduces these channels and must be policy-gated and PBOM-listed. Development/CI metadata (registry/GitHub contact during `pnpm install`/Actions) is separate from app-runtime metadata and documented in [PBOM.md](PBOM.md).
+
 Related risks: DNS queries, request frequency, capsule size, headers/cookies/referrers, link-preview and remote-asset requests, and update-check/telemetry beacons — all denied or unimplemented. Mitigation is NetworkPolicy (metadata is part of the decision) plus per-transport UX warnings; timing/size correlation cannot be fully eliminated.
 
 ## Metadata regression invariants

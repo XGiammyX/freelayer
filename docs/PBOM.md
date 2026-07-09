@@ -33,6 +33,29 @@ Actual behavior of the current codebase (verified by tests and static guards):
 | User-chosen relays | Capsule store-and-forward | Not implemented yet (Phase 4) |
 | User-initiated transports (email, LAN, etc.) | Blind courier channels | Not implemented yet |
 
+### Runtime network behavior — default build (TECH-09)
+
+The built app makes **zero automatic network egress on load**, verified by static source + build-artifact + runtime-trap + dependency scans:
+
+| Behavior | Default build status |
+| --- | --- |
+| FreeLayer-owned backend | Does not exist |
+| Runtime network calls | **Forbidden / tested** (runtime trap) |
+| Telemetry | **Forbidden / tested** |
+| Analytics | **Forbidden / tested** (dependency + build scan) |
+| Crash reporting | Not implemented |
+| Remote fonts / images / scripts | **Forbidden / tested** (remote-asset + build scan) |
+| Link previews | Not implemented / forbidden |
+| Remote AI | Not implemented / forbidden |
+| Update checks | Not implemented |
+| WebSocket / WebRTC | **Forbidden / tested** |
+| Service worker network | **Not implemented** (none registered — [audit](audits/PWA_SERVICE_WORKER_NETWORK_AUDIT.md)) |
+| Relay transport | Not implemented |
+
+**Benign strings in the build (not egress):** `github.com` (navigation anchors), `www.w3.org` (React XML/SVG namespaces), `react.dev` (React error-message links) — documented allowlist, never fetched.
+
+> **Development tooling may contact package registries and GitHub.** That is *not* app runtime behavior: `pnpm install` uses the npm registry; GitHub Actions/CodeQL/Dependabot are GitHub-side. See the [GitHub Actions egress audit](audits/GITHUB_ACTIONS_EGRESS_AUDIT.md). No third-party upload, telemetry, or deploy occurs in CI.
+
 ### Network behavior — current implementation (TECH-08)
 
 | Behavior | Status |

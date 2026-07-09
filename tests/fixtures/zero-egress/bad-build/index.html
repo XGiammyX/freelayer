@@ -1,0 +1,17 @@
+<!-- FIXTURE — intentionally violates zero-egress (remote font + analytics +
+     sentinel host). Scanned only when the build scanner is pointed here. -->
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
+    <script src="https://www.googletagmanager.com/gtag/js"></script>
+    <script>
+      const s = "https://freelayer.invalid/should-never-be-called";
+      void s;
+    </script>
+  </head>
+  <body>
+    bad build fixture
+  </body>
+</html>
