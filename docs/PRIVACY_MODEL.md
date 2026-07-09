@@ -121,6 +121,8 @@ The network side-effect barrier is now implemented as policy (no real network ex
 
 These are required privacy-regression suites in `tests/privacy-regression/network/`.
 
+TECH-09: **zero egress is a default-build invariant.** The built app makes no automatic network call on load (tested); any future network capability must be policy-gated and PBOM-listed; automatic egress is a privacy violation unless explicitly designed. There is no telemetry carve-out — not even opt-out. App-runtime egress is distinct from development/CI egress (documented in [PBOM.md](PBOM.md)).
+
 ## Identity Firewall
 
 - Local identities generated on-device; multiple identities per install.

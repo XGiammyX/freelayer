@@ -10,7 +10,16 @@
 // API (e.g. "// no fetch") are tolerated by requiring a call-shaped or
 // import-shaped match for the risky tokens.
 import { join } from "node:path";
-import { fileLines, report, repoRelative, repoRoot, walkFiles } from "./_util.mjs";
+import {
+  extractRemoteHosts,
+  fileLines,
+  hostAllowed,
+  NAV_ALLOWED_HOSTS,
+  report,
+  repoRelative,
+  repoRoot,
+  walkFiles,
+} from "./_util.mjs";
 
 // Call/construct/import-shaped patterns — deliberately specific to avoid
 // flagging prose and identifiers.
@@ -46,14 +55,33 @@ const FORBIDDEN = [
   'from "superagent"',
   'from "request"',
   'from "node-fetch"',
+  'from "undici"',
+  "ws://",
+  "wss://",
 ];
 
 const DEFAULT_DIRS = ["apps", "packages"];
 const EXTS = [".ts", ".tsx", ".html", ".mjs", ".css"];
 
+// Source scans apps+packages by default. `--build <dir>` scans a build dir.
+// Tests and scripts are NOT scanned: the trap helpers and guardrail scripts
+// legitimately reference these APIs to trap/detect them (test-time egress is
+// covered by the runtime trap, not this static scan) — documented in
+// docs/audits/NETWORK_BOUNDARY_AUDIT.md.
+const args = process.argv.slice(2);
+let scanDirs = DEFAULT_DIRS;
+const buildIdx = args.indexOf("--build");
+if (buildIdx !== -1 && args[buildIdx + 1]) {
+  scanDirs = [args[buildIdx + 1]];
+} else if (args.includes("--all")) {
+  scanDirs = ["apps", "packages", "apps/web/dist"];
+} else if (args.length > 0 && !args[0].startsWith("--")) {
+  scanDirs = args;
+}
+
 const root = repoRoot();
-const scanDirs = process.argv.slice(2).length > 0 ? process.argv.slice(2) : DEFAULT_DIRS;
 const violations = [];
+const allowedHostsSeen = new Set();
 
 for (const dir of scanDirs) {
   for (const file of walkFiles(join(root, dir), EXTS)) {
@@ -70,8 +98,24 @@ for (const dir of scanDirs) {
           );
         }
       }
+      // Remote HOST check: any https/ws host outside the allowlist is a
+      // finding (github.com navigation anchors are allowed and reported).
+      for (const host of extractRemoteHosts(line)) {
+        if (hostAllowed(host, NAV_ALLOWED_HOSTS)) {
+          allowedHostsSeen.add(host);
+        } else {
+          violations.push(
+            `${repoRelative(root, file)}:${index + 1} — remote host "${host}" not in the source allowlist`,
+          );
+        }
+      }
     });
   }
 }
 
+if (allowedHostsSeen.size > 0) {
+  console.log(
+    `[check:no-forbidden-network] allowlisted navigation hosts present (not egress): ${[...allowedHostsSeen].sort().join(", ")}`,
+  );
+}
 report("check:no-forbidden-network", violations);

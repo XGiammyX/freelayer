@@ -66,7 +66,8 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 - [ ] No telemetry endpoints (CI guard)
 - [x] Transport leakage labels defined per transport — `describeNetworkMetadataLeakage` (TECH-08, [METADATA_MODEL.md](METADATA_MODEL.md))
 - [x] "Bunker: no direct-IP transport" test passing (WebRTC denied Private+, TECH-08)
-- [x] NetworkPolicy v0 + side-effect barrier + forbidden-network guard + runtime egress trap (TECH-08); zero-egress *default-build* verification remains TECH-09
+- [x] NetworkPolicy v0 + side-effect barrier + forbidden-network guard + runtime egress trap (TECH-08)
+- [x] Zero-egress *default-build* verification (TECH-09): source scan + build-artifact scan + runtime trap + dependency scan + service-worker audit + GitHub Actions egress audit ([audit](audits/TECH_09_ZERO_EGRESS_AUDIT.md)); full in-browser E2E deferred to AUDIT-HARD
 
 ## Gate E — Capsule Parser
 

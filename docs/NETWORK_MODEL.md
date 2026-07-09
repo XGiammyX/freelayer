@@ -15,6 +15,24 @@ Describe how FreeLayer moves data between devices without any required, project-
 - If every relay on the internet disappeared, FreeLayer would still function over QR, files, USB, and LAN.
 - Transports are **blind couriers**: they carry opaque encrypted capsules and are assumed hostile (see [THREAT_MODEL.md](THREAT_MODEL.md)).
 
+## TECH-09 — Zero-egress default build tests
+
+**The default build makes no automatic network egress on load — machine-checked across four layers** ([research](research/ZERO_EGRESS_RESEARCH.md) · [threat model](audits/TECH_09_ZERO_EGRESS_THREAT_MODEL.md) · [audit](audits/TECH_09_ZERO_EGRESS_AUDIT.md)):
+
+1. **Static source scan** (`check:no-forbidden-network`) — egress API/import tokens, `http:`/`ws(s):`, Node net libs, HTTP client libs, Tauri HTTP, plus a remote-**host allowlist** (only `github.com` navigation anchors permitted in source, reported transparently). CLI modes: default source, `--build <dir>`, `--all`.
+2. **Build artifact scan** (`check:build-zero-egress`) — over `apps/web/dist`: a remote-host allowlist ({github.com nav, www.w3.org namespaces, react.dev error links — all benign strings, never fetched}), remote-asset markup detection in built HTML/CSS, and an analytics/telemetry/AI-host denylist. The real build is clean.
+3. **Runtime trap** (`createZeroEgressRuntimeTrap`) — patches fetch/XHR/WebSocket/EventSource/RTCPeerConnection/RTCDataChannel/sendBeacon/`serviceWorker.register`/`Image`; FreeLayer's load path (SDK + NetworkPolicy + transports) calls none; positive controls prove the trap fires.
+4. **Dependency scan** (`check:no-network-deps`) — no network-client/analytics/AI/Tauri-HTTP dependency anywhere.
+
+Plus: broadened **remote-asset scan** (`check:no-external-assets`), a **service-worker audit** (none exists — [PWA audit](audits/PWA_SERVICE_WORKER_NETWORK_AUDIT.md)), and a **GitHub Actions egress audit** (GitHub-only — [audit](audits/GITHUB_ACTIONS_EGRESS_AUDIT.md)).
+
+**Honest scope — two distinct things:**
+
+- **App runtime egress = zero** (verified above).
+- **Development/CI egress exists and is expected:** `pnpm install` contacts the npm registry; GitHub Actions/CodeQL/Dependabot contact GitHub. This is *not* app behavior and is documented separately ([PBOM.md](PBOM.md)). Neither TECH-09 nor anything else can stop the OS, browser, extensions, package manager, or GitHub infrastructure from using the network.
+
+**Why not just scan minified JS for `fetch(`?** Because React DOM embeds `fetch(`/`createElement('script')` dormantly for its resource APIs — token-scanning would flag every React app falsely. The runtime trap is the real proof. **Deferred:** full in-browser render egress verification (AUDIT-HARD, Playwright).
+
 ## TECH-08 — NetworkPolicy implementation
 
 **NetworkPolicy v0 exists and is machine-checked; no real network is implemented** ([research](research/NETWORK_POLICY_RESEARCH.md) · [threat model](audits/TECH_08_NETWORK_THREAT_MODEL.md) · [audit](audits/TECH_08_NETWORK_POLICY_AUDIT.md)):

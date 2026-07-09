@@ -126,6 +126,17 @@ Stated without hedging:
 
 Honest scope: NetworkPolicy is an **application-behavior guarantee**, not network isolation — the OS, browser, extensions, package manager, and malware are outside its control.
 
+## Zero-egress build threats (TECH-09)
+
+- **Hidden egress** — a stray `fetch`/WebSocket/beacon or remote asset in app or build. Mitigation: static source scan, build-artifact host-allowlist scan, runtime egress trap, remote-asset scan.
+- **Build-artifact endpoint strings** — a remote host baked into the bundle. Mitigation: build scanner fails on any host outside {github.com, www.w3.org, react.dev}; the real build is clean.
+- **Dependency-bundled endpoints** — a network-client/analytics/AI SDK pulled in. Mitigation: `check-no-network-deps` fails on direct adoption; dependency-review covers the tree.
+- **Runtime API bypass** — policy says deny but a call still fires. Mitigation: the runtime trap fails any test where an egress API is invoked.
+- **Service-worker egress** — a worker fetching/caching remote resources. Mitigation: none is registered; `serviceWorker.register` is a forbidden token and trapped.
+- **Dev/CI vs runtime confusion** — conflating registry/GitHub contact with app egress. Mitigation: documented distinction; GitHub Actions egress audit (GitHub-only).
+
+Honest limit: TECH-09 verifies the built app and repository source — not the OS, browser, extensions, package manager, GitHub infrastructure, or future dependencies. Full in-browser render egress is deferred to Playwright E2E.
+
 ## Overlay / tapjacking
 
 Overlay attacks trick users into acting on hidden UI. Sensitive actions (reveal, send, wipe, key operations, mode changes) require anti-overlay measures — touch-filtering-class defenses per OWASP MASTG — where the platform provides them.
