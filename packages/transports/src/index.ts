@@ -104,3 +104,54 @@ export class MockTransport implements Transport {
     return drained;
   }
 }
+
+// ---- NetworkPolicy layer (TECH-08) ----
+export {
+  NETWORK_OPERATION_KINDS,
+  OFFLINE_TRANSPORT_CLASSES,
+  DIRECT_PEER_TRANSPORT_CLASSES,
+  type NetworkOperationKind,
+  type TransportClass,
+  type NetworkCapability,
+  type MetadataExposureLevel,
+  type MetadataSensitivity,
+  type NetworkRequest,
+} from "./networkTypes";
+
+export {
+  resolveNetworkPolicy,
+  type NetworkPolicy,
+  type NetworkPolicyInput,
+  type DeviceRiskLevel as NetworkDeviceRiskLevel,
+  type ScreenShieldLevel as NetworkScreenShieldLevel,
+} from "./networkPolicy";
+
+export { assertNetworkOperationAllowed } from "./networkBarrier";
+
+export { validateNetworkEndpoint, type ValidatedNetworkEndpoint } from "./networkEndpoint";
+
+export {
+  describeNetworkMetadataLeakage,
+  type NetworkMetadataLeakageLabel,
+} from "./networkMetadata";
+
+export {
+  createMockNetworkTransport,
+  createNoopTransport,
+  MockNetworkTransport,
+  NoopTransport,
+  type NetworkTransport,
+} from "./networkProviders";
+
+export {
+  ForbiddenDirectPeerConnectionError,
+  ForbiddenExternalAssetError,
+  ForbiddenLinkPreviewError,
+  ForbiddenNetworkOperationError,
+  ForbiddenOfflineModeNetworkError,
+  ForbiddenTelemetryError,
+  InvalidNetworkEndpointError,
+  NetworkBypassAttemptError,
+  NetworkDecisionMismatchError,
+  NetworkPolicyDeniedError,
+} from "./networkErrors";

@@ -77,6 +77,22 @@ export type PolicySideEffectScope =
   | "storage.audit.write"
   | "network.send"
   | "network.receive"
+  // Network operation scopes (TECH-08). A decision issued for one network
+  // operation must not authorize another; the network barrier requires an
+  // exact match and never accepts "generic".
+  | "network.connect"
+  | "network.request"
+  | "network.listen"
+  | "transport.send"
+  | "transport.receive"
+  | "transport.poll"
+  | "transport.sync"
+  | "transport.discovery"
+  | "link.preview"
+  | "asset.fetch"
+  | "telemetry.send"
+  | "update.check"
+  | "ai.remote_request"
   | "ai.infer"
   | "generic";
 

@@ -76,6 +76,23 @@ TECH-07 additions: strict modes also reduce **storage-shaped metadata** — caps
 
 Storage itself also *generates* metadata: the existence of a capsule spool, cache entries, reveal state, device-risk state, capture audit events, storage keys/names, bundle-export timestamps, and materialized room state all describe behavior even when encrypted. Mitigations (TECH-05 onward): coarse timestamps where needed, no plaintext in logs/audit (barrier-enforced), no caches in strict modes (matrix-enforced), PBOM enumeration of every storage class, and privacy-regression tests over the machine-checkable parts.
 
+## Network metadata leakage labels (TECH-08)
+
+Each transport carries an honest, plain-language leakage label (`describeNetworkMetadataLeakage`, `packages/transports`) surfaced in UX and docs so a transport choice is never a silent metadata decision:
+
+| Transport | IP | Timing | Size | Relationship | Third-party endpoint | Exposure |
+| --- | --- | --- | --- | --- | --- | --- |
+| QR / file / USB | no | no | (file/usb: size) | no | no | local_only / low |
+| LAN | yes | yes | yes | yes | no | medium |
+| relay | yes | yes | yes | yes | yes | medium (high without Tor/proxy) |
+| email / external_app | yes | yes | yes | yes | yes | high |
+| WebRTC | yes (real IP via ICE/STUN) | yes | yes | yes | yes | high — **denied in Private+** |
+| HTTP / WebSocket | yes | yes | yes | yes | yes | high — forbidden until approved |
+| tor_proxy (future) | no (from relay) | yes | yes | no | no | medium |
+| unknown | assumed yes | yes | yes | yes | yes | unknown — **denied** |
+
+Related risks: DNS queries, request frequency, capsule size, headers/cookies/referrers, link-preview and remote-asset requests, and update-check/telemetry beacons — all denied or unimplemented. Mitigation is NetworkPolicy (metadata is part of the decision) plus per-transport UX warnings; timing/size correlation cannot be fully eliminated.
+
 ## Metadata regression invariants
 
 Initial machine-checkable invariants, to be enforced as privacy-regression tests when the relevant components exist ([PRIVACY_MODEL.md — Policy conflict rule](PRIVACY_MODEL.md)):

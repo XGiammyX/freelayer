@@ -109,6 +109,18 @@ ScreenShield ([SCREENSHIELD.md](SCREENSHIELD.md), ADR-0012) adds endpoint-exposu
 - Web/PWA + sealed content → **low-assurance warning or reveal denied**, per `platformAssuranceRequired`.
 - Capture detected + protected room → **redact**.
 
+## NetworkPolicy under Privacy Modes (TECH-08)
+
+The network side-effect barrier is now implemented as policy (no real network exists — [NETWORK_MODEL.md](NETWORK_MODEL.md)):
+
+- **Offline Capsule** denies all network operations; **Emergency** denies normal network operations.
+- **Ghost/Bunker** deny direct network; **Private and above** deny direct peer connections (WebRTC — real-IP exposure via ICE/STUN).
+- **External assets, automatic link previews, and telemetry are denied in every mode** — always (ADR-0008), never a policy field that can flip true.
+- **Remote AI and update checks** denied by default.
+- **Strictest wins:** room network policy can tighten but never loosen the device mode; unknown operation/transport/mode fail closed.
+
+These are required privacy-regression suites in `tests/privacy-regression/network/`.
+
 ## Identity Firewall
 
 - Local identities generated on-device; multiple identities per install.
