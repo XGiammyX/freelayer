@@ -207,6 +207,7 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 
 The technical phase numbering above is unchanged by infrastructure work. Infra milestones:
 
+- **Wiki refresh at first easy install** *(scheduled TODO)*: when an installable release exists (Phase 11 / Gate J), rewrite the wiki for end users — real installation steps in Getting-Started, fuller plain-language explanations on Home/FAQ — and publish via `pnpm wiki:publish`. Until then the wiki honestly says there is nothing to install.
 - **Infra-01 — GitHub publication + live CI** *(this pass)*: public repository at <https://github.com/XGiammyX/freelayer>, README as a complete public landing page, GitHub Actions validated live, CI validation PR, security settings checklist ([GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md)), branch protection applied or documented ([GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md)), live results in [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md). GitHub is the development platform only — never a runtime dependency.
 
 ## Cross-cutting rules

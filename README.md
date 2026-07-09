@@ -1,138 +1,108 @@
-# FreeLayer
+<div align="center">
 
-**Private communication without a central server.**
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/freelayer-banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset=".github/assets/freelayer-banner-light.svg">
+  <img src=".github/assets/freelayer-banner-dark.svg" alt="FreeLayer — private communication without a central server" width="920">
+</picture>
 
-FreeLayer is an open-source project exploring a new kind of communication platform: private rooms that live on your devices, sealed capsules that can move through any transport, and privacy rules enforced by the app core instead of hidden server trust.
+<br>
 
-> ⚠️ **FreeLayer is in foundation stage. It is not ready for real secrets yet.**
+**Private rooms that live on your devices. Sealed capsules that travel any road. Privacy rules enforced by the app core — not by server promises.**
+
+<br>
 
 [![CI](https://github.com/XGiammyX/freelayer/actions/workflows/ci.yml/badge.svg)](https://github.com/XGiammyX/freelayer/actions/workflows/ci.yml)
 [![Privacy regression](https://github.com/XGiammyX/freelayer/actions/workflows/privacy-regression.yml/badge.svg)](https://github.com/XGiammyX/freelayer/actions/workflows/privacy-regression.yml)
 [![CodeQL](https://github.com/XGiammyX/freelayer/actions/workflows/codeql.yml/badge.svg)](https://github.com/XGiammyX/freelayer/actions/workflows/codeql.yml)
 
-**New here?** Start with [FreeLayer in plain English](docs/PUBLIC_EXPLANATION.md) · [Wiki](https://github.com/XGiammyX/freelayer/wiki) · [Trust Center](docs/TRUST_CENTER.md) · [Roadmap](docs/ROADMAP.md) · [Docs index](docs/README.md)
+**[Plain-English overview](docs/PUBLIC_EXPLANATION.md)** · **[Wiki](https://github.com/XGiammyX/freelayer/wiki)** · **[Trust Center](docs/TRUST_CENTER.md)** · **[Roadmap](docs/ROADMAP.md)** · **[All docs](docs/README.md)**
+
+</div>
+
+> [!WARNING]
+> **Foundation stage — not ready for real secrets.** No release, no implemented cryptography, no messaging yet. What exists today: a locked architecture constitution (12 ADRs), a policy-enforced storage layer with 78 green tests, and mechanical privacy guardrails on every commit. The [Trust Center](docs/TRUST_CENTER.md) tells you exactly what is and isn't real.
 
 ---
 
-## The problem
+## 🧭 The problem
 
-Most communication tools force you to trust a central service. Even when messages are encrypted, you often still expose:
+Most communication tools force you to trust a central service. Even with encrypted messages, you usually still expose **accounts · phone numbers · servers · metadata · online status · screenshots · cloud workspaces**. And the moment real collaboration starts — documents, tasks, decisions — it escapes to cloud tools that read everything.
 
-**accounts** · **phone numbers** · **email addresses** · **servers** · **metadata** · **online status** · **device notifications** · **screenshots** · **cloud storage** · **workspace history**
+**What if private communication were built around user-owned rooms and sealed objects, instead of company-owned servers?**
 
-And the moment real collaboration starts — documents, tasks, decisions — it usually moves to cloud tools that see everything.
+## 💡 The idea in one minute
 
-**What if private communication was built around user-owned rooms and sealed objects instead of company-owned servers?**
+1. You create a **private room** — it lives on the members' devices, not on anyone's server.
+2. Every update becomes a **sealed capsule** — a digital envelope.
+3. Capsules travel through **any courier**: an internet relay, a shared folder, a QR code, a USB stick.
+4. **The courier can't read them.** If one road is blocked, take another.
+5. The **policy engine in the app core** decides what may be stored, sent, previewed, copied or shown — rules a UI bug can't skip.
+6. **ScreenShield** (planned) keeps caring *after* decryption: screenshots, clipboard, recording, risky devices.
 
-## The idea in one minute
+> [!TIP]
+> **Think of a capsule like a sealed envelope.** A courier can carry it. A folder can store it. A QR code can move it. A USB drive can transport it. A relay can hold it for a while. But the courier is never trusted with the letter inside.
 
-- You create a **private room**.
-- Your room data **lives locally**, on the members' devices.
-- Every update becomes a **sealed capsule**.
-- Capsules can move through **different couriers** — a relay, a file, a QR code, a USB drive, a local network.
-- The **courier cannot read them**.
-- The **app policy decides** what can be stored, sent, previewed, copied or shown — the rules live in the core, not in a settings screen a bug can skip.
-- A future layer called **ScreenShield** protects sensitive content *after* it is decrypted — screenshots, clipboard, screen recording, risky devices.
+## 🧱 Core ideas
 
-## The simple analogy
+| | Idea | Simple meaning |
+|---|------|----------------|
+| 🏠 | **Sovereign Rooms** | Private workspaces on your devices — chat, notes, documents, tasks, decisions |
+| ✉️ | **Capsules** | Sealed digital envelopes for everything that travels between devices |
+| 📦 | **Blind Courier** | Any transport can carry capsules — none can read them |
+| ⚖️ | **Policy Engine** | Core rules that block unsafe storage, network, previews, AI or copy actions |
+| 🪪 | **Identity Firewall** | No phone number, no email, no central account — ever |
+| 🌫️ | **Metadata Firewall** | Fewer silent leaks: typing, read receipts, presence, link previews |
+| 🛡️ | **ScreenShield** | Planned protection for screenshots, clipboard, capture and risky devices |
+| 🧊 | **Ghost Vault** | Planned mode keeping identity keys on an offline device |
 
-Think of a capsule like a **sealed envelope**.
+Every term, honestly labeled with its real status → **[Glossary](docs/GLOSSARY.md)**
 
-A courier can carry it.
-A folder can store it.
-A QR code can move it.
-A USB drive can transport it.
-A relay can hold it temporarily.
+## ⚖️ Honest by design
 
-But the courier is not trusted with the letter inside.
+| ❌ FreeLayer is not… | ✅ …it is |
+|---|---|
+| Production software or a Signal replacement today | A research-stage architecture, built slowly and in public |
+| A blockchain or token project | Decentralized as in *no required infrastructure* — no chain, no coin, ever |
+| A cloud workspace or SaaS | Rooms that live on members' devices, synced by sealed capsules |
+| A promise of perfect anonymity | An honest threat model that states its limits first |
+| A magic anti-spyware layer | ScreenShield reduces capture risk — and says exactly where it can't |
 
-## Core ideas
+## 📊 Status at a glance
 
-| Idea | Simple meaning |
-| --- | --- |
-| Sovereign Rooms | Private workspaces that live on your devices |
-| Capsules | Sealed digital envelopes |
-| Blind Courier | Any transport that carries capsules without reading them |
-| Policy Engine | Rules that block unsafe storage, network, previews, AI or copy actions |
-| Identity Firewall | No required phone number, email or central account |
-| Metadata Firewall | Fewer leaks like typing, read receipts, presence and link previews |
-| ScreenShield | Future protection for screenshots, clipboard and risky devices |
-| Ghost Vault | Future mode for keeping identity keys offline |
+| Area | Status | | Area | Status |
+|---|---|---|---|---|
+| Public repo | 🟢 Live | | Messaging | ⚪ Not implemented |
+| CI + privacy guards | 🟢 Green on every commit | | Real networking | ⚪ Not implemented |
+| Storage policy layer | 🟢 Implemented + 78 tests | | Local AI | ⚪ Not implemented |
+| App | 🟡 Foundation shell only | | ScreenShield | 🔵 Design/research |
+| Crypto | ⚪ Deliberately not yet | | **Safe for real secrets** | 🔴 **No** |
 
-Simple definitions for every term: [docs/GLOSSARY.md](docs/GLOSSARY.md)
+## 🗺️ Roadmap
 
-## What FreeLayer is not
+**1.** Foundation & public repo ✅ → **2.** Policy engine → **3.** Storage/network/metadata guardrails *(storage ✅)* → **4.** Endpoint defense / ScreenShield *(research ✅)* → **5.** Identity without phone/email → **6.** Encrypted capsules → **7.** Messaging MVP → **8.** Sovereign Rooms → **9.** Documents & files → **10.** Local AI → **11.** Security hardening → **12.** Alpha
 
-- Not production software yet — there is no release.
-- Not a Signal replacement today.
-- Not a blockchain project. No tokens, ever.
-- Not a SaaS. Not a cloud workspace.
-- Not a promise of perfect anonymity.
-- Not a promise to defeat compromised devices.
-- Not a magic anti-spyware solution.
+No dates, deliberately — [gates](docs/IMPLEMENTATION_GATES.md), not schedules, decide when implementation may start. Full detail: **[Roadmap](docs/ROADMAP.md)**
 
-## What makes it different
+## 🔍 Compared simply
 
-- Most messengers are built around a **network**. FreeLayer is built around **sealed objects**.
-- Most collaboration tools store rooms in the **cloud**. FreeLayer aims for rooms that **live on devices**.
-- Most apps treat screenshot/clipboard/device exposure as somebody else's problem. FreeLayer adds **ScreenShield** as a planned endpoint-defense layer.
-- Most apps expose identifiers. FreeLayer avoids **phone/email login by design**.
+> [!NOTE]
+> This explains FreeLayer's **design direction** — it is not an attack on other projects, many of which are excellent, audited software you can use today. FreeLayer is not implemented yet, so no row claims it is better now.
 
-## Status
+| Tool / category | Great at | Simple trade-off | FreeLayer direction |
+|---|---|---|---|
+| Signal | Mature encrypted messaging | Central service model | No required server at all |
+| WhatsApp / Telegram-like | Easy mainstream messaging | Account/platform trust is central | User-owned local rooms |
+| Matrix | Powerful rooms & federation | Homeservers are core infrastructure | Rooms without homeservers |
+| SimpleX | No user identifiers | Relay/queue model is central | Relays are just one optional courier |
+| Briar | Offline/P2P resilience | Limited as a workspace | Offline thinking + full rooms |
+| Nostr clients | Simple relay ecosystem | Public/metadata-heavy by design | Private sealed capsules by default |
+| Reticulum/LXMF | Transport-agnostic networking | Technical ecosystem | Same freedom, usable room platform |
+| Slack / Notion / Docs | Great cloud collaboration | The cloud reads everything | Local-first operational rooms |
 
-| Area | Status |
-| --- | --- |
-| Public repo | Live |
-| App | Foundation shell only |
-| Crypto | Not implemented |
-| Messaging | Not implemented |
-| Real networking | Not implemented |
-| AI | Not implemented |
-| ScreenShield | Design/research |
-| Security audit | None |
-| **Safe for real secrets** | **No** |
+Deeper: **[readable comparison](docs/PUBLIC_COMPARISON.md)** · **[research-grade comparison](docs/COMPETITOR_COMPARISON.md)**
 
-The full honest answer lives in the [Trust Center](docs/TRUST_CENTER.md).
-
-## Roadmap summary
-
-1. Foundation and public repo ✅
-2. Policy engine
-3. Storage/network/metadata guardrails
-4. Endpoint defense / ScreenShield *(research done ✅ — implementation later)*
-5. Identity without phone/email
-6. Encrypted capsules
-7. Messaging MVP
-8. Sovereign Rooms
-9. Documents/files
-10. Local AI
-11. Security hardening
-12. Alpha
-
-Detailed tracks and gates: [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/IMPLEMENTATION_GATES.md](docs/IMPLEMENTATION_GATES.md)
-
-## Compared simply
-
-> This comparison explains FreeLayer's design direction. It is not an attack on other projects — many of them solve hard problems brilliantly and inspire FreeLayer. **FreeLayer is not implemented yet**, so no row claims FreeLayer is better today.
-
-| Tool / category | What it is great at | Simple trade-off | FreeLayer direction |
-| --- | --- | --- | --- |
-| Signal | Mature encrypted messaging | Still depends on a central service model | No required FreeLayer server |
-| WhatsApp / Telegram-like apps | Easy mainstream messaging | Account/server/platform trust is central | User-owned local rooms |
-| Matrix | Powerful rooms and federation | Homeservers are still core infrastructure | Rooms without homeservers |
-| SimpleX | Strong no-identifier thinking | Relay/queue model is central | Relays are optional couriers, not the whole system |
-| Briar | Offline/P2P resilience | More limited as a workspace | Offline thinking plus rooms, docs, tasks and decisions |
-| Nostr clients | Simple relay ecosystem | Often public/metadata-heavy by design | Private sealed capsules by default |
-| Reticulum/LXMF | Transport-agnostic networking | Technical ecosystem | Bring transport-agnostic ideas into a usable room platform |
-| Slack/Notion/Google Docs | Great cloud collaboration | Workspace data lives in cloud services | Private local-first operational rooms |
-
-For a deeper comparison, see [docs/PUBLIC_COMPARISON.md](docs/PUBLIC_COMPARISON.md) (readable) and [docs/COMPETITOR_COMPARISON.md](docs/COMPETITOR_COMPARISON.md) (research-grade).
-
----
-
-## Technical architecture
-
-For the technically curious — the deep documents live in [docs/](docs/README.md).
+## 🏗️ Under the hood
 
 ```mermaid
 flowchart TD
@@ -146,32 +116,41 @@ flowchart TD
   Core --> Screen[ScreenShield - future]
 ```
 
-Every side-effectful operation follows one pipeline: **validate → classify → resolve policies → strictest policy wins → `PolicyDecision` → execute → audit**. Apps never call storage, transports, crypto, or AI directly — enforced today by import-boundary checks in CI, with the binding rules recorded as [Architecture Decision Records](docs/adr/README.md) (the project constitution) and implementation blocked behind explicit [gates](docs/IMPLEMENTATION_GATES.md).
+Every side effect follows one pipeline — **validate → classify → resolve policies → strictest wins → `PolicyDecision` → execute → audit** — and apps can't call storage, transports, crypto or AI directly (import boundaries fail CI). The binding decisions live as [Architecture Decision Records](docs/adr/README.md); implementation is blocked behind explicit [gates](docs/IMPLEMENTATION_GATES.md).
 
-Key technical documents: [Architecture](docs/ARCHITECTURE.md) · [Threat Model](docs/THREAT_MODEL.md) · [Privacy Model](docs/PRIVACY_MODEL.md) · [CapsuleNet](docs/CAPSULENET.md) · [Sovereign Rooms](docs/SOVEREIGN_ROOMS.md) · [Endpoint Defense](docs/ENDPOINT_DEFENSE_MODEL.md) · [PBOM](docs/PBOM.md)
+<details>
+<summary><b>📚 Key technical documents</b></summary>
+<br>
 
-## Security philosophy
+- [Architecture](docs/ARCHITECTURE.md) — layering, the 15 non-bypassable rules, the operation pipeline
+- [Threat Model](docs/THREAT_MODEL.md) — attackers, assets, and what FreeLayer honestly can't protect against
+- [Privacy Model](docs/PRIVACY_MODEL.md) — seven privacy modes, strictest-policy-wins
+- [Storage Model](docs/STORAGE_MODEL.md) — the write barrier: nothing persists without policy approval
+- [CapsuleNet](docs/CAPSULENET.md) — sealed capsules and hostile-input parsing
+- [Sovereign Rooms](docs/SOVEREIGN_ROOMS.md) — rooms as private operational spaces
+- [Endpoint Defense / ScreenShield](docs/ENDPOINT_DEFENSE_MODEL.md) — data-on-screen protection design
+- [PBOM](docs/PBOM.md) — the Privacy Bill of Materials: everything the software actually does
 
-- **Honest threat model** — [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) states what FreeLayer does *not* protect against: compromised devices, malicious room members, global traffic analysis, cameras pointed at screens.
-- **No perfect-anonymity claims. No unbreakable-encryption claims. No forensic-erasure claims. No spyware-proof claims.** Ever.
-- **Transports are hostile.** All external input is hostile input, parsed strictly with fuzz tests required before production.
-- **Policy bypass is a top-level threat** — a feature skipping core policy is treated as an attack class.
-- **Docs and tests must change with code** — same-PR coupling, enforced in review.
+</details>
 
-## For contributors
+## 🔐 Security philosophy
 
-We are building slowly, because privacy/security software should not be rushed.
+**Honest threat model** — the docs state what FreeLayer *cannot* do (compromised devices, malicious members, global traffic analysis, cameras) before what it aims to do. **No forbidden claims** — "unbreakable", "perfect anonymity", "forensic erasure" and "spyware-proof" are review-blockers, permanently. **Everything hostile until proven otherwise** — transports are blind, all external input is parsed strictly, policy bypass is treated as a top-level threat. **Docs and tests move with code** — same-PR coupling, enforced in review and CI.
 
-- **Research before code. Docs before implementation.** Tests and docs land in the same PR.
-- Hard lines every PR must respect: **no custom crypto, no telemetry, no external assets, no policy bypass** — CI enforces the mechanical parts.
-- Security-sensitive PRs follow stricter rules: [CONTRIBUTING.md](CONTRIBUTING.md) · [docs/CONTRIBUTING_SECURITY.md](docs/CONTRIBUTING_SECURITY.md)
-- Want to help right now? Pick a task from [docs/CONTRIBUTOR_TASKS.md](docs/CONTRIBUTOR_TASKS.md) — research and doc verification are as valuable as code today.
-- FreeLayer wants contributors, but it does not want reckless security claims — honest language is a review criterion.
-- Report vulnerabilities privately: [SECURITY.md](SECURITY.md)
+## 🤝 Contributing
 
-## License
+We are building slowly, because privacy software should not be rushed. Right now, **research and verification are as valuable as code** — a perfect first PR is checking one comparison row against official docs.
 
-- **Code:** [AGPL-3.0-or-later](LICENSE)
-- **Documentation:** [CC BY-SA 4.0](docs/LICENSE-DOCS.md) unless otherwise stated
+**[Contributor tasks](docs/CONTRIBUTOR_TASKS.md)** · **[Contributing guide](CONTRIBUTING.md)** · **[Security-sensitive rules](docs/CONTRIBUTING_SECURITY.md)** · **[Report a vulnerability](SECURITY.md)** *(privately, please)*
 
-Rationale: [ADR-0011](docs/adr/ADR-0011-license-strategy.md). Not legal advice; the license texts are authoritative.
+Hard lines every PR must respect: no telemetry · no external assets · no custom crypto · no policy bypass — CI enforces the mechanical parts.
+
+---
+
+<div align="center">
+
+**Code [AGPL-3.0-or-later](LICENSE) · Docs [CC BY-SA 4.0](docs/LICENSE-DOCS.md)** — so privacy-weakening closed forks are license violations ([why](docs/adr/ADR-0011-license-strategy.md))
+
+*Built slowly, on purpose. Every limitation written down before every feature.*
+
+</div>
