@@ -9,7 +9,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { issuePolicyDecision } from "@freelayer/privacy";
 import { MemoryStorageProvider, resolveStoragePolicy } from "@freelayer/storage";
@@ -27,9 +27,12 @@ function scanDirForSentinel(dir: string): { scanned: number; hits: string[] } {
       const full = join(path, entry.name);
       if (entry.isDirectory()) {
         walk(full);
-      } else if (entry.isFile() && statSync(full).size < 10_000_000) {
+      } else if (entry.isFile()) {
+        // Single read, no stat-then-read race: size is bounded after the
+        // fact (artifact dirs are small; an oversized file is skipped).
         scanned += 1;
-        if (readFileSync(full, "utf8").includes(ZP_SENTINEL)) {
+        const content = readFileSync(full, "utf8");
+        if (content.length < 10_000_000 && content.includes(ZP_SENTINEL)) {
           hits.push(full);
         }
       }
