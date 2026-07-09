@@ -5,10 +5,13 @@
 declare const fsShim: { writeFileSync(path: string, value: string): void };
 declare const caches: { open(name: string): Promise<unknown> };
 
+declare function showSaveFilePicker(): Promise<unknown>;
+
 export function badPersistence(value: string): void {
   window.localStorage.setItem("k", value);
   const db = window.indexedDB;
   void db;
   void caches.open("cache");
   fsShim.writeFileSync("/tmp/x", value);
+  void showSaveFilePicker();
 }

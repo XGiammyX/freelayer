@@ -110,7 +110,10 @@ Stated without hedging:
 - **Provider misuse** — missing/forged/wrong-scope decisions, policy-for-one-backend used on another, app-level direct provider use. Mitigation: barrier validation, backend-match checks, boundary rules ([audits/STORAGE_BOUNDARY_AUDIT.md](audits/STORAGE_BOUNDARY_AUDIT.md)).
 - **Sensitive errors/logs** — stored values leaking through exceptions, console output, list metadata, key names, or CI artifacts. Mitigation: redacted error model, metadata-only listing, key validation, sentinel-based regression tests.
 - **In-memory reference/mutation leaks** — callers mutating stored state through retained references. Mitigation: clone-at-boundaries; uncloneable values rejected. Honest limit: none of this protects memory from a compromised process or OS swap.
-- **PWA storage limitations** — browser-controlled quotas/eviction and origin-shared storage make strict no-persistence claims weaker on web than desktop (research notes).
+- **PWA storage limitations** — browser-controlled quotas/eviction and origin-shared storage make strict no-persistence claims weaker on web than desktop (research notes); the File System Access API and OPFS add real-disk channels the guardrail now covers.
+- **Accidental persistence in strict modes** — a feature or future backend silently persisting under Ghost/Bunker. Mitigation: fail-closed backend detection, full-matrix zero-persistence tests, runtime persistence-API traps (TECH-07).
+- **Mode-transition flush** — leaving Ghost/Bunker triggering a "flush memory to disk" path. Mitigation: providers structurally expose no flush surface; cross-mode policy/backend mismatch rejected; tested.
+- **Test/CI artifact leakage** — secrets escaping via snapshots, coverage, build output, or CI artifacts during development. Mitigation: sentinel artifact scans over generated outputs; traps prevent test-time disk writes.
 
 ## Overlay / tapjacking
 

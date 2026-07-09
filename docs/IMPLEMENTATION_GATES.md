@@ -53,6 +53,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 - [x] Forbidden direct-storage CI guard extended (browser storage/DB, caches, cookies, beacons, `fs.writeFile*`, Deno/Bun/Tauri) and covered by its own tests
 - [x] PBOM storage section updated to implemented reality
 - [x] TECH-06 hardening: provider contract v2, clone-at-boundaries memory provider, structurally-stateless null provider, key validation, redacted errors, sentinel leak tests, zero-persistence harness, guardrail v2 with fixture self-tests
+- [x] TECH-07 deep verification: Ghost/Bunker persistent-backend selection denied (full sweep), runtime persistent-write traps, static scan incl. File System Access API, 8-config provider matrix, mode-transition no-auto-flush tests, spool/cache/log strict suites, artifact sentinel scan — all green ([audit](audits/TECH_07_ZERO_PERSISTENCE_AUDIT.md))
 - [ ] Encrypted persistence, wipe semantics, per-platform storage behavior — **blocked by Gate F** (crypto review); Gate C fully opens only with those
 
 ## Gate D — Network

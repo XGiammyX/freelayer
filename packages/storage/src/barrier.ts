@@ -68,9 +68,14 @@ function assertDecisionValid(
   }
 }
 
-/** The backend named by policy must exist; the placeholder throws by design. */
+/** The backend named by policy must exist; the placeholder throws by design.
+ *  Unknown backends (unsound casts / future drift) FAIL CLOSED. */
 function assertBackendUsable(policy: StoragePolicy): void {
-  const capability = STORAGE_BACKEND_CAPABILITIES[policy.backend];
+  const capability = STORAGE_BACKEND_CAPABILITIES[policy.backend] as
+    (typeof STORAGE_BACKEND_CAPABILITIES)[keyof typeof STORAGE_BACKEND_CAPABILITIES] | undefined;
+  if (capability === undefined) {
+    throw new StorageBypassAttemptError(`unknown storage backend "${policy.backend}": fail closed`);
+  }
   if (!capability.implemented) {
     throw new StorageBackendNotImplementedError();
   }
