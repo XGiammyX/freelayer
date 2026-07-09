@@ -5,6 +5,20 @@
 > [!NOTE]
 > **TECH-05 implemented the foundation of this model**: StoragePolicy v0, the write barrier, and hardened memory/null providers exist and are regression-tested. Encrypted persistence remains deliberately unimplemented (Gate F).
 
+## TECH-07 — Ghost/Bunker zero persistent writes
+
+**The claim "Ghost/Bunker write nothing persistent" is now a machine-checked invariant** ([research](research/ZERO_PERSISTENCE_RESEARCH.md) · [threat model](audits/TECH_07_ZERO_PERSISTENCE_THREAT_MODEL.md) · [audit](audits/TECH_07_ZERO_PERSISTENCE_AUDIT.md)):
+
+- **What "zero persistent writes" means:** in Ghost/Bunker/Emergency, no data class can resolve a persistent backend (`isPersistentBackend` is the single source of truth, unknown backends fail closed); runtime traps prove strict-mode workouts never touch a persistence API (web storage, browser DBs/caches, Node `fs`, synthetic traps for absent browser APIs); the sentinel never reaches errors, console, lists, or generated artifacts.
+- **What it does NOT mean:** no forensic guarantee. OS swap, hibernation, crash dumps, journaling, SSD wear-leveling, backups, browser internals, and compromised processes are outside application control — **application-level invariant, not forensic guarantee.**
+- **Mode transitions:** entering Ghost/Bunker re-resolves everything to memory/null; leaving them **cannot auto-flush** — providers structurally expose no flush/persist/export surface, and a standard-mode policy cannot authorize the memory provider (backend mismatch), both tested.
+- **Capsule spool:** spool/inbox/quarantine never persistent in strict modes; spool timestamps live only in in-memory record metadata.
+- **Caches:** preview/thumbnail/media/AI caches and search-index classes denied in Ghost/Bunker (sealed ScreenShield denies them in every mode).
+- **Logs/debug:** content-grade logs rejected at the barrier; debug artifacts denied; audit/endpoint artifacts carry redacted metadata only.
+- **Unknowns fail closed:** unknown data class or mode ⇒ full deny on the null backend; unknown backend ⇒ treated as persistent and rejected.
+- **PWA/browser honesty:** the page cannot control browser persistence (eviction, OPFS, `StorageManager.persist()`); the File System Access API is now in the forbidden-token guardrail; strict-mode claims remain lower-assurance on web.
+- **TECH-08 relationship:** the same deep-verification pattern (traps + matrix + sentinel scans) is the template for network zero-egress.
+
 ## Hardening status (TECH-06)
 
 TECH-06 hardened the non-persistent providers into genuinely misuse-resistant foundations (research notes: [research/STORAGE_HARDENING_RESEARCH.md](research/STORAGE_HARDENING_RESEARCH.md)):

@@ -23,6 +23,10 @@ Apps never import `@freelayer/storage` providers directly; apps call SDK/core; c
 - **AST-grade import analysis** — the boundary check is regex-based; aliased/dynamic imports could evade it. TODO (Phase 10): adopt `dependency-cruiser` or `eslint-plugin-boundaries` per [DEPENDENCY_POLICY.md](../DEPENDENCY_POLICY.md).
 - **Runtime provenance of decisions** — `Symbol.for` marks are forgeable in-process (documented in privacy package); acceptable against accidents, not attackers.
 
+## TECH-07 update
+
+A **boundary regression test** now runs inside the suite (`tests/security-regression/storage/zero-persistence-artifacts.test.ts` spawns `check-boundaries` and asserts green), so the apps-cannot-import-storage rule is verified on every `pnpm test`, not only in CI. Compile-time provider-construction restriction and AST-grade import analysis remain the tracked upgrades (Gate B / Phase 10).
+
 ## Conclusion
 
 Boundary posture is adequate for the current phase: mechanical import enforcement + runtime barrier validation + tests. The two upgrades above are tracked for Gate B / Phase 10.

@@ -21,6 +21,7 @@ import {
   ENDPOINT_CLASSES,
   KEY_MATERIAL_CLASSES,
   SETTINGS_CLASSES,
+  STORAGE_DATA_CLASSES,
   type StorageDataClass,
 } from "./dataClasses";
 import type { StorageBackendKind } from "./backends";
@@ -90,10 +91,41 @@ function deny(p: MutablePolicy, reason: string): void {
   p.reasons.push(reason);
 }
 
+const KNOWN_MODES: readonly PrivacyMode[] = [
+  "standard",
+  "private",
+  "ghost",
+  "bunker",
+  "offline_capsule",
+  "emergency",
+  "sovereign_room",
+];
+
 export function resolveStoragePolicy(input: StoragePolicyInput): StoragePolicy {
   const { mode, dataClass, sensitivity } = input;
   const risk: DeviceRiskLevel = input.deviceRiskLevel ?? "unknown";
   const shield: ScreenShieldLevel = input.screenShieldLevel ?? "off";
+
+  // FAIL CLOSED (TECH-07): an unknown data class or unknown mode — reachable
+  // at runtime only via unsound casts or future drift — resolves to a full
+  // deny on the null backend, never to an accidental allowance.
+  if (!STORAGE_DATA_CLASSES.includes(dataClass) || !KNOWN_MODES.includes(mode)) {
+    return {
+      mode,
+      dataClass,
+      backend: "null",
+      allowWrite: false,
+      allowRead: false,
+      allowDelete: false,
+      allowList: false,
+      allowExport: false,
+      allowCache: false,
+      allowDebugArtifacts: false,
+      plaintextAllowed: false,
+      persistentAllowed: false,
+      reason: "unknown data class or mode: fail closed (deny everything)",
+    };
+  }
 
   // ---- Start from DEFAULT DENY. Every allowance below is explicit. ----
   const p: MutablePolicy = {

@@ -77,6 +77,8 @@ The first machine-checked slice of this model now exists in `packages/storage`:
 
 **Storage guarantees that are machine-checkable must be tested in privacy-regression tests** — `tests/privacy-regression/storage/` holds them; a claimed guarantee without a test is a documentation bug.
 
+TECH-07 additions: **Ghost/Bunker zero-persistence is machine-checked** — no persistent backend resolvable for any data class (full-sweep tests), runtime traps prove no persistence API fires, and **mode transitions cannot auto-flush**: leaving Ghost/Bunker has no code path that moves memory state to persistent storage (structurally verified — providers expose no flush surface). Room policy composed onto Ghost/Bunker can never loosen them. ScreenShield protected-artifact hooks (reveal state, previews) are denied in strict modes and covered by the same tests. These zero-persistence tests are **required privacy-regression suites**: weakening them is a privacy-model change needing governance review.
+
 TECH-06 additions: **storage errors and logs are privacy channels** — the barrier rejects content-grade payloads in logs/audit/endpoint classes, error messages are generic and value-free (sentinel-tested), and the zero-persistence harness re-verifies Ghost/Bunker/Emergency invariants plus untouched runtime web storage on every run. ScreenShield storage hooks (reveal state, capture audit, device-risk, watermark/canary) are policy-typed and tested even though ScreenShield itself is unimplemented.
 
 TODO:

@@ -67,6 +67,10 @@ None. No analytics providers, no push-notification services, no CDN assets, no f
 | Preview/thumbnail cache | Not implemented; policy hooks exist (denied in Private+/sealed) |
 | ScreenShield reveal state | Not implemented; policy hooks exist (denied to persist; denied entirely at high risk) |
 
+### Zero-persistence modes (TECH-07)
+
+Ghost/Bunker (and Emergency for normal writes) app-level behavior, **machine-checked**: no persistent provider selectable for any of the 30 data classes; caches denied or null; no AI cache; no preview/thumbnail cache; no storage telemetry (none exists anywhere); no default logs with content (barrier-rejected); protected reveal-state and endpoint artifacts non-persistent. Verification: full-matrix policy tests, runtime persistence-API traps (web storage/browser DB/caches/Node fs, with honest absent-API coverage reporting), and sentinel scans over generated artifacts (coverage/build/snapshots — directories absent are reported "not applicable", never assumed). **Known limitations:** application-level only — OS swap, crash dumps, browser internals, backups, and compromised processes are out of scope, stated in [STORAGE_MODEL.md](STORAGE_MODEL.md).
+
 Future per-platform enumeration (identity store, room stores, spool, wipe paths) arrives with real persistence (Phase 7). The future Vault Inspector renders this section live, in-app. Any storage behavior not listed in the PBOM is considered undocumented and therefore a bug.
 
 ## 5. Permissions

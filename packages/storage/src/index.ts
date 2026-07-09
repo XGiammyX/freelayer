@@ -73,6 +73,14 @@ export {
 export { validateStorageKey, type ValidatedStorageKey } from "./keys";
 export { cloneStorageValue } from "./values";
 
+export {
+  assertNoPersistentBackendSelected,
+  assertNoPersistentWriteAllowed,
+  assertZeroPersistentWriteMode,
+  isPersistentBackend,
+  isZeroPersistenceMode,
+} from "./zeroPersistence";
+
 export type {
   StorageClearResult,
   StorageDeleteResult,
