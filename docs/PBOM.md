@@ -33,6 +33,26 @@ Actual behavior of the current codebase (verified by tests and static guards):
 | User-chosen relays | Capsule store-and-forward | Not implemented yet (Phase 4) |
 | User-initiated transports (email, LAN, etc.) | Blind courier channels | Not implemented yet |
 
+### Network behavior — current implementation (TECH-08)
+
+| Behavior | Status |
+| --- | --- |
+| FreeLayer-owned backend | **Does not exist** (ADR-0001) |
+| Real network transports | **Not implemented** |
+| Relay client | Not implemented |
+| HTTP / fetch | **Forbidden** outside a future approved provider (CI guard) |
+| WebSocket | **Forbidden** (CI guard) |
+| WebRTC / direct peer | **Forbidden** (CI guard + policy; IP exposure) |
+| Telemetry / `sendBeacon` | **Forbidden** (always) |
+| External assets | **Forbidden** (always) |
+| Automatic link previews | **Forbidden** (always) |
+| Remote AI API | **Forbidden** (default build) |
+| Update checks | **Not implemented** (manual/future only) |
+| Mock / Noop transport | Implemented — `performsRealNetwork: false` |
+| NetworkPolicy v0 + barrier | Implemented + regression-tested |
+
+Any network behavior not listed here is undocumented and must be treated as a privacy bug.
+
 The default build must make **zero** network calls not explicitly initiated by the user. Update checks: none by default; a manual "check for updates" action is the likely future design *(TODO decide, Phase 9)*.
 
 Future entries required at Gate D: **relay usage** (per-relay leakage profile) and **external-app courier flows** (including the mandatory UX leakage warnings — [METADATA_MODEL.md](METADATA_MODEL.md) invariants 9–10).

@@ -115,6 +115,17 @@ Stated without hedging:
 - **Mode-transition flush** — leaving Ghost/Bunker triggering a "flush memory to disk" path. Mitigation: providers structurally expose no flush surface; cross-mode policy/backend mismatch rejected; tested.
 - **Test/CI artifact leakage** — secrets escaping via snapshots, coverage, build output, or CI artifacts during development. Mitigation: sentinel artifact scans over generated outputs; traps prevent test-time disk writes.
 
+## Network-layer threats (TECH-08)
+
+- **Direct network bypass** — `fetch`/`XMLHttpRequest`/`WebSocket`/`EventSource`/`RTCPeerConnection`/`sendBeacon`, service workers, Tauri HTTP, Node HTTP/net libraries. Mitigation: default-deny NetworkPolicy, forbidden-network CI guard, runtime egress trap, mock/noop transports only.
+- **WebRTC / direct peer metadata** — a data-channel-only `RTCPeerConnection` triggers ICE/STUN and returns the user's real local+public IP to JavaScript, with no prompt, bypassing VPN. Mitigation: direct peer connections denied in Private/Ghost/Bunker (and Standard pending explicit policy); forbidden API.
+- **Telemetry-shaped operations** — `sendBeacon` and analytics/crash SDKs. Mitigation: always denied by policy; guardrail catches the APIs; no telemetry dependency exists (ADR-0008).
+- **External asset / link-preview leakage** — remote fonts/images/scripts and preview fetches expose IP/timing to third parties. Mitigation: denied in every mode; external-assets guard.
+- **DNS/IP/timing leakage** — inherent to any networked transport. Honest limit: reduced by transport choice and (future) Tor/proxy, never eliminated.
+- **Development/CI leakage** — tests or dependency scripts calling the internet. Mitigation: runtime trap fails any test touching network APIs; dependency policy; TECH-09 will verify the built app.
+
+Honest scope: NetworkPolicy is an **application-behavior guarantee**, not network isolation — the OS, browser, extensions, package manager, and malware are outside its control.
+
 ## Overlay / tapjacking
 
 Overlay attacks trick users into acting on hidden UI. Sensitive actions (reveal, send, wipe, key operations, mode changes) require anti-overlay measures — touch-filtering-class defenses per OWASP MASTG — where the platform provides them.

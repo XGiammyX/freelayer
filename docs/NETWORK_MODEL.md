@@ -15,6 +15,25 @@ Describe how FreeLayer moves data between devices without any required, project-
 - If every relay on the internet disappeared, FreeLayer would still function over QR, files, USB, and LAN.
 - Transports are **blind couriers**: they carry opaque encrypted capsules and are assumed hostile (see [THREAT_MODEL.md](THREAT_MODEL.md)).
 
+## TECH-08 — NetworkPolicy implementation
+
+**NetworkPolicy v0 exists and is machine-checked; no real network is implemented** ([research](research/NETWORK_POLICY_RESEARCH.md) · [threat model](audits/TECH_08_NETWORK_THREAT_MODEL.md) · [audit](audits/TECH_08_NETWORK_POLICY_AUDIT.md)):
+
+- **Taxonomy** (`packages/transports`): 13 `NetworkOperationKind`s, 12 `TransportClass`es, `NetworkCapability`, `MetadataExposureLevel`/`MetadataSensitivity`, `NetworkRequest`.
+- **`resolveNetworkPolicy`** — default deny; strictest wins; room policy tightens only; unknown operation/transport/mode **fail closed**.
+- **Barrier** — `assertNetworkOperationAllowed(request, decision, policy)` requires a `PolicyDecision` scoped to *exactly* the operation (network/directTransport capability; `generic` rejected); precise errors for telemetry, external assets, link previews, and direct peer connections.
+- **Transports** — only `NoopTransport` (validates, does nothing) and `MockNetworkTransport` (test-only, in-memory); both declare `performsRealNetwork: false`. **No fetch, WebSocket, WebRTC, EventSource, sendBeacon, or Tauri HTTP anywhere.**
+- **Always denied, every mode:** telemetry, external assets, automatic link previews, remote AI, update checks (ADR-0008).
+- **Direct peer connections (WebRTC):** denied in Standard/Private/Ghost/Bunker — a page can read your real IP via ICE/STUN with no prompt (research).
+- **Offline Capsule and Emergency:** all network denied. **Ghost/Bunker:** direct network denied. **HTTP/WebSocket/LAN:** forbidden until an approved transport exists. **QR/file/USB:** offline transports, not network operations.
+- **Endpoint validation** (`validateNetworkEndpoint`) — misuse detector rejecting insecure scheme, credentials-in-URL, private/loopback hosts, `file:`/`data:`/`blob:`, suspicious query keys, and the network sentinel; never enough on its own to *allow*, and never echoes the endpoint.
+- **Metadata leakage labels** (`describeNetworkMetadataLeakage`) — honest per-transport exposure (IP/timing/size/relationship/third-party) with plain-language summaries.
+- **Forbidden-network guardrail** (`check:no-forbidden-network`) — source scan for `fetch(`/`WebSocket`/`RTCPeerConnection`/`sendBeacon`/`http:`/Tauri HTTP/Node net libs/HTTP client libs, with fixture self-tests; wired into CI and `audit:privacy`.
+- **Runtime trap** — proves the policy layer and mock transports touch no network API; positive controls prove the trap fires.
+- **TECH-09 relationship:** this is the foundation; TECH-09 does full-build zero-egress verification.
+
+Honest scope: NetworkPolicy governs **FreeLayer application behavior** — it cannot stop the OS, package manager, GitHub, the browser, extensions, or malware from using the network.
+
 ## Network side-effect barrier
 
 **No package may open a network connection unless all of the following hold** (network mirror of the storage write barrier — [ADR-0002](adr/ADR-0002-core-enforced-policy-engine.md), [STORAGE_MODEL.md — Write barrier](STORAGE_MODEL.md)):
