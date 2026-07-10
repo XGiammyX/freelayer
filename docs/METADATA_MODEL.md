@@ -141,9 +141,36 @@ TODO:
 - Empirical: what metadata each candidate transport leaks in practice
 - OS notification pipelines as a metadata channel
 
+## TECH-10 — Metadata Firewall implementation
+
+The Metadata Firewall is now a real policy engine in `packages/privacy` (MetadataPolicy v0), the sibling of StoragePolicy and NetworkPolicy. It treats metadata as sensitive data: every metadata-producing behavior is classified and gated.
+
+**Taxonomy.** A `MetadataEventKind` (40 events) × `MetadataSink` (12 sinks) triple resolves through `resolveMetadataPolicy(input)` to a `MetadataPolicy` — `{ action, allowed, persistentAllowed, networkAllowed, userVisibleWarningRequired, reason }`. Events are grouped: application-signal (receipts/typing/presence/room-activity), notification, external-fetch (link preview / remote asset/avatar / navigation), derived-preview (cache/preview/thumbnail existence), network-metadata (timing/size/relay/LAN/ICE), AI-derived, local-state (spool existence/timestamp), log/audit, and endpoint/ScreenShield.
+
+**Default-deny behavior.**
+- Unknown mode/event/sink → **fail closed**.
+- Receipts/typing/presence/last-seen → off by default, denied in Private+ (v0 denies all — no messaging exists).
+- Link preview / external assets / remote avatars / crash reports / telemetry-shaped → forbidden every mode (ADR-0008).
+- Notification content → denied in strict modes (v0 denies all notification metadata).
+- AI metadata → denied in Ghost/Bunker (v0 denies all — Gate I).
+- Protected reveal state → denied in strict/sealed; **v0 invariant: no metadata persists and none egresses** — the ceiling for any allowed event is memory-only, redacted.
+
+**Strictest-policy-wins.** Room policy composes tighten-only; a permissive room can never loosen a stricter device mode.
+
+**Enforcement.** Metadata operations pass a barrier (`assertMetadataOperationAllowed`) that requires an authentic, exactly-scoped `PolicyDecision` — reusing the existing module-private WeakSet provenance registry ([ARCHITECTURE.md](ARCHITECTURE.md)), not a new mechanism. New side-effect scopes: `metadata.emit/store/notify/log/audit/network_expose`, `receipt.emit`, `typing.emit`, `presence.emit`, `notification.show` (plus existing `link.preview`/`asset.fetch`).
+
+**Redaction.** Metadata payloads may carry only numeric/boolean counters and flags — **never strings** (a slug is indistinguishable from a room name). `redactMetadataPayload` and `createRedactedAuditEvent` drop everything else; the sentinel never survives.
+
+**Integration.** MetadataPolicy is self-contained (privacy may not import storage/transports — the boundary rule), so agreement with StoragePolicy and NetworkPolicy is proven by `tests/privacy-regression/metadata/metadata-integration.test.ts` (link preview, external assets, WebRTC, telemetry, preview/AI caches, persistence).
+
+**Tested / not solved.** 47 metadata tests (privacy + security + integration) cover the matrix, redaction, sentinel-freedom, decision authenticity, and cross-policy agreement. Not solved here: real messaging, notifications, batching/padding/cover traffic, protocol-level anonymity — see [research/METADATA_FIREWALL_RESEARCH.md](research/METADATA_FIREWALL_RESEARCH.md) and [audits/TECH_10_METADATA_THREAT_MODEL.md](audits/TECH_10_METADATA_THREAT_MODEL.md).
+
+**Platform-state note.** The AST-backed ESLint guardrails and the WeakSet `PolicyDecision` provenance registry are already-resolved foundation items ([PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md)); TECH-10 builds on them and does not replace them.
+
 ## TODO
 
 - [ ] Metadata leakage label schema per transport
 - [ ] Padding bucket proposal in protocol design (Phase 4)
 - [ ] First wire-level privacy-regression tests (Phase 10)
+- [ ] `Referrer-Policy: no-referrer` + user-initiated-only preview model (TECH-11)
 - [ ] Re-audit this inventory at each phase boundary

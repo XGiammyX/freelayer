@@ -69,6 +69,28 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 - [x] NetworkPolicy v0 + side-effect barrier + forbidden-network guard + runtime egress trap (TECH-08)
 - [x] Zero-egress *default-build* verification (TECH-09): source scan + build-artifact scan + runtime trap + dependency scan + service-worker audit + GitHub Actions egress audit ([audit](audits/TECH_09_ZERO_EGRESS_AUDIT.md)); full in-browser E2E deferred to AUDIT-HARD
 
+## Gate M — Metadata Firewall (TECH-10)
+
+*Opens: any feature that could emit a metadata signal (receipts, typing, presence, notifications, previews, network timing).*
+
+TECH-10 is complete only if all hold:
+
+- [x] Platform reconciliation exists ([audits/TECH_10_PLATFORM_RECONCILIATION.md](audits/TECH_10_PLATFORM_RECONCILIATION.md))
+- [x] MetadataPolicy v0 exists with metadata event + sink taxonomy (`packages/privacy`)
+- [x] Default deny + fail-closed on unknown mode/event/sink
+- [x] Receipts/typing/presence denied in Private+
+- [x] Notification content denied in Ghost/Bunker
+- [x] Offline Capsule denies network metadata; Emergency denies normal metadata generation
+- [x] Link preview / external asset / telemetry-shaped metadata denied
+- [x] AI metadata denied in Ghost/Bunker
+- [x] Redacted audit-event model exists; sentinel never appears in errors/audit/logs
+- [x] StoragePolicy + NetworkPolicy integration tests exist (`tests/privacy-regression/metadata/metadata-integration.test.ts`)
+- [x] Metadata-bypass guardrail (`check:no-metadata-bypass`) + AST ESLint coverage
+- [x] PBOM, Trust Center, and Metadata Model updated
+- [x] All local checks pass (220 tests)
+
+Enforcement reuses the existing WeakSet `PolicyDecision` provenance (Gate B item A2), not a new mechanism. Detail: [METADATA_MODEL.md](METADATA_MODEL.md), [audits/TECH_10_METADATA_FIREWALL_AUDIT.md](audits/TECH_10_METADATA_FIREWALL_AUDIT.md).
+
 ## Gate E — Capsule Parser
 
 *Opens: processing any externally-produced capsule (Phase 4).*

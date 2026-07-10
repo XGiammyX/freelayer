@@ -64,6 +64,9 @@ jobs:
       - name: No network-client dependencies
         run: pnpm check:no-network-deps
 
+      - name: No metadata-bypass (Metadata Firewall)
+        run: pnpm check:no-metadata-bypass
+
       - name: Build artifact zero-egress (after build)
         run: pnpm check:build-zero-egress
 

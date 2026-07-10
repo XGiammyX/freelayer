@@ -185,6 +185,12 @@ Merging state from multiple devices creates ordering/consistency attack surface:
 - Traffic-analysis resistance literature (padding, cover traffic costs)
 - Forensic residue of browsers/Tauri on each OS (for no-persistence claims)
 
+## Metadata threats (TECH-10)
+
+The Metadata Firewall addresses application-signal leakage (receipts/typing/presence/room-activity), local metadata leakage (logs/audit/caches/spool existence/reveal state), notification metadata, link-preview/external-asset leakage, and audit/log leakage — all denied-by-default and, where allowed, memory-only and redacted. Endpoint/ScreenShield metadata (capture detection, reveal state, watermark/canary) is memory-only and must never carry raw identity/content.
+
+**Out of scope, stated plainly:** global passive traffic analysis, transport-native metadata visible to a future courier, malicious room members, and network-level timing/size correlation (mitigated only in later phases). TECH-10 is app-level metadata policy, not protocol-level anonymity. Full analysis: [audits/TECH_10_METADATA_THREAT_MODEL.md](audits/TECH_10_METADATA_THREAT_MODEL.md).
+
 ## TODO
 
 - [ ] Per-transport threat annexes as each transport is designed

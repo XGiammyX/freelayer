@@ -195,10 +195,20 @@ Stated plainly:
 - OS keychain integration in Tauri across Windows/macOS/Linux
 - Cloud-backup interaction (iOS/Android/Windows) with app storage
 
+## Storage as a metadata surface (TECH-10)
+
+Storage is not only a content surface — its artifacts are metadata:
+
+- Caches and derived artifacts (preview/thumbnail/media/AI caches) are **content-adjacent metadata**; their existence leaks activity.
+- Audit events and logs are **metadata sinks** — redacted only, never content, never persistent in v0.
+- Preview/thumbnail existence is metadata; protected-content reveal state is metadata.
+- **Cache denial must align with MetadataPolicy.** StoragePolicy denies preview/thumbnail caches in Private+, AI caches everywhere, and reveal-state persistence in strict/sealed; MetadataPolicy denies the corresponding `preview.generated` / `cache.exists` / `ai.cache_exists` / `protected_content.revealed` events. Agreement is guarded by `tests/privacy-regression/metadata/metadata-integration.test.ts`. See [METADATA_MODEL.md](METADATA_MODEL.md).
+
 ## TODO
 
 - [ ] Storage policy engine API design (Phase 2)
 - [ ] Data-class → backend matrix per mode (Phase 2)
+- [ ] (TECH-10) Keep StoragePolicy cache/reveal/AI denials aligned with MetadataPolicy (integration test guards this)
 - [ ] Crypto-shredding key hierarchy proposal (with CRYPTO_DESIGN.md, Phase 7)
 - [ ] "Zero persistent writes in Ghost" regression test (Phase 10)
 - [ ] Vault Inspector UX sketch (Phase 7+)

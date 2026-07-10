@@ -94,6 +94,19 @@ export type PolicySideEffectScope =
   | "update.check"
   | "ai.remote_request"
   | "ai.infer"
+  // Metadata Firewall scopes (TECH-10). A metadata decision issued for one
+  // signal must not authorize another; the metadata barrier requires an exact
+  // match and never accepts "generic" (docs/METADATA_MODEL.md).
+  | "metadata.emit"
+  | "metadata.store"
+  | "metadata.notify"
+  | "metadata.log"
+  | "metadata.audit"
+  | "metadata.network_expose"
+  | "receipt.emit"
+  | "typing.emit"
+  | "presence.emit"
+  | "notification.show"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
@@ -164,3 +177,14 @@ export function isPolicyDecision(value: unknown): value is PolicyDecision {
     typeof value === "object" && value !== null && issuedDecisions.has(value as PolicyDecision)
   );
 }
+
+// ---- Metadata Firewall (TECH-10). Re-exported last so isPolicyDecision above
+//      is fully initialized before the metadata barrier's call-time use of it
+//      (docs/METADATA_MODEL.md). These modules import only types + the
+//      authenticity check from here — no new runtime cycle of concern. ----
+export * from "./metadataTypes";
+export * from "./metadataErrors";
+export * from "./metadataHelpers";
+export * from "./metadataPolicy";
+export * from "./metadataBarrier";
+export * from "./metadataSignals";

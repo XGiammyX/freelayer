@@ -164,6 +164,18 @@ Storage is governed by [STORAGE_MODEL.md](STORAGE_MODEL.md): encrypted persisten
 - Notification privacy on each OS (what leaks through OS notification centers)
 - PWA storage eviction vs. Ghost-mode guarantees
 
+## Metadata Firewall under Privacy Modes (TECH-10)
+
+Privacy Modes now govern metadata, not only content and storage/network side effects. MetadataPolicy (`packages/privacy`) composes with StoragePolicy and NetworkPolicy under the same strictest-policy-wins rule:
+
+- **Private+** disables read receipts, typing indicators, and presence/last-seen.
+- **Ghost / Bunker** additionally disable notification content, AI metadata, and any persistent metadata state (nothing metadata-shaped persists).
+- **Offline Capsule** disables all network-exposed metadata.
+- **Emergency** disables normal metadata generation (only a redacted wipe/revoke audit placeholder).
+- **Room policy cannot loosen device metadata policy** — a permissive room never overrides a stricter device mode.
+
+Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_MODEL.md).
+
 ## TODO
 
 - [ ] Write the policy matrix as a versioned schema in `packages/privacy` (Phase 2)
