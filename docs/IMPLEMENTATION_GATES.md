@@ -110,6 +110,26 @@ TECH-11 is complete only if all hold:
 
 A safe user-initiated preview remains a future design gate. Detail: [audits/TECH_11_LINK_ASSET_BLOCKING_AUDIT.md](audits/TECH_11_LINK_ASSET_BLOCKING_AUDIT.md).
 
+## Gate O — Notification Privacy (TECH-12)
+
+*Opens: any feature that would show a notification, request permission, set a badge, or use push/service workers.*
+
+TECH-12 is complete only if all hold:
+
+- [x] Precheck, research note, and threat model exist ([audits/TECH_12_PRECHECK.md](audits/TECH_12_PRECHECK.md), [research/NOTIFICATION_PRIVACY_RESEARCH.md](research/NOTIFICATION_PRIVACY_RESEARCH.md), [audits/TECH_12_NOTIFICATION_THREAT_MODEL.md](audits/TECH_12_NOTIFICATION_THREAT_MODEL.md))
+- [x] `NotificationPolicy` + operation/content-class/surface taxonomy exist (`packages/privacy`)
+- [x] Permission requests denied by default; no real prompt/display implemented
+- [x] Message previews denied; room/sender names denied in Private+; protected/secret denied in all modes
+- [x] Badge denied in Ghost/Bunker/Emergency; sound/vibration denied in Bunker/Emergency
+- [x] Push subscribe/receive + service-worker notifications denied in all modes
+- [x] Notification content storage denied in Ghost/Bunker; audit events redacted; sentinel-free
+- [x] Notification-bypass guardrail + runtime trap exist; Tauri + service-worker/push audits exist (both absent)
+- [x] Metadata / Storage / Network integration tests pass
+- [x] PBOM, Trust Center, Metadata/Privacy/Threat/Storage/Network docs updated
+- [x] All local checks pass (286 tests)
+
+Any OS notification / push / service worker requires a future ADR/gate. Detail: [audits/TECH_12_NOTIFICATION_PRIVACY_AUDIT.md](audits/TECH_12_NOTIFICATION_PRIVACY_AUDIT.md).
+
 ## Gate E — Capsule Parser
 
 *Opens: processing any externally-produced capsule (Phase 4).*

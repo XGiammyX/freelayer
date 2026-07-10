@@ -67,6 +67,9 @@ jobs:
       - name: No metadata-bypass (Metadata Firewall)
         run: pnpm check:no-metadata-bypass
 
+      - name: No notification-bypass (Notification Privacy Model)
+        run: pnpm check:no-notification-bypass
+
       - name: Build artifact zero-egress (after build)
         run: pnpm check:build-zero-egress
 

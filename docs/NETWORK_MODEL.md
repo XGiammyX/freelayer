@@ -145,6 +145,10 @@ Network behavior is metadata-producing behavior. The per-transport leakage label
 
 Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favicons/OpenGraph images/tracking pixels) are network side effects and are denied in every mode. Connection hints — `preconnect`, `dns-prefetch`, `preload`, `prefetch` to remote origins — produce DNS/TCP metadata *before* any content is fetched and are likewise forbidden. `LinkPreviewPolicy`/`ExternalAssetPolicy` agree with NetworkPolicy's `link.preview`/`asset.fetch` denials. Future transports must not reintroduce preview fetches; a future preview must be user-initiated through an IP-protecting transport with `Referrer-Policy: no-referrer` ([WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md)).
 
+### TECH-12 — push notifications are network behavior
+
+Push notifications (Web Push / APNs / FCM-like systems) require a push service, a subscription with endpoint metadata, and background delivery — network behavior FreeLayer does not implement and does not require by default. `NotificationPolicy` denies push subscribe/receive and service-worker notifications in every mode; NetworkPolicy independently denies the network they would need. Any push service provider metadata would require a future PBOM entry and an ADR/research gate. No push network by default.
+
 ## TODO
 
 - [ ] `Transport` interface specification (Phase 4)

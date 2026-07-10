@@ -177,6 +177,18 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-12 — Notification privacy model
+
+Notifications are **metadata-producing side effects** and their content is sensitive. `NotificationPolicy` (`resolveNotificationPolicy`) classifies operation × content class × surface and denies by default:
+
+- **Permission prompts** are side effects — never automatic (denied every mode).
+- **Content** (message preview, room name, sender alias, task/decision/document title, AI summary, protected/secret) denied every mode; lock-screen/notification-center surfaces denied.
+- **Badge / sound / vibration** are activity metadata — denied in v0 (hard-denied in Ghost/Bunker/Emergency).
+- **Push / service worker** denied in every mode (future gate; no infrastructure).
+- The only allowed notification is a **generic, content-free, memory-only in-app indicator** (Standard/Private) — no OS surface, no persistence, no egress.
+
+Enforced by a barrier reusing the WeakSet `PolicyDecision` provenance; audit events redacted; content redaction (`redactNotificationContent`) yields generic labels only. Agrees with Metadata/Storage/Network policies (`tests/privacy-regression/notifications/`). Detail: [research/NOTIFICATION_PRIVACY_RESEARCH.md](research/NOTIFICATION_PRIVACY_RESEARCH.md), [audits/TECH_12_NOTIFICATION_THREAT_MODEL.md](audits/TECH_12_NOTIFICATION_THREAT_MODEL.md).
+
 ## TODO
 
 - [ ] Metadata leakage label schema per transport
