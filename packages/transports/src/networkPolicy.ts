@@ -116,7 +116,6 @@ function denied(reason: string): Draft {
 
 export function resolveNetworkPolicy(input: NetworkPolicyInput): NetworkPolicy {
   const { mode, operation, transportClass } = input;
-  const userInitiated = input.userInitiated ?? false;
   const label = describeNetworkMetadataLeakage({ transportClass, operation });
 
   const finalize = (draft: Draft): NetworkPolicy => {

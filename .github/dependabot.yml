@@ -1,6 +1,7 @@
 version: 2
 updates:
   # Keep GitHub Actions pinned and current — CI is part of the supply chain.
+  # Adopted majors are pinned by commit SHA (see docs/GITHUB_REPOSITORY_SETUP.md).
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -8,8 +9,14 @@ updates:
     labels:
       - dependencies
       - ci
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
-  # npm/pnpm workspace dependencies.
+  # npm/pnpm workspace dependencies. The comprehensive test + guardrail suite
+  # (168 tests, 13 checks) is the safety net: a green PR is a safe patch/minor
+  # update. Majors follow the migration checklist in docs/MAINTENANCE.md.
   - package-ecosystem: npm
     directory: "/"
     schedule:
@@ -17,14 +24,35 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - dependencies
-    # Security-relevant packages have elevated review requirements —
-    # see GOVERNANCE.md. Dependabot PRs touching them still require
-    # two maintainer approvals via CODEOWNERS.
+    # Security-relevant packages have elevated review requirements
+    # (GOVERNANCE.md); Dependabot PRs touching them still need CODEOWNERS review.
     groups:
-      dev-tooling:
+      # One PR for routine patch/minor tooling bumps — low-noise, safe-when-green.
+      dev-tooling-minor:
         patterns:
           - "turbo"
-          - "typescript"
           - "prettier"
-          - "eslint*"
-          - "vitest*"
+          - "vitest"
+          - "@vitest/*"
+          - "eslint"
+          - "@eslint/*"
+          - "typescript-eslint"
+          - "globals"
+          - "@types/*"
+          - "vite"
+          - "@vitejs/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # React kept as its own group (paired react/react-dom + types).
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types:
+          - "minor"
+          - "patch"
+    # Majors (TypeScript 7, React majors, Node type majors) come as individual
+    # PRs so each gets its own migration review — never auto-grouped.

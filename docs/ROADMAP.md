@@ -54,7 +54,7 @@ Progress (Prompt 03):
 - ✅ Mechanical guardrails (baseline): import-boundary check (dependency direction), no-external-assets check, no-telemetry check, forbidden-storage check — all wired into CI and `audit:privacy`.
 - ✅ Side-effect scaffolding: storage/transport placeholders require a `PolicyDecision` and fail closed; baseline tests verify it.
 - ⬜ Desktop: placeholder only — Tauri shell still to come (kept minimal deliberately; permissions surface deferred).
-- ⬜ ESLint-based dependency-direction enforcement (current check is a static-scan baseline).
+- ✅ ESLint-based enforcement added (flat config + typescript-eslint): AST-backed `no-restricted-globals`/`no-restricted-imports` over shipped source, upgrading the static-scan baseline (which remains as belt-and-suspenders). See [PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md).
 - ✅ First real CI run on GitHub — green on `main` and PRs since INFRA-01 ([LIVE_CI_REPORT.md](LIVE_CI_REPORT.md)).
 
 - Exit: `pnpm build/typecheck/lint/test` run real work; shells launch; privacy-regression workflow checks real artifacts. **Not complete yet** — desktop shell and hosted CI verification remain.
@@ -142,6 +142,7 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 - ⬜ TECH-04 Policy Engine (Gate B)
 - ✅ INFRA-01 GitHub Publication + Live CI
 - ✅ INFRA-02 GitHub Live Audit + Public Experience Polish
+- ✅ INFRA-03 Stabilize & Harden — AST-backed ESLint enforcement, unforgeable `PolicyDecision` (WeakSet), Node 24 LTS pin, coverage visibility, and a definitive [maintenance strategy](MAINTENANCE.md); full problem register in [PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md)
 
 ### Storage / network / metadata
 

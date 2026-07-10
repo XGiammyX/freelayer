@@ -13,5 +13,14 @@ export default defineConfig({
       "tests/security-regression/**/*.test.ts",
     ],
     environment: "node",
+    coverage: {
+      provider: "v8",
+      // Measured on the shipped source; reported for regression visibility.
+      // No hard threshold yet — the suite is scaffolding + policy logic, and a
+      // premature gate would reward coverage theater. Revisit at Gate B.
+      include: ["packages/*/src/**/*.ts"],
+      exclude: ["**/*.d.ts", "**/index.ts"],
+      reporter: ["text-summary"],
+    },
   },
 });

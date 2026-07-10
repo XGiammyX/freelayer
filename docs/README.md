@@ -9,6 +9,7 @@
 
 - [FreeLayer in plain English](PUBLIC_EXPLANATION.md) — what this project is, with no jargon.
 - [Trust Center](TRUST_CENTER.md) — can you trust FreeLayer today? (No — and here is exactly why.)
+- [Platform State Analysis](PLATFORM_STATE_ANALYSIS.md) — the honest register of every open problem, limit, and deferred decision, each with a decision.
 - [Roadmap](ROADMAP.md) — phases, tracks, and what "done" means for each.
 - [Public Comparison](PUBLIC_COMPARISON.md) — how FreeLayer's direction differs from existing tools, respectfully.
 - [Glossary](GLOSSARY.md) — every term in one table: simple meaning, technical meaning, real status.
@@ -46,6 +47,7 @@
 - [Security Review Checklist](SECURITY_REVIEW_CHECKLIST.md) — what reviewers verify on every sensitive PR.
 - [Implementation Gates](IMPLEMENTATION_GATES.md) — the checkpoints that block implementation until design is done.
 - [Dependency Policy](DEPENDENCY_POLICY.md) — when a dependency may be added, and how it is reviewed.
+- [Maintenance & Update Strategy](MAINTENANCE.md) — how the platform stays current safely: the test suite as the update safety net.
 - [No External Assets Policy](NO_EXTERNAL_ASSETS_POLICY.md) — why the apps contact no third party, ever.
 - [ADRs — the project constitution](adr/README.md) — the binding decisions (ADR-0001 … ADR-0012).
 - [Security policy](../SECURITY.md) — how to report vulnerabilities privately.

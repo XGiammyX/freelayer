@@ -23,6 +23,10 @@ Dependencies are the largest attack surface a privacy project voluntarily accept
 
 New or updated dependency → PR includes the stated case (rule 2) → [SECURITY_REVIEW_CHECKLIST.md](SECURITY_REVIEW_CHECKLIST.md) dependency items answered → CODEOWNERS approval where sensitive → PBOM updated when the dependency affects network, storage, or build behavior ([PBOM.md](PBOM.md), section 10).
 
+## Adopted dev dependencies (stabilize/harden pass)
+
+ESLint tooling was adopted with a stated case: **ESLint + typescript-eslint + @eslint/js + globals** (all MIT, standard, well-maintained) provide **AST-backed enforcement** of the constitution (no-restricted-globals/imports) — the definitive upgrade of the regex guardrails. **@vitest/coverage-v8** (matches the pinned vitest major) gives regression-visibility coverage. All are dev-only, ship nothing to users, and are covered by `check:no-network-deps` (none is a network/analytics/AI client). Update cadence: [MAINTENANCE.md](MAINTENANCE.md).
+
 ## TODO
 
 - [ ] Define a dependency budget per package (target counts; sensitive packages: 0 default)
