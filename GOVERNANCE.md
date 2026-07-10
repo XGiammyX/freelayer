@@ -25,6 +25,10 @@ The following classes of change require **at least two maintainer approvals**, o
 4. **Dependency changes** — adding or updating dependencies in security-relevant packages (`crypto`, `security`, `privacy`, `storage`, `capsules`, `rooms`). New dependencies require a stated justification and a look at maintenance health, transitive footprint, and install scripts.
 5. **CI/workflow changes** — `.github/workflows/` modifications, since CI is part of the supply chain.
 
+## Solo-maintainer honesty (TECH-15)
+
+Today a **single founding maintainer** operates the project, so the two-approval rule above and CODEOWNERS review are **not mechanically enforceable yet** — `@maintainers` is a placeholder and `enforce_admins` is off (documented in [docs/GITHUB_REPOSITORY_SETUP.md](docs/GITHUB_REPOSITORY_SETUP.md) and [docs/audits/CODEOWNERS_REVIEW_AUDIT.md](docs/audits/CODEOWNERS_REVIEW_AUDIT.md)). The safety net in the meantime is the machine layer: CI guards, the policy matrix/conflict suite, and the Trust Center overclaim scanner. **When a second maintainer joins:** create the real team, enable "Require review from Code Owners" + two approvals on security-sensitive paths, enable `enforce_admins`, and re-run the [OpenSSF readiness checklist](docs/audits/OPENSSF_READINESS_CHECKLIST.md).
+
 ## What maintainers may never do
 
 Consistent with the project's hard constraints, no maintainer decision can introduce: a required FreeLayer-owned backend, a central user database, telemetry-by-default, an admin backdoor or remote-control mechanism, or private key upload. Removing these constraints would require public discussion, a documented amendment to this file, and should be treated by users as a fork-worthy event.

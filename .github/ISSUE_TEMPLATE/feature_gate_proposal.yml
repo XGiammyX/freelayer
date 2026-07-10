@@ -1,0 +1,48 @@
+name: Feature gate proposal
+description: Propose opening (or creating) an implementation gate for a deferred feature.
+title: "[gate] "
+labels: ["future-gate", "adr"]
+body:
+  - type: input
+    id: feature
+    attributes:
+      label: Feature / gate name
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is this needed now?
+    validations:
+      required: true
+  - type: textarea
+    id: research
+    attributes:
+      label: Research required
+      description: Which research note(s) must exist before the ADR?
+    validations:
+      required: true
+  - type: textarea
+    id: threat
+    attributes:
+      label: Threat model impact
+    validations:
+      required: true
+  - type: textarea
+    id: policy
+    attributes:
+      label: Policy / PBOM impact
+      description: Which matrix rows change from future_gate; which PBOM sections gain behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests required before implementation
+    validations:
+      required: true
+  - type: textarea
+    id: deps
+    attributes:
+      label: Deferred dependencies
+      description: Which other gates must open first (e.g. crypto before encrypted storage)?

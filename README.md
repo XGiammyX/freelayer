@@ -53,7 +53,7 @@ Most communication tools force you to trust a central service. Even with encrypt
 | ⚖️ | **Policy Engine** | Core rules that block unsafe storage, network, previews, AI or copy actions |
 | 🪪 | **Identity Firewall** | No phone number, no email, no central account — ever |
 | 🌫️ | **Metadata Firewall** | Fewer silent leaks: typing, read receipts, presence, link previews |
-| 🛡️ | **ScreenShield** | Planned protection for screenshots, clipboard, capture and risky devices |
+| 🛡️ | **ScreenShield** | Endpoint protection developed as a **separate standalone project** — FreeLayer core keeps policy hooks only; nothing is active in core yet |
 | 🧊 | **Ghost Vault** | Planned mode keeping identity keys on an offline device |
 
 Every term, honestly labeled with its real status → **[Glossary](docs/GLOSSARY.md)**
@@ -75,12 +75,12 @@ Every term, honestly labeled with its real status → **[Glossary](docs/GLOSSARY
 | Public repo | 🟢 Live | | Messaging | ⚪ Not implemented |
 | CI + privacy guards | 🟢 Green on every commit | | Real networking | ⚪ Not implemented |
 | Storage policy layer | 🟢 Implemented + 78 tests | | Local AI | ⚪ Not implemented |
-| App | 🟡 Foundation shell only | | ScreenShield | 🔵 Design/research |
+| App | 🟡 Foundation shell only | | ScreenShield | 🔷 Externalized (hooks only in core) |
 | Crypto | ⚪ Deliberately not yet | | **Safe for real secrets** | 🔴 **No** |
 
 ## 🗺️ Roadmap
 
-**1.** Foundation & public repo ✅ → **2.** Policy engine → **3.** Storage/network/metadata guardrails *(storage ✅)* → **4.** Endpoint defense / ScreenShield *(research ✅)* → **5.** Identity without phone/email → **6.** Encrypted capsules → **7.** Messaging MVP → **8.** Sovereign Rooms → **9.** Documents & files → **10.** Local AI → **11.** Security hardening → **12.** Alpha
+**1.** Foundation & public repo ✅ → **2.** Policy engine *(matrix + conflict suite ✅)* → **3.** Storage/network/metadata guardrails ✅ → **4.** Endpoint defense / ScreenShield *(research ✅ — implementation **externalized** to a standalone project; core keeps hooks; integration via a dedicated gate)* → **5.** Identity without phone/email → **6.** Encrypted capsules → **7.** Messaging MVP → **8.** Sovereign Rooms → **9.** Documents & files → **10.** Local AI → **11.** Security hardening → **12.** Alpha
 
 No dates, deliberately — [gates](docs/IMPLEMENTATION_GATES.md), not schedules, decide when implementation may start. Full detail: **[Roadmap](docs/ROADMAP.md)**
 
@@ -141,7 +141,7 @@ Every side effect follows one pipeline — **validate → classify → resolve p
 
 We are building slowly, because privacy software should not be rushed. Right now, **research and verification are as valuable as code** — a perfect first PR is checking one comparison row against official docs.
 
-**[Contributor tasks](docs/CONTRIBUTOR_TASKS.md)** · **[Contributing guide](CONTRIBUTING.md)** · **[Security-sensitive rules](docs/CONTRIBUTING_SECURITY.md)** · **[Report a vulnerability](SECURITY.md)** *(privately, please)*
+**[Contributor workflow](docs/CONTRIBUTOR_WORKFLOW.md)** *(start here — `pnpm check:all` before every PR)* · **[Contributor tasks](docs/CONTRIBUTOR_TASKS.md)** · **[Contributing guide](CONTRIBUTING.md)** · **[Security-sensitive rules](docs/CONTRIBUTING_SECURITY.md)** · **[Trust Center](docs/TRUST_CENTER.md)** · **[PBOM](docs/PBOM.md)** · **[Report a vulnerability](SECURITY.md)** *(privately, please)*
 
 Hard lines every PR must respect: no telemetry · no external assets · no custom crypto · no policy bypass — CI enforces the mechanical parts.
 

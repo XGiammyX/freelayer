@@ -1,0 +1,65 @@
+name: Anti-spyware integration proposal (Gate R)
+description: Propose integrating the standalone anti-spyware / Endpoint Defense project into FreeLayer core.
+title: "[gate-r] "
+labels: ["anti-spyware-external", "adr", "security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The Endpoint Defense / anti-spyware **implementation is externalized** — FreeLayer core keeps policy hooks only.
+        Integration requires the full Gate R process ([IMPLEMENTATION_GATES.md](../../docs/IMPLEMENTATION_GATES.md)):
+        ADR + threat model + native-permission audit + PBOM + Trust Center + tests + review.
+  - type: input
+    id: project
+    attributes:
+      label: Standalone anti-spyware project reference
+      description: Repository/release being proposed for integration.
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Proposed integration boundary
+      description: Exactly which hooks/contracts in core would connect to which external components.
+    validations:
+      required: true
+  - type: textarea
+    id: permissions
+    attributes:
+      label: Native permissions required
+      description: Every OS permission/capability, per platform.
+    validations:
+      required: true
+  - type: textarea
+    id: dataflows
+    attributes:
+      label: Data flows
+      description: What data crosses the boundary, in which direction, under which policy.
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Platform limitations (honest)
+      description: What this integration CANNOT protect against, per platform (compromised endpoints, cameras, ...).
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: PBOM / Trust Center impact
+    validations:
+      required: true
+  - type: textarea
+    id: belongs
+    attributes:
+      label: Why does this belong in FreeLayer core (vs staying external)?
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Non-overclaim commitment
+      options:
+        - label: The integration will not claim protection against compromised endpoints or cameras, and the Trust Center language will pass the overclaim scanner
+          required: true

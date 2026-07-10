@@ -19,15 +19,17 @@ Thank you for your interest in FreeLayer. The project is in the **research and f
 > Placeholder — there is no runnable application yet.
 
 ```bash
-# Prerequisites: Node.js >= 20, pnpm >= 9
+# Prerequisites: Node.js 24 (.nvmrc), pnpm >= 9
 git clone https://github.com/XGiammyX/freelayer.git
 cd freelayer
 pnpm install
-pnpm typecheck && pnpm lint && pnpm test && pnpm build
-pnpm audit:privacy   # boundary + external-asset + telemetry + storage guards
+pnpm check:all   # typecheck + lint + test + build + every privacy/security guard
 ```
 
-See [docs/INSTALLATION.md](docs/INSTALLATION.md) for details.
+See [docs/INSTALLATION.md](docs/INSTALLATION.md) for details, **[docs/CONTRIBUTOR_WORKFLOW.md](docs/CONTRIBUTOR_WORKFLOW.md) for the full PR workflow**, and [docs/COMMANDS.md](docs/COMMANDS.md) for every command. Policy work: [docs/POLICY_DEVELOPER_GUIDE.md](docs/POLICY_DEVELOPER_GUIDE.md).
+
+> [!IMPORTANT]
+> **No real secrets** — the project is research-stage; nothing here protects real communications yet. **Docs are canonical** — `docs/` first, wiki second ([docs/DOCS_CANONICAL_WORKFLOW.md](docs/DOCS_CANONICAL_WORKFLOW.md)). **Anti-spyware is externalized** — the Endpoint Defense / ScreenShield implementation lives in a standalone project; FreeLayer core accepts policy hooks only, never endpoint-monitoring dependencies or implementations (Gate R, [docs/IMPLEMENTATION_GATES.md](docs/IMPLEMENTATION_GATES.md)).
 
 ## Coding standards
 

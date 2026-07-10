@@ -5,7 +5,7 @@
 
 ## Project status
 
-FreeLayer is in the **research and foundation stage**. There is no released software, no implemented cryptography, and nothing has been audited. Do not use anything in this repository to protect real communications.
+FreeLayer is in the **research and foundation stage**. There is no released software, no implemented cryptography, and nothing has been audited. **Not ready for real secrets — do not use anything in this repository to protect real communications.** The Endpoint Defense / anti-spyware implementation is **externalized** to a standalone project and is **not active in FreeLayer core** (policy hooks only). No perfect-security claims are made anywhere in this project; overclaims are treated as bugs and machine-scanned (`check:policy-conflicts`).
 
 ## Supported versions
 
