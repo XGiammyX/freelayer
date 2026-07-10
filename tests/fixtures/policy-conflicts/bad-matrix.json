@@ -1,0 +1,102 @@
+{
+  "version": "0.0.0-fixture",
+  "note": "FIXTURE (never shipped): a deliberately CONTRADICTORY matrix export. Every spec below violates a policy invariant; scripts/check-policy-conflicts.mjs must fail on all of them.",
+  "specs": [
+    {
+      "id": "storage.content_persistent_write",
+      "domain": "storage",
+      "operation": "storage.write.persistent",
+      "sink": "local_persistent_storage",
+      "dataClass": "message_content",
+      "effect": "allow",
+      "reasonCode": "default_deny",
+      "rationale": "FIXTURE: ghost persistent write marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/STORAGE_MODEL.md"]
+    },
+    {
+      "id": "network.telemetry_send",
+      "domain": "network",
+      "operation": "telemetry.send",
+      "effect": "allow",
+      "reasonCode": "telemetry_forbidden",
+      "rationale": "FIXTURE: telemetry marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/NETWORK_MODEL.md"]
+    },
+    {
+      "id": "link_preview.automatic_preview",
+      "domain": "link_preview",
+      "operation": "preview.automatic",
+      "effect": "allow",
+      "reasonCode": "link_preview_forbidden",
+      "rationale": "FIXTURE: automatic preview marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/METADATA_MODEL.md"]
+    },
+    {
+      "id": "network.arbitrary_request",
+      "domain": "network",
+      "operation": "network.request",
+      "effect": "deny",
+      "effectOverrides": { "offline_capsule": "allow" },
+      "reasonCode": "network_forbidden",
+      "rationale": "FIXTURE: offline capsule network marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/NETWORK_MODEL.md"]
+    },
+    {
+      "id": "crypto.operation",
+      "domain": "crypto",
+      "operation": "crypto.any",
+      "effect": "allow",
+      "reasonCode": "crypto_not_implemented",
+      "rationale": "FIXTURE: future-gated crypto marked allowed/executable.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/CRYPTO_DESIGN.md"]
+    },
+    {
+      "id": "endpoint.screenshot_blocking",
+      "domain": "endpoint",
+      "operation": "display.screenshot_blocking",
+      "effect": "allow",
+      "reasonCode": "deferred_gate",
+      "rationale": "FIXTURE: externalized endpoint-defense capability marked implemented/active.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/SCREENSHIELD.md"]
+    },
+    {
+      "id": "metadata.typing_indicator",
+      "domain": "metadata",
+      "operation": "typing.start",
+      "effect": "deny",
+      "effectOverrides": { "private": "allow" },
+      "reasonCode": "metadata_forbidden",
+      "rationale": "FIXTURE: private typing indicator marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/METADATA_MODEL.md"]
+    },
+    {
+      "id": "notification.badge_count",
+      "domain": "notification",
+      "operation": "notification.badge.count",
+      "sink": "app_badge",
+      "effect": "deny",
+      "effectOverrides": { "bunker": "allow" },
+      "reasonCode": "metadata_forbidden",
+      "rationale": "FIXTURE: bunker badge marked allowed.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/PRIVACY_MODEL.md"]
+    },
+    {
+      "id": "storage.encrypted_persistent_backend",
+      "domain": "storage",
+      "operation": "storage.backend.encrypted_persistent",
+      "effect": "allow",
+      "reasonCode": "encrypted_storage_not_implemented",
+      "rationale": "FIXTURE: not-implemented encrypted placeholder marked executable.",
+      "testCoverage": "covered",
+      "docsRefs": ["docs/STORAGE_MODEL.md"]
+    }
+  ]
+}

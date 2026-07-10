@@ -219,3 +219,8 @@ export * from "./notificationBarrier";
 //      (docs/POLICY_MATRIX.md). ----
 export * from "./policyMatrixTypes";
 export * from "./policyMatrix";
+
+// ---- Policy conflict taxonomy (TECH-14). Contradictions between policy
+//      layers are privacy bugs; the regression suite makes them fail tests
+//      (docs/audits/POLICY_CONFLICT_REPORT.md). ----
+export * from "./policyConflicts";

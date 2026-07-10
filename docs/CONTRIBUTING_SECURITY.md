@@ -25,6 +25,8 @@ Extra rules — beyond [CONTRIBUTING.md](../CONTRIBUTING.md) — for contributio
 
 **Policy Matrix coupling (TECH-13):** any PR that changes privacy/security *behavior* must update, in the same PR: the [Policy Matrix](POLICY_MATRIX.md) (spec table + mirrored `docs/policy-matrix.v1.json` — the sync test fails on drift), the [PBOM](PBOM.md), the relevant model doc, and tests. `check:policy-matrix` / `check:policy-docs` enforce the mechanical parts.
 
+**Conflict-suite coupling (TECH-14):** the same PRs must also keep the conflict regression suite green — update `tests/*/policy-conflicts/` when adding rows the engines cover, and the Trust Center if user-facing guarantees change (`check:policy-conflicts` scans it for overclaims). **Any PR touching endpoint-defense / anti-spyware integration must open the dedicated ADR/gate first** ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md) Gate R) — the implementation is externalized and core accepts hooks only.
+
 Any PR touching the following areas must update documentation **in the same PR**:
 
 - `packages/core`

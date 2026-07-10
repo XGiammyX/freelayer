@@ -233,6 +233,14 @@ Any notification-producing behavior not listed here is undocumented and must be 
 
 The PBOM must agree with the canonical [Policy Matrix](POLICY_MATRIX.md) — sections 14–16 above map 1:1 onto matrix domains (metadata, link/asset, notification), and the matrix's 94 specs are the machine-checked source of truth (`check:policy-matrix`, `check:policy-docs`). **Any new network / storage / metadata / notification / link / asset / AI behavior requires a matrix update in the same PR. Undocumented behavior is a privacy bug.**
 
+## 18. Endpoint Defense / Anti-spyware status (TECH-14)
+
+The anti-spyware / Endpoint Defense / ScreenShield **implementation is externalized** to a separate standalone project. In FreeLayer core: **no native endpoint monitoring dependency** (screenshot/clipboard/overlay/keystroke/process monitoring — machine-checked by `check:policy-conflicts`), **no native permissions**, **policy hooks only** (ScreenShield levels, endpoint data classes/metadata events, `future_gate` matrix rows). Future integration requires the dedicated gate ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md) Gate R) and a PBOM update enumerating every capability. Audit: [audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md).
+
+## 19. Policy conflict checks (TECH-14)
+
+The PBOM must agree with the Policy Matrix and the conflict checks: `check:policy-conflicts` fails CI if a dependency contradicts a "not implemented" claim here (push SDKs, endpoint monitoring, remote-AI clients), if the Trust Center overclaims, or if the exported matrix marks an always-forbidden behavior as allowed. Conflict status: [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md).
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).
