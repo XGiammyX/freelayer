@@ -203,6 +203,7 @@ Storage is not only a content surface — its artifacts are metadata:
 - Audit events and logs are **metadata sinks** — redacted only, never content, never persistent in v0.
 - Preview/thumbnail existence is metadata; protected-content reveal state is metadata.
 - **Cache denial must align with MetadataPolicy.** StoragePolicy denies preview/thumbnail caches in Private+, AI caches everywhere, and reveal-state persistence in strict/sealed; MetadataPolicy denies the corresponding `preview.generated` / `cache.exists` / `ai.cache_exists` / `protected_content.revealed` events. Agreement is guarded by `tests/privacy-regression/metadata/metadata-integration.test.ts`. See [METADATA_MODEL.md](METADATA_MODEL.md).
+- **(TECH-11) Preview/favicon/OpenGraph/avatar/thumbnail caches are denied.** A preview cache would persist a URL, title, and image (content-adjacent); a favicon cache would persist browsing interests; a remote-avatar cache would persist contact-graph hints. `LinkPreviewPolicy` denies all preview caching (`cacheAllowed`/`thumbnailAllowed`/`faviconAllowed` false), and Ghost/Bunker deny any persistent URL/preview artifact. Agreement with StoragePolicy is guarded by `tests/privacy-regression/link-preview/`.
 
 ## TODO
 

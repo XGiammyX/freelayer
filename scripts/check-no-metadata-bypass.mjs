@@ -43,6 +43,11 @@ const FORBIDDEN = [
   "fetchOpenGraph",
   "loadOpenGraph",
   "fetchLinkMetadata",
+  "unfurl(",
+  "fetchFavicon",
+  "fetchRemoteAvatar",
+  "fetchAvatar",
+  "loadRemoteImage",
 ];
 
 const DEFAULT_DIRS = ["apps", "packages"];

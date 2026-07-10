@@ -191,6 +191,10 @@ The Metadata Firewall addresses application-signal leakage (receipts/typing/pres
 
 **Out of scope, stated plainly:** global passive traffic analysis, transport-native metadata visible to a future courier, malicious room members, and network-level timing/size correlation (mitigated only in later phases). TECH-10 is app-level metadata policy, not protocol-level anonymity. Full analysis: [audits/TECH_10_METADATA_THREAT_MODEL.md](audits/TECH_10_METADATA_THREAT_MODEL.md).
 
+## Link preview / external asset threats (TECH-11)
+
+Automatic link previews and remote assets are privacy traps: one auto-fetch leaks the URL, IP, user-agent, referrer, DNS, and open-timing to a server the user never chose; connection hints leak DNS/TCP before content; a malicious URL can attack a parser; a server-side preview (which FreeLayer refuses to build) would add SSRF. **Mitigation:** no automatic previews and no remote assets in any mode; a pure URL classifier that never fetches; domain-only redacted display. **Limitation:** manual external navigation is user-controlled and outside the app boundary — opening a link in another browser leaks to that browser and the target site. Full analysis: [audits/TECH_11_LINK_ASSET_THREAT_MODEL.md](audits/TECH_11_LINK_ASSET_THREAT_MODEL.md).
+
 ## TODO
 
 - [ ] Per-transport threat annexes as each transport is designed

@@ -38,6 +38,17 @@ const FORBIDDEN_DEPS = [
   "@anthropic-ai/",
   "@google-cloud/",
   "@tauri-apps/plugin-http",
+  // Link-preview / OpenGraph / URL-unfurling / HTML-scraper packages (TECH-11).
+  // These fetch and parse remote pages — exactly what the Metadata Firewall and
+  // NetworkPolicy forbid. Adding one is a review-blocking event.
+  "metascraper", // prefix — metascraper-* subpackages
+  "open-graph-scraper",
+  "link-preview-js",
+  "url-metadata",
+  "unfurl.js",
+  "html-metadata",
+  "@extractus/", // prefix — oembed/article/etc. extractors
+  "cheerio",
 ];
 
 function isForbidden(depName) {

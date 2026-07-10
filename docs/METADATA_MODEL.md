@@ -167,6 +167,16 @@ The Metadata Firewall is now a real policy engine in `packages/privacy` (Metadat
 
 **Platform-state note.** The AST-backed ESLint guardrails and the WeakSet `PolicyDecision` provenance registry are already-resolved foundation items ([PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md)); TECH-10 builds on them and does not replace them.
 
+## TECH-11 — Link preview and external asset blocking
+
+URLs are **content-adjacent metadata**; remote assets are **network side effects**. A single automatic preview leaks the URL, the reader's IP, user-agent, referrer, DNS, and open-timing. So FreeLayer denies **all** automatic previews and **all** remote assets, in every mode:
+
+- `LinkPreviewPolicy` (`resolveLinkPreviewPolicy`): no automatic preview, no fetch, no favicon/OpenGraph/thumbnail, no preview cache — ever. Relaxed modes show the URL as **redacted plain text** (domain-only); ScreenShield sealed collapses it to `[redacted link]`.
+- `ExternalAssetPolicy` (`resolveExternalAssetPolicy`): all 16 asset kinds (remote image/avatar/font/script/stylesheet/CSS-url, tracking pixel, favicon, OpenGraph image, video/audio/iframe, preconnect/dns-prefetch/preload/prefetch) denied. Avatars/images must travel as future capsule content, never remote URLs.
+- **URL classifier** (`classifyUrl`): pure — no network, no DNS; classifies 14 kinds; `javascript:`/`data:`/`blob:`/`file:` denied; query strings and credentials always redacted. `renderPlainTextUrlLabel` is the only sanctioned renderer (never an image/favicon/card).
+
+Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
+
 ## TODO
 
 - [ ] Metadata leakage label schema per transport
