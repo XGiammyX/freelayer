@@ -174,6 +174,24 @@ Rules: [DEPENDENCY_POLICY.md](DEPENDENCY_POLICY.md). Future: SBOM per release (P
 
 Not implemented yet. Once the core operation pipeline exists (Gate B), every side-effect category it recognizes (persist, notify, connect, transmit, fetch, preview, derive, sync, run AI) will map to the PBOM sections that inventory it — so "the pipeline allows X" and "the PBOM documents X" can be diffed mechanically (Phase 10 auto-diff). Tauri capabilities (Phase 9 lockdown) are inventoried under section 5 as part of this coverage.
 
+## 14. Metadata behavior — current implementation (TECH-10)
+
+| Metadata behavior            | Default status                           |
+| ---------------------------- | ---------------------------------------- |
+| Read receipts                | Not implemented / denied in Private+     |
+| Typing indicators            | Not implemented / denied in Private+     |
+| Presence/online status       | Not implemented / denied in Private+     |
+| Last seen                    | Not implemented / denied                 |
+| Link previews                | Not implemented / denied                 |
+| External assets              | Forbidden                                |
+| Notification content         | Not implemented / denied in strict modes |
+| Audit events                 | Redacted only                            |
+| Telemetry metadata           | Forbidden                                |
+| AI metadata                  | Not implemented / denied in Ghost/Bunker |
+| ScreenShield reveal metadata | Policy hooks only                        |
+
+Any metadata-producing behavior not listed here is undocumented and must be treated as a privacy bug. Governed by MetadataPolicy v0 ([METADATA_MODEL.md](METADATA_MODEL.md)); in v0 no metadata persists and none egresses.
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).

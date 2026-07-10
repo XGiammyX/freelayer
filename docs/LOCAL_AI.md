@@ -114,6 +114,7 @@ AI is fully unavailable in Ghost and Bunker: inference produces memory artifacts
 
 ## TODO
 
+- [ ] (TECH-10) AI *existence* is metadata: `ai.prompt_exists`, `ai.cache_exists`, and `ai.summary_exists` are denied in Ghost/Bunker (and everywhere in v0 — Gate I). AI outputs must never enter audit/log metadata without redaction. MetadataPolicy denies these events; StoragePolicy denies AI caches. See [METADATA_MODEL.md](METADATA_MODEL.md).
 - [ ] AIPolicy schema alongside Privacy Modes work (Phase 2 leaves hooks; Phase 8 fills them)
 - [ ] Model adapter interface draft
 - [ ] AI Privacy Guard design doc

@@ -26,9 +26,10 @@
     "check:no-forbidden-network": "node scripts/check-no-forbidden-network.mjs",
     "check:build-zero-egress": "node scripts/check-build-zero-egress.mjs",
     "check:no-network-deps": "node scripts/check-no-network-deps.mjs",
+    "check:no-metadata-bypass": "node scripts/check-no-metadata-bypass.mjs",
     "check:doc-links": "node scripts/check-doc-links.mjs",
     "wiki:publish": "node scripts/publish-wiki.mjs",
-    "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:no-forbidden-network && pnpm run check:no-network-deps && pnpm run check:boundaries",
+    "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:no-forbidden-network && pnpm run check:no-network-deps && pnpm run check:no-metadata-bypass && pnpm run check:boundaries",
     "audit:security": "node -e \"console.log('[audit:security] Baseline only: see audit:privacy checks and docs/SECURITY_REVIEW_CHECKLIST.md. Dedicated security-regression suite arrives with implementation phases (docs/ROADMAP.md Phase 10).'); process.exit(0)\"",
     "audit:supply-chain": "pnpm audit --audit-level=high || echo \"[audit:supply-chain] pnpm audit reported issues. Dependency rules: docs/DEPENDENCY_POLICY.md.\"",
     "clean": "turbo run clean"

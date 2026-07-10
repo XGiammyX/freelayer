@@ -133,6 +133,14 @@ Discovery and transfer on a local network for same-site sync (e.g. desktop ↔ l
 - Tor integration patterns for Tauri and browsers
 - LAN discovery protocols with minimal presence leakage
 
+## Coordination with the Metadata Firewall (TECH-10)
+
+Network behavior is metadata-producing behavior. The per-transport leakage labels here must coordinate with MetadataPolicy ([METADATA_MODEL.md](METADATA_MODEL.md)):
+
+- WebRTC/direct connections expose IP/NAT metadata (ICE candidates) — `webrtc.ice_candidate` is a denied network-metadata event; NetworkPolicy denies the WebRTC transport in Private/Ghost/Bunker. The two agree (integration test).
+- Relay-poll timing, request timing/size, and relay choice are metadata (`transport.poll`, `transport.send_timing`, `transport.size`, `relay.choice`) — denied in v0 (no network) and always in offline/strict modes.
+- Link preview and external-asset fetch are metadata-producing egress — denied by both NetworkPolicy and MetadataPolicy in every mode.
+
 ## TODO
 
 - [ ] `Transport` interface specification (Phase 4)
