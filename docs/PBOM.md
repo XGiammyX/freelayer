@@ -229,6 +229,10 @@ Governed by `LinkPreviewPolicy` / `ExternalAssetPolicy` ([METADATA_MODEL.md](MET
 
 Any notification-producing behavior not listed here is undocumented and must be treated as a privacy bug. Governed by `NotificationPolicy` ([PRIVACY_MODEL.md](PRIVACY_MODEL.md)); machine-checked by `check:no-notification-bypass` + the runtime notification trap. Audits: [audits/TAURI_NOTIFICATION_PERMISSION_AUDIT.md](audits/TAURI_NOTIFICATION_PERMISSION_AUDIT.md), [audits/NOTIFICATION_SERVICE_WORKER_PUSH_AUDIT.md](audits/NOTIFICATION_SERVICE_WORKER_PUSH_AUDIT.md).
 
+## 17. Policy Matrix v1 (TECH-13)
+
+The PBOM must agree with the canonical [Policy Matrix](POLICY_MATRIX.md) — sections 14–16 above map 1:1 onto matrix domains (metadata, link/asset, notification), and the matrix's 94 specs are the machine-checked source of truth (`check:policy-matrix`, `check:policy-docs`). **Any new network / storage / metadata / notification / link / asset / AI behavior requires a matrix update in the same PR. Undocumented behavior is a privacy bug.**
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).

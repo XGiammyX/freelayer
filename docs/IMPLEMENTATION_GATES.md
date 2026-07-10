@@ -130,6 +130,24 @@ TECH-12 is complete only if all hold:
 
 Any OS notification / push / service worker requires a future ADR/gate. Detail: [audits/TECH_12_NOTIFICATION_PRIVACY_AUDIT.md](audits/TECH_12_NOTIFICATION_PRIVACY_AUDIT.md).
 
+## Gate P — Policy Matrix (TECH-13)
+
+*Opens: any change to privacy/security policy behavior (all future feature work consults this gate).*
+
+TECH-13 is complete only if all hold:
+
+- [x] Precheck, research note, and threat model exist ([audits/TECH_13_PRECHECK.md](audits/TECH_13_PRECHECK.md), [research/POLICY_MATRIX_RESEARCH.md](research/POLICY_MATRIX_RESEARCH.md), [audits/TECH_13_POLICY_MATRIX_THREAT_MODEL.md](audits/TECH_13_POLICY_MATRIX_THREAT_MODEL.md))
+- [x] Policy Matrix v1 exists (94 specs → 658 rules; unique ids; every mode × major domain covered)
+- [x] Machine-readable export ([policy-matrix.v1.json](policy-matrix.v1.json)) with verbatim sync test
+- [x] Validation script (`check:policy-matrix`) + docs-consistency script (`check:policy-docs`) in CI
+- [x] Fail-closed unknown inputs; deny-overrides; strictest-wins; tighten-only room/ScreenShield composition — all tested
+- [x] Cross-engine agreement tests: Storage, Network, Metadata, LinkPreview, ExternalAsset, Notification
+- [x] Deferred gates encoded as `future_gate` (crypto, encrypted storage, capsules, room sync, identity, push, AI, EDL)
+- [x] PBOM, Trust Center, Privacy/Storage/Network/Metadata docs, CONTRIBUTING_SECURITY updated
+- [x] All local checks pass (320 tests)
+
+Any policy-behavior PR must update the matrix in the same PR. Detail: [audits/TECH_13_POLICY_MATRIX_AUDIT.md](audits/TECH_13_POLICY_MATRIX_AUDIT.md).
+
 ## Gate E — Capsule Parser
 
 *Opens: processing any externally-produced capsule (Phase 4).*

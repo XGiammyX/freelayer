@@ -213,3 +213,9 @@ export * from "./notificationTypes";
 export * from "./notificationErrors";
 export * from "./notificationPolicy";
 export * from "./notificationBarrier";
+
+// ---- Policy Matrix v1 (TECH-13). The single canonical mode × domain ×
+//      operation contract; tests, docs and PBOM must agree with it
+//      (docs/POLICY_MATRIX.md). ----
+export * from "./policyMatrixTypes";
+export * from "./policyMatrix";

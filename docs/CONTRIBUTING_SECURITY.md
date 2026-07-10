@@ -23,6 +23,8 @@ Extra rules — beyond [CONTRIBUTING.md](../CONTRIBUTING.md) — for contributio
 
 *(Locked — [ADR-0010](adr/ADR-0010-documentation-updated-with-code.md).)*
 
+**Policy Matrix coupling (TECH-13):** any PR that changes privacy/security *behavior* must update, in the same PR: the [Policy Matrix](POLICY_MATRIX.md) (spec table + mirrored `docs/policy-matrix.v1.json` — the sync test fails on drift), the [PBOM](PBOM.md), the relevant model doc, and tests. `check:policy-matrix` / `check:policy-docs` enforce the mechanical parts.
+
 Any PR touching the following areas must update documentation **in the same PR**:
 
 - `packages/core`
