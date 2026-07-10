@@ -7,7 +7,6 @@ import { describe, expect, it } from "vitest";
 import { issuePolicyDecision, type PolicyDecision } from "@freelayer/privacy";
 import {
   assertStorageWriteAllowed,
-  ForbiddenDebugArtifactError,
   MemoryStorageProvider,
   resolveStoragePolicy,
   StoragePolicyDeniedError,

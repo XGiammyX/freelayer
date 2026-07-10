@@ -96,18 +96,8 @@ export type PolicySideEffectScope =
   | "ai.infer"
   | "generic";
 
-/**
- * Runtime marker for PolicyDecision objects. Honest scope: `Symbol.for` is
- * forgeable by code in the same process — this guard catches *accidental*
- * bypass (a feature calling a side-effect module directly), not a hostile
- * in-process actor, which is outside the threat model. Compile-time
- * enforcement is a Gate A/B TODO (docs/ARCHITECTURE.md).
- */
-export const POLICY_DECISION_MARK: unique symbol = Symbol.for("freelayer.policy-decision");
-
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
 export interface PolicyDecision {
-  readonly [POLICY_DECISION_MARK]: true;
   readonly id: PolicyDecisionId;
   readonly capability: PolicyCapability;
   /** The concrete operation this decision authorizes (exact-match in strict barriers). */
@@ -118,6 +108,21 @@ export interface PolicyDecision {
   readonly issuedAtLogical: number;
 }
 
+/**
+ * Provenance registry: the set of PolicyDecision objects this module actually
+ * issued. It is module-PRIVATE — no other code holds a reference to it, so no
+ * other code can add to it. A hand-crafted object that merely *looks* like a
+ * PolicyDecision is not a member and is rejected.
+ *
+ * This is genuinely unforgeable within the JS object-capability model
+ * (upgraded from the earlier `Symbol.for` mark, which was forgeable because
+ * the registry key was global). Honest remaining limit: it does not defend
+ * against a hostile actor with the same-realm ability to reflect on a *real*
+ * decision and re-present it — decision reuse across operations is bounded by
+ * the exact side-effect scope check in each barrier, not by this registry.
+ */
+const issuedDecisions = new WeakSet<PolicyDecision>();
+
 export type PolicyEvaluationResult =
   | { readonly verdict: "allowed"; readonly decision: PolicyDecision }
   | { readonly verdict: "denied"; readonly reason: string };
@@ -127,7 +132,8 @@ let decisionSeq = 0;
 /**
  * Issue a PolicyDecision. Intended caller: the core operation pipeline ONLY.
  * Direct use by features is a policy bypass — rejected in review
- * (docs/SECURITY_REVIEW_CHECKLIST.md) until enforced mechanically.
+ * (docs/SECURITY_REVIEW_CHECKLIST.md). The returned object is registered as
+ * an authentic decision; only objects from this factory pass isPolicyDecision.
  */
 export function issuePolicyDecision(
   capability: PolicyCapability,
@@ -136,8 +142,7 @@ export function issuePolicyDecision(
   sideEffect: PolicySideEffectScope = "generic",
 ): PolicyDecision {
   decisionSeq += 1;
-  return {
-    [POLICY_DECISION_MARK]: true,
+  const decision: PolicyDecision = {
     id: `pd-${decisionSeq}` as PolicyDecisionId,
     capability,
     sideEffect,
@@ -145,18 +150,17 @@ export function issuePolicyDecision(
     mode,
     issuedAtLogical: decisionSeq,
   };
+  issuedDecisions.add(decision);
+  return decision;
 }
 
-/** Runtime shape check used by side-effect modules before acting. */
+/**
+ * Authenticity check used by side-effect modules before acting: the value must
+ * be an object this module actually issued (WeakSet membership). Forged
+ * look-alikes fail by construction.
+ */
 export function isPolicyDecision(value: unknown): value is PolicyDecision {
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-  const candidate = value as Partial<PolicyDecision>;
   return (
-    candidate[POLICY_DECISION_MARK] === true &&
-    typeof candidate.id === "string" &&
-    typeof candidate.capability === "string" &&
-    (candidate.verdict === "allowed" || candidate.verdict === "denied")
+    typeof value === "object" && value !== null && issuedDecisions.has(value as PolicyDecision)
   );
 }
