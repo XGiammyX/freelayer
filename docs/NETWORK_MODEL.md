@@ -141,6 +141,10 @@ Network behavior is metadata-producing behavior. The per-transport leakage label
 - Relay-poll timing, request timing/size, and relay choice are metadata (`transport.poll`, `transport.send_timing`, `transport.size`, `relay.choice`) — denied in v0 (no network) and always in offline/strict modes.
 - Link preview and external-asset fetch are metadata-producing egress — denied by both NetworkPolicy and MetadataPolicy in every mode.
 
+### TECH-11 — link previews and external assets are network side effects
+
+Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favicons/OpenGraph images/tracking pixels) are network side effects and are denied in every mode. Connection hints — `preconnect`, `dns-prefetch`, `preload`, `prefetch` to remote origins — produce DNS/TCP metadata *before* any content is fetched and are likewise forbidden. `LinkPreviewPolicy`/`ExternalAssetPolicy` agree with NetworkPolicy's `link.preview`/`asset.fetch` denials. Future transports must not reintroduce preview fetches; a future preview must be user-initiated through an IP-protecting transport with `Referrer-Policy: no-referrer` ([WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md)).
+
 ## TODO
 
 - [ ] `Transport` interface specification (Phase 4)

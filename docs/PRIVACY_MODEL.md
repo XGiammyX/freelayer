@@ -176,6 +176,8 @@ Privacy Modes now govern metadata, not only content and storage/network side eff
 
 Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_MODEL.md).
 
+**Link previews & external assets (TECH-11):** no automatic link previews and no remote assets in any mode. Relaxed modes may show a URL as redacted plain text (domain-only); Private/Ghost/Bunker follow the content-rendering policy; ScreenShield sealed redacts the URL display entirely. A real, user-initiated preview requires a new design gate. Room policy cannot loosen these denials.
+
 ## TODO
 
 - [ ] Write the policy matrix as a versioned schema in `packages/privacy` (Phase 2)

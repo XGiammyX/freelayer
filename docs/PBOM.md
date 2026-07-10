@@ -192,6 +192,25 @@ Not implemented yet. Once the core operation pipeline exists (Gate B), every sid
 
 Any metadata-producing behavior not listed here is undocumented and must be treated as a privacy bug. Governed by MetadataPolicy v0 ([METADATA_MODEL.md](METADATA_MODEL.md)); in v0 no metadata persists and none egresses.
 
+## 15. Link previews and external assets (TECH-11)
+
+| Behavior                       | Status                   |
+| ------------------------------ | ------------------------ |
+| Automatic link previews        | Forbidden                |
+| OpenGraph fetch                | Forbidden                |
+| Favicon fetch                  | Forbidden                |
+| Remote images                  | Forbidden                |
+| Remote avatars                 | Forbidden                |
+| Remote fonts                   | Forbidden                |
+| Remote scripts                 | Forbidden                |
+| Remote CSS                     | Forbidden                |
+| Tracking pixels                | Forbidden                |
+| Preconnect/dns-prefetch remote | Forbidden                |
+| Preview cache                  | Not implemented / denied |
+| User-initiated preview         | Future research gate     |
+
+Governed by `LinkPreviewPolicy` / `ExternalAssetPolicy` ([METADATA_MODEL.md](METADATA_MODEL.md)) and machine-checked by `check:no-external-assets` + `check:build-zero-egress`.
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).

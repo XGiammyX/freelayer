@@ -49,6 +49,7 @@
 - [Dependency Policy](DEPENDENCY_POLICY.md) — when a dependency may be added, and how it is reviewed.
 - [Maintenance & Update Strategy](MAINTENANCE.md) — how the platform stays current safely: the test suite as the update safety net.
 - [No External Assets Policy](NO_EXTERNAL_ASSETS_POLICY.md) — why the apps contact no third party, ever.
+- [Web Security Headers](WEB_SECURITY_HEADERS.md) — recommended CSP / Referrer-Policy for a future deployment (defense-in-depth).
 - [ADRs — the project constitution](adr/README.md) — the binding decisions (ADR-0001 … ADR-0012).
 - [Security policy](../SECURITY.md) — how to report vulnerabilities privately.
 

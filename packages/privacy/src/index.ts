@@ -188,3 +188,10 @@ export * from "./metadataHelpers";
 export * from "./metadataPolicy";
 export * from "./metadataBarrier";
 export * from "./metadataSignals";
+
+// ---- Link preview / external asset blocking (TECH-11). URLs are
+//      content-adjacent metadata; remote assets are network side effects.
+//      Both denied by default (docs/METADATA_MODEL.md). ----
+export * from "./urlClassification";
+export * from "./linkPreviewPolicy";
+export * from "./externalAssetPolicy";

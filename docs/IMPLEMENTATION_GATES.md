@@ -91,6 +91,25 @@ TECH-10 is complete only if all hold:
 
 Enforcement reuses the existing WeakSet `PolicyDecision` provenance (Gate B item A2), not a new mechanism. Detail: [METADATA_MODEL.md](METADATA_MODEL.md), [audits/TECH_10_METADATA_FIREWALL_AUDIT.md](audits/TECH_10_METADATA_FIREWALL_AUDIT.md).
 
+## Gate N — Link Preview / External Asset Blocking (TECH-11)
+
+*Opens: any UI that renders user-provided URLs or could load a remote asset.*
+
+TECH-11 is complete only if all hold:
+
+- [x] Precheck, research note, and threat model exist ([audits/TECH_11_PRECHECK.md](audits/TECH_11_PRECHECK.md), [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [audits/TECH_11_LINK_ASSET_THREAT_MODEL.md](audits/TECH_11_LINK_ASSET_THREAT_MODEL.md))
+- [x] `LinkPreviewPolicy`, `ExternalAssetPolicy`, and a pure URL classifier exist (`packages/privacy`)
+- [x] Automatic previews + network preview fetch + favicon/OpenGraph denied in all modes
+- [x] Remote images/fonts/scripts/styles/avatars + preconnect/dns-prefetch/preload/prefetch denied
+- [x] Preview/thumbnail/favicon caching denied; URL display redacts credentials/query
+- [x] No sentinel URL in errors/audit/logs; no fetch during classification/policy resolution
+- [x] External-asset scanner catches fixtures; real build/source contains no remote assets
+- [x] Metadata / Network / Storage integration tests pass
+- [x] PBOM, Trust Center, Metadata/Network/Storage/Privacy docs + [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md) updated
+- [x] All local checks pass (257 tests)
+
+A safe user-initiated preview remains a future design gate. Detail: [audits/TECH_11_LINK_ASSET_BLOCKING_AUDIT.md](audits/TECH_11_LINK_ASSET_BLOCKING_AUDIT.md).
+
 ## Gate E — Capsule Parser
 
 *Opens: processing any externally-produced capsule (Phase 4).*

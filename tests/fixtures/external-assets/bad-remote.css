@@ -1,0 +1,9 @@
+/* FIXTURE (never bundled). Remote CSS asset patterns the scanner must catch. */
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+body {
+  background: url("https://cdn.example.com/bg.png");
+}
+@font-face {
+  font-family: "X";
+  src: url("https://fonts.gstatic.com/font.woff2");
+}
