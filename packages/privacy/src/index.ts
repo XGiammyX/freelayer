@@ -107,6 +107,16 @@ export type PolicySideEffectScope =
   | "typing.emit"
   | "presence.emit"
   | "notification.show"
+  // Notification Privacy Model scopes (TECH-12). Each notification operation
+  // must carry a decision scoped to exactly it (docs/PRIVACY_MODEL.md).
+  | "notification.permission_request"
+  | "notification.badge"
+  | "notification.sound"
+  | "notification.vibration"
+  | "notification.push_subscribe"
+  | "notification.push_receive"
+  | "notification.service_worker_show"
+  | "notification.audit"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
@@ -195,3 +205,11 @@ export * from "./metadataSignals";
 export * from "./urlClassification";
 export * from "./linkPreviewPolicy";
 export * from "./externalAssetPolicy";
+
+// ---- Notification Privacy Model (TECH-12). Notifications are side effects;
+//      their content and metadata are sensitive; denied by default
+//      (docs/PRIVACY_MODEL.md). ----
+export * from "./notificationTypes";
+export * from "./notificationErrors";
+export * from "./notificationPolicy";
+export * from "./notificationBarrier";

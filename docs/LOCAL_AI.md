@@ -115,6 +115,7 @@ AI is fully unavailable in Ghost and Bunker: inference produces memory artifacts
 ## TODO
 
 - [ ] (TECH-10) AI *existence* is metadata: `ai.prompt_exists`, `ai.cache_exists`, and `ai.summary_exists` are denied in Ghost/Bunker (and everywhere in v0 — Gate I). AI outputs must never enter audit/log metadata without redaction. MetadataPolicy denies these events; StoragePolicy denies AI caches. See [METADATA_MODEL.md](METADATA_MODEL.md).
+- [ ] (TECH-12) AI summaries must never be sent to notifications by default: NotificationPolicy denies the `ai_summary` content class in every mode. Ghost/Bunker deny AI notification metadata/content. AI-derived notification content stays denied until a future explicit design gate. See [PRIVACY_MODEL.md](PRIVACY_MODEL.md).
 - [ ] AIPolicy schema alongside Privacy Modes work (Phase 2 leaves hooks; Phase 8 fills them)
 - [ ] Model adapter interface draft
 - [ ] AI Privacy Guard design doc

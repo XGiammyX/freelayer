@@ -211,6 +211,24 @@ Any metadata-producing behavior not listed here is undocumented and must be trea
 
 Governed by `LinkPreviewPolicy` / `ExternalAssetPolicy` ([METADATA_MODEL.md](METADATA_MODEL.md)) and machine-checked by `check:no-external-assets` + `check:build-zero-egress`.
 
+## 16. Notifications (TECH-12)
+
+| Behavior                        | Status                                   |
+| ------------------------------- | ---------------------------------------- |
+| Browser Notification API        | Not used / denied by policy              |
+| Notification permission request | Not performed by default                 |
+| System notification display     | Not implemented                          |
+| Message previews                | Forbidden                                |
+| Room/sender names               | Denied in Private+                       |
+| Badge count                     | Not implemented / denied in strict modes |
+| Sound/vibration                 | Not implemented / denied in strict modes |
+| Push notifications              | Not implemented / denied                 |
+| Service worker notifications    | Not implemented / denied                 |
+| Tauri notification plugin       | Not present / permission-audited         |
+| Notification audit events       | Redacted only                            |
+
+Any notification-producing behavior not listed here is undocumented and must be treated as a privacy bug. Governed by `NotificationPolicy` ([PRIVACY_MODEL.md](PRIVACY_MODEL.md)); machine-checked by `check:no-notification-bypass` + the runtime notification trap. Audits: [audits/TAURI_NOTIFICATION_PERMISSION_AUDIT.md](audits/TAURI_NOTIFICATION_PERMISSION_AUDIT.md), [audits/NOTIFICATION_SERVICE_WORKER_PUSH_AUDIT.md](audits/NOTIFICATION_SERVICE_WORKER_PUSH_AUDIT.md).
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).
