@@ -73,6 +73,9 @@ jobs:
       - name: No RoomOS-bypass (Sovereign Rooms)
         run: pnpm check:no-roomos-bypass
 
+      - name: No room-object-bypass (RoomOS Object Model)
+        run: pnpm check:no-room-object-bypass
+
       - name: Policy Matrix validation
         run: pnpm check:policy-matrix
 

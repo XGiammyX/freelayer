@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS object-model rows (TECH-18)
+
+Twelve rows joined the `room` domain for the object model: `room.object.create`/`update`/`archive` are `memory_only` (Emergency denies); `room.object.redact`/`tombstone` are `memory_only` in **every** mode (safe/wipe direction, Emergency included); `room.object.persist` is `deny` (persistent plaintext content — Gate F); `room.object_log.append` is `memory_only` (its own separate storage decision); `room.object.poll_vote`/`file_resolve`/`ai_memory`/`endpoint_hook` are `future_gate`; `room.object.file_preview`/`file_remote` are `deny`. Per-kind behavior is derived by `resolveRoomObjectMutationPolicy`; these rows pin the class-level rule. Matrix is now **120 specs → 840 rules**.
+
 ## RoomOS operation-log rows (TECH-17)
 
 Four rows joined the `room` domain: `room.operation_log.read` and `room.replay` are `memory_only` (Emergency denies); `room.operation_log.clear` is `memory_only` in **every** mode (wipe direction, Emergency included); `room.project.snapshot` is a pinned **`future_gate`** (snapshots can retain deleted content and need Gate F + StoragePolicy/PBOM review). Matrix is now **107 specs → 749 rules**.

@@ -282,6 +282,32 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 | Tombstone forensic deletion     | Not claimed               |
 | Endpoint Defense                | Externalized / hooks only |
 
+## 23. RoomOS object model (TECH-18)
+
+| Behavior                                   | Status                    |
+| ------------------------------------------ | ------------------------- |
+| Concrete objects (message/note/task/…)     | Local data objects (v1)   |
+| Content storage                            | Memory only               |
+| Persistent plaintext content               | Denied — Gate F           |
+| Object mutation log                        | Memory/null only          |
+| Explicit command mutations                 | Implemented               |
+| Generic/JSON patch                         | Not available (forbidden) |
+| Local revision (optimistic concurrency)    | Implemented               |
+| Distributed versioning / merge             | Not implemented — Gate H  |
+| Messaging transport / send / receive       | Not implemented           |
+| Read receipts / typing / presence          | Not implemented           |
+| Rich text / HTML / Markdown rendering      | Not implemented (forbidden) |
+| Link preview / thumbnail                   | Forbidden                 |
+| File bytes / path / URL                    | Never stored              |
+| File resolve / fetch / upload / download   | Not implemented — Gate E  |
+| Poll voting / tallies / voter identity     | Not implemented — Gate G/H |
+| Object content encryption / signatures     | Not implemented — Gate F  |
+| Verified identity / authoritative voting   | Not implemented — Gate G  |
+| External object parser                     | Not implemented — Gate E  |
+| Tombstone forensic deletion                | Not claimed               |
+| AI memory objects                          | Placeholder — Gate I      |
+| Endpoint hook objects                      | Externalized — Gate R     |
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).
