@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "expect": "valid",
+    "description": "object placeholders"
+  },
+  "events": [
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0001",
+      "roomId": "room-fixture-01",
+      "localSequence": 1,
+      "operation": "room.create",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "kind": "workspace",
+        "title": "fixture-room"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0002",
+      "roomId": "room-fixture-01",
+      "localSequence": 2,
+      "operation": "note.create_placeholder",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "objectId": "obj-0001",
+        "kind": "note",
+        "redacted": true,
+        "sensitivity": "content"
+      },
+      "objectKind": "note"
+    },
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0003",
+      "roomId": "room-fixture-01",
+      "localSequence": 3,
+      "operation": "task.create_placeholder",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "objectId": "obj-0002",
+        "kind": "task",
+        "redacted": true,
+        "sensitivity": "content"
+      },
+      "objectKind": "task"
+    }
+  ]
+}

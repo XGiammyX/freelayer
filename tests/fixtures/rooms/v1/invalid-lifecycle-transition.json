@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "expect": "invalid",
+    "description": "mutation after tombstone",
+    "errorCode": "invalid_lifecycle_transition"
+  },
+  "events": [
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0001",
+      "roomId": "room-fixture-01",
+      "localSequence": 1,
+      "operation": "room.create",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "kind": "workspace",
+        "title": "fixture-room"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0002",
+      "roomId": "room-fixture-01",
+      "localSequence": 2,
+      "operation": "room.delete_tombstone",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "target": "deleted_tombstone"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "projectionVersion": 1,
+      "eventId": "evt-0003",
+      "roomId": "room-fixture-01",
+      "localSequence": 3,
+      "operation": "room.rename",
+      "actor": "local_unknown",
+      "createdAtLocal": "local:2026-01-01T00:00:00.000Z",
+      "payloadClass": "placeholder",
+      "payload": {
+        "title": "x-after-death"
+      }
+    }
+  ]
+}

@@ -31,3 +31,12 @@ export * from "./room-state";
 export * from "./room-projection";
 export * from "./room-audit";
 export * from "./room-factory";
+
+// ---- TECH-17: log-grade V1 events, lifecycle machine, pure reducer,
+//      deterministic replay, memory/null operation logs. Local-only —
+//      NOT a CRDT, distributed ledger, tamper-proof log, or sync protocol.
+export * from "./room-log-errors";
+export * from "./room-event-v1";
+export * from "./room-lifecycle";
+export * from "./room-reducer";
+export * from "./room-log";

@@ -180,6 +180,25 @@ TECH-16 is complete only if all hold:
 
 Sync remains **Gate H**; room content persistence remains **Gate F**; identity remains **Gate G**; capsule transport remains **Gate E**; endpoint defense remains **Gate R** (externalized).
 
+## Gate U — RoomOS Operation Log and Projection Gate (TECH-17)
+
+*Opens: any feature consuming the room event log (messaging views, documents, history UI).*
+
+TECH-17 is complete only if all hold:
+
+- [x] v1 event schema (`schemaVersion`/`projectionVersion` explicit; unknown versions reject) with typed operation payloads
+- [x] Local ordering rules (positive safe integers, contiguous ascending, complete replay starts at 1, timestamps never order) — documented as NOT distributed/causal ordering
+- [x] Memory/null logs only (clone-on-append/read; no internal exposure; separate exactly-scoped decisions for append/read/clear)
+- [x] Deterministic replay (validate-all-then-apply; no partial state; pure reducer; zero clock/network/notification calls — trapped)
+- [x] Lifecycle transition state machine (tombstone terminal; explicitly not forensic deletion)
+- [x] Immutability/defensive-cloning tests; sentinel-free errors/status/reports
+- [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
+- [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
+
+## Room Event Schema Evolution Gate (future)
+
+*Opens: any change to the room event schema beyond v1.* Requires: research note · migration design (no automatic/lossy upcasting) · test vectors · backward-compatibility fixtures · privacy review of retained historical payloads · hostile-input review if external import (Gate E) is involved. Until it opens, unknown schema versions fail closed.
+
 ## Gate S — Contributor Workflow Gate (TECH-15)
 
 *Opens: permanently active — the governance surface must stay intact (`check:contributor-workflow` in CI).*

@@ -149,6 +149,10 @@ Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favi
 
 NetworkPolicy must not contradict the [Policy Matrix](POLICY_MATRIX.md) (agreement is test-enforced): Offline Capsule's total network denial, the always-forbidden operations (telemetry / external assets / link previews / remote AI / update checks / push), and the future-gated real transports are all matrix-covered rows.
 
+### TECH-17 — replay and the operation log are zero-network
+
+The local operation log is **not a transport** and replay performs zero network I/O (trap-tested). Synchronization remains Gate H; there is no awareness/presence provider and no relay polling. Offline Capsule denies room network categorically.
+
 ### TECH-16 — RoomOS has no network
 
 The RoomOS foundation performs **zero** network operations: no sync, no relay polling, no CRDT network provider — `room.sync` is pinned `future_gate` (Gate H) by both matrix validators, `RoomPolicy.allowNetworkSync` is false in every mode, Offline Capsule denies room network categorically, and traps prove no network API fires during room operations.

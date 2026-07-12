@@ -36,6 +36,18 @@ const FORBIDDEN = [
   'from "loro',
 ];
 
+// TECH-17: full-event serialization in shipped RoomOS source leaks payloads.
+FORBIDDEN.push("JSON.stringify(event", "JSON.stringify(room");
+
+// TECH-17: the projector/replay/log modules must be DETERMINISTIC — no clock,
+// no randomness (injected boundaries only, in room-event-v1 creation).
+const DETERMINISTIC_FILES = [
+  "packages/rooms/src/room-reducer.ts",
+  "packages/rooms/src/room-log.ts",
+  "packages/rooms/src/room-lifecycle.ts",
+];
+const NONDETERMINISTIC_TOKENS = ["Date.now(", "Math.random(", "new Date("];
+
 const DEFAULT_DIRS = ["apps", "packages"];
 const EXTS = [".ts", ".tsx", ".mjs"];
 
@@ -66,6 +78,26 @@ for (const dir of scanDirs) {
         }
       }
     });
+  }
+}
+
+// Determinism scan over the projector/replay/log modules.
+for (const rel of DETERMINISTIC_FILES) {
+  const abs = join(root, rel);
+  try {
+    const lines = fileLines(abs);
+    lines.forEach((line, index) => {
+      for (const token of NONDETERMINISTIC_TOKENS) {
+        if (line.includes(token)) {
+          violations.push(
+            `${rel}:${index + 1} — nondeterministic call "${token}" in a replay/projection module ` +
+              "(clocks/IDs are injected at event creation only — docs/SOVEREIGN_ROOMS.md)",
+          );
+        }
+      }
+    });
+  } catch {
+    // Module not present (e.g. fixture-mode scans) — existence is covered by tests.
   }
 }
 

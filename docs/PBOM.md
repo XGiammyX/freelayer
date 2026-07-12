@@ -264,6 +264,24 @@ The governance surface itself is machine-checked: `check:contributor-workflow` (
 
 Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md)); machine-checked by `check:no-roomos-bypass` + the room regression suites. Rooms are NOT safe for real secrets.
 
+## 22. RoomOS local event behavior (TECH-17)
+
+| Behavior                        | Status                    |
+| ------------------------------- | ------------------------- |
+| Internal RoomOS event schema    | v1 foundation             |
+| Local operation log             | Memory/null only          |
+| Persistent room event log       | Not implemented           |
+| Deterministic projection replay | Implemented foundation    |
+| Event signatures                | Not implemented — Gate F  |
+| Event encryption                | Not implemented — Gate F  |
+| Distributed ordering            | Not implemented — Gate H  |
+| CRDT engine                     | Not selected — Gate H     |
+| External event parser           | Not implemented — Gate E  |
+| Snapshots/checkpoints           | Not implemented           |
+| Compaction                      | Not implemented           |
+| Tombstone forensic deletion     | Not claimed               |
+| Endpoint Defense                | Externalized / hooks only |
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).
