@@ -52,7 +52,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9.18.0",
     "globals": "^15.14.0",
-    "prettier": "^3.4.2",
+    "prettier": "^3.9.5",
     "turbo": "^2.3.3",
     "typescript-eslint": "^8.20.0",
     "typescript": "^5.7.2",
