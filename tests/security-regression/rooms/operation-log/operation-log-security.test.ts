@@ -163,8 +163,10 @@ describe("Mutation isolation (tests 9-10)", () => {
 
 describe("Dependency + import hygiene (tests 18-20)", () => {
   it("rooms package imports no CRDT/crypto/network/monitoring packages", () => {
-    const files = readdirSync("packages/rooms/src");
+    // Recursive so subpackages (e.g. objects/, TECH-18) are covered too.
+    const files = readdirSync("packages/rooms/src", { recursive: true }) as string[];
     for (const file of files) {
+      if (!file.endsWith(".ts")) continue;
       const source = readFileSync(`packages/rooms/src/${file}`, "utf8");
       for (const banned of [
         '"yjs"',

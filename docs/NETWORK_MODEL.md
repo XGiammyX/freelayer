@@ -149,6 +149,10 @@ Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favi
 
 NetworkPolicy must not contradict the [Policy Matrix](POLICY_MATRIX.md) (agreement is test-enforced): Offline Capsule's total network denial, the always-forbidden operations (telemetry / external assets / link previews / remote AI / update checks / push), and the future-gated real transports are all matrix-covered rows.
 
+### TECH-18 — object mutations are zero-network
+
+Object creation/edit/redaction and the object mutation log perform zero network I/O (trap-tested). File-reference objects carry no URL/remote path and are never fetched, uploaded, downloaded, previewed, or thumbnailed (`room.object.file_remote`/`file_preview` deny; `file_resolve` future-gate). Messaging transport, delivery, and sync remain Gate H.
+
 ### TECH-17 — replay and the operation log are zero-network
 
 The local operation log is **not a transport** and replay performs zero network I/O (trap-tested). Synchronization remains Gate H; there is no awareness/presence provider and no relay polling. Offline Capsule denies room network categorically.

@@ -195,6 +195,23 @@ TECH-17 is complete only if all hold:
 - [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
 - [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
 
+## Gate V — RoomOS Object Model and Local Mutations Gate (TECH-18)
+
+*Opens: any feature consuming concrete room objects (message views, task boards, decision logs).*
+
+TECH-18 is complete only if all hold:
+
+- [x] Concrete object schemas (message/note/task/decision/poll/file_ref) with explicit `schemaVersion`; unknown versions/kinds/commands reject
+- [x] Plain-text-only content with UTF-8 byte limits, bounded arrays, NUL/surrogate rejection
+- [x] Explicit command union (no generic patch); proto-pollution + getter + mass-assignment defenses
+- [x] Local `revision` optimistic concurrency (create→1, +1/mutation, stale/future/missing/overflow reject) — documented as NOT distributed/causal/tamper-proof
+- [x] Deny-by-default policy-gated pipeline; separate exact-scoped mutation vs object-log decisions; matrix cross-check; logical all-or-nothing
+- [x] Deterministic operation-specific events + pure reducer + memory/null object log + replay
+- [x] Lifecycle/status machines (archived read-only, redaction one-way, tombstone terminal, not forensic erasure)
+- [x] File refs hold no bytes/path/URL; poll voting/tallies absent
+- [x] 12 matrix rows (`room.object.*`); Storage/Metadata/Network agreement; guardrail + CI; 33 new tests (432 total); docs/PBOM/Trust Center updated
+- [x] No transport/sync/CRDT/crypto/identity/AI/anti-spyware; not safe for real secrets
+
 ## Room Event Schema Evolution Gate (future)
 
 *Opens: any change to the room event schema beyond v1.* Requires: research note · migration design (no automatic/lossy upcasting) · test vectors · backward-compatibility fixtures · privacy review of retained historical payloads · hostile-input review if external import (Gate E) is involved. Until it opens, unknown schema versions fail closed.

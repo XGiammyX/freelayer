@@ -177,6 +177,17 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-18 — object-model metadata
+
+Object mutations add metadata surfaces, all governed via `RoomObjectSummaryV1` (metadata-only; NEVER carries content):
+
+- object existence, object kind, `revision`, lifecycle, update timing (local labels only)
+- assignee-placeholder relationships (Gate-G placeholders, not authenticated identities)
+- poll existence, file-reference existence
+- `contentPresent` — a boolean flag only, never the content
+
+**Strict-mode suppression:** Ghost/Bunker/Emergency suppress even the `revision` and `contentPresent` signals. No receipts/typing/presence/last-seen are emitted; a due date or file ref triggers no notification, reminder, calendar, or link preview. Future sync metadata (peer visibility of object activity) is Gate H design work, recorded not solved.
+
 ## TECH-17 — operation-log metadata
 
 The log adds metadata surfaces, all governed: event existence, local sequence, operation kind, local timing, retained event count, replay availability, and tombstone existence. Log `status()` is metadata-only (never payloads); audit stays redacted; Ghost/Bunker keep event metadata memory-only (nothing persists); no receipts/typing/presence/last-seen signals exist; no endpoint-protection signal exists. Future sync metadata (peer visibility of sequences/timing) is a Gate H design concern, recorded not solved.

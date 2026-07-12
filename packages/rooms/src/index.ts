@@ -40,3 +40,8 @@ export * from "./room-event-v1";
 export * from "./room-lifecycle";
 export * from "./room-reducer";
 export * from "./room-log";
+
+// ---- TECH-18: RoomOS Object Model v1 — concrete local objects with explicit,
+//      policy-gated, deterministic mutations. Local-only; no transport, no
+//      collaborative editing, no sync, no crypto, no identity, no persistence.
+export * from "./objects";

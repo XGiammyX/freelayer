@@ -130,6 +130,17 @@ export type PolicySideEffectScope =
   | "room.audit"
   | "room.policy_update"
   | "room.lifecycle_update"
+  // RoomOS Object Model scopes (TECH-18). Object mutation and object-log
+  // storage are SEPARATE side effects; each decision is scoped to exactly one
+  // (docs/SOVEREIGN_ROOMS.md). Object IDs/actor refs confer no authority.
+  | "room.object.create"
+  | "room.object.update"
+  | "room.object.redact"
+  | "room.object.archive"
+  | "room.object.tombstone"
+  | "room.object_log.append"
+  | "room.object_log.read"
+  | "room.object_log.clear"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
