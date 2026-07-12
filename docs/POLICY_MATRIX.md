@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS domain (TECH-16)
+
+The `room` domain graduated from fully-deferred to a **local foundation**: 9 new rows model policy-controlled local state transitions — `room.create` / `room.mutate` / `room.lifecycle_update` / `room.policy_update` / `room.operation_log.append` / `room.project` are `memory_only` (Emergency denies all but lifecycle); `room.operation_log.persist` and `room.project.persist` are **deny in every mode** (encrypted backend is Gate F); `room.audit` is `redact`. **`room.sync` stays `future_gate`** (Gate H) — pinned by both validators. Endpoint hook rows remain externalized/future-gated. Matrix is now **103 specs → 721 rules**.
+
 ## Deferred gates (all `future_gate`, 22 specs)
 
 Crypto (Gate F) · encrypted persistent storage (Gate F) · capsule wire format/transport (Gate D/E) · room sync (Gate H) · identity invites/verification (Gate G) · local AI (Gate I) · user-initiated preview · push subscribe/receive/service-worker notifications · clipboard/secure-input/task-switcher/screenshot-blocking (TECH-EDL) · Tauri desktop permissions (Phase 9). Marking them here **encodes the decision without implementing the feature**.

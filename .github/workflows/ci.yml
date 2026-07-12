@@ -70,6 +70,9 @@ jobs:
       - name: No notification-bypass (Notification Privacy Model)
         run: pnpm check:no-notification-bypass
 
+      - name: No RoomOS-bypass (Sovereign Rooms)
+        run: pnpm check:no-roomos-bypass
+
       - name: Policy Matrix validation
         run: pnpm check:policy-matrix
 

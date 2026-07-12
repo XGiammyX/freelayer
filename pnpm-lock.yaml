@@ -23,6 +23,9 @@ importers:
       '@freelayer/privacy':
         specifier: workspace:*
         version: link:packages/privacy
+      '@freelayer/rooms':
+        specifier: workspace:*
+        version: link:packages/rooms
       '@freelayer/sdk':
         specifier: workspace:*
         version: link:packages/sdk

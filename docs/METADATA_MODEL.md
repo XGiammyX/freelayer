@@ -177,6 +177,10 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-16 — room metadata
+
+RoomOS adds room-shaped metadata surfaces, all governed: room titles and member display are redacted in strict modes (and always display-redacted for members in v1); room activity, operation timing, and projection existence are metadata — no receipts/typing/presence signals exist and `room.activity` stays denied; room audit events are redacted (numeric/boolean details only); event timestamps carry an explicit `local:` label and are never trusted time.
+
 ## TECH-13 — metadata behavior in the Policy Matrix
 
 Metadata behavior is now summarized in the canonical [Policy Matrix](POLICY_MATRIX.md): receipts/typing/presence denied in Private+ (v1: all modes), strict modes deny most metadata artifacts, audit/logs exist only redacted and memory-only. MetadataPolicy and the matrix must agree — test-enforced. Metadata reduction remains reduction, not elimination.

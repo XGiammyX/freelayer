@@ -245,6 +245,25 @@ The PBOM must agree with the Policy Matrix and the conflict checks: `check:polic
 
 The governance surface itself is machine-checked: `check:contributor-workflow` (CI) verifies the workflow docs, PR/issue templates, ADR template, CODEOWNERS, and the anti-spyware externalization statements all exist and stay consistent. **No anti-spyware dependencies may enter core**; any future integration goes through Gate R and requires updating this PBOM first ([CONTRIBUTOR_WORKFLOW.md](CONTRIBUTOR_WORKFLOW.md) §5).
 
+## 21. RoomOS / Sovereign Rooms (TECH-16)
+
+| Behavior                        | Status                                     |
+| ------------------------------- | ------------------------------------------ |
+| Local room data model           | Implemented foundation                     |
+| Room operation log              | Placeholder / policy-controlled (memory-only) |
+| Room projection                 | Implemented foundation / policy-controlled (memory-only) |
+| Real messaging                  | Not implemented                            |
+| Real sync                       | Future Gate H                              |
+| CRDT engine                     | Not selected                               |
+| Crypto room keys                | Future Gate F                              |
+| Identity/invites                | Future Gate G                              |
+| Capsule import/export           | Future Gate E                              |
+| Endpoint Defense / Anti-spyware | Externalized / hooks only                  |
+| Room notifications              | Not implemented / denied by policy         |
+| Room AI                         | Not implemented / denied in strict modes   |
+
+Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md)); machine-checked by `check:no-roomos-bypass` + the room regression suites. Rooms are NOT safe for real secrets.
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).

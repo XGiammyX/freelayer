@@ -149,6 +149,10 @@ Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favi
 
 NetworkPolicy must not contradict the [Policy Matrix](POLICY_MATRIX.md) (agreement is test-enforced): Offline Capsule's total network denial, the always-forbidden operations (telemetry / external assets / link previews / remote AI / update checks / push), and the future-gated real transports are all matrix-covered rows.
 
+### TECH-16 — RoomOS has no network
+
+The RoomOS foundation performs **zero** network operations: no sync, no relay polling, no CRDT network provider — `room.sync` is pinned `future_gate` (Gate H) by both matrix validators, `RoomPolicy.allowNetworkSync` is false in every mode, Offline Capsule denies room network categorically, and traps prove no network API fires during room operations.
+
 ### TECH-12 — push notifications are network behavior
 
 Push notifications (Web Push / APNs / FCM-like systems) require a push service, a subscription with endpoint metadata, and background delivery — network behavior FreeLayer does not implement and does not require by default. `NotificationPolicy` denies push subscribe/receive and service-worker notifications in every mode; NetworkPolicy independently denies the network they would need. Any push service provider metadata would require a future PBOM entry and an ADR/research gate. No push network by default.
