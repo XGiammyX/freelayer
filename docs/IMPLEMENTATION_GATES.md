@@ -148,6 +148,37 @@ TECH-13 is complete only if all hold:
 
 Any policy-behavior PR must update the matrix in the same PR. Detail: [audits/TECH_13_POLICY_MATRIX_AUDIT.md](audits/TECH_13_POLICY_MATRIX_AUDIT.md).
 
+## Gate Q — Policy Conflict Gate (TECH-14)
+
+*Opens: permanently active — any policy-behavior PR must keep the conflict suite green.*
+
+TECH-14 is complete only if all hold:
+
+- [x] Precheck, research note, and threat model exist ([audits/TECH_14_PRECHECK.md](audits/TECH_14_PRECHECK.md), [research/POLICY_CONFLICT_REGRESSION_RESEARCH.md](research/POLICY_CONFLICT_REGRESSION_RESEARCH.md), [audits/TECH_14_POLICY_CONFLICT_THREAT_MODEL.md](audits/TECH_14_POLICY_CONFLICT_THREAT_MODEL.md))
+- [x] 17 conflict categories defined (`packages/privacy/src/policyConflicts.ts`) + deterministic redacted explainer
+- [x] Cross-policy assertion helpers + table-driven tests (matrix ↔ every engine agrees)
+- [x] Intentional-contradiction fixtures exist and are provably detected (48 + 10 findings)
+- [x] `check:policy-conflicts` validator (matrix invariants, Trust Center overclaims, docs statements, dependency bans) in `audit:privacy` + CI
+- [x] PBOM consistency + Trust Center overclaim checks exist
+- [x] Anti-spyware externalization audit exists ([audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md))
+- [x] [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md) — 0 conflicts
+- [x] All local checks pass (337 tests)
+
+## Gate R — Endpoint Defense / Anti-spyware Integration Gate
+
+*Opens: only when the standalone anti-spyware project is completed and its integration is proposed.*
+
+The anti-spyware / Endpoint Defense / ScreenShield **implementation is externalized** to a separate project; FreeLayer core keeps **policy hooks only** (ScreenShield levels as tightening inputs, endpoint data classes/metadata events, `future_gate` matrix rows). Integration requires ALL of:
+
+- [ ] A dedicated ADR proposing the integration
+- [ ] An integration threat model (per-OS capture/clipboard/overlay behavior, honest limits)
+- [ ] PBOM update (every native capability, dependency, and permission enumerated)
+- [ ] Trust Center update (what is actually protected, what is not)
+- [ ] Native-permission audit (Tauri capabilities scoped to exactly what policy allows)
+- [ ] No overclaims: integration must not claim protection against compromised endpoints or cameras ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md))
+
+Until this gate opens, any endpoint-monitoring dependency or active-protection claim in core is a policy conflict (`check:policy-conflicts` fails).
+
 ## Gate E — Capsule Parser
 
 *Opens: processing any externally-produced capsule (Phase 4).*

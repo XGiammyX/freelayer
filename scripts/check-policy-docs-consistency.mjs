@@ -22,14 +22,18 @@ for (const path of MUST_EXIST) {
   }
 }
 
-// file → phrases that must appear (case-insensitive).
+// file → phrases that must appear (case-insensitive). TECH-14 added the
+// consistency statements for always-denied behaviors, deferred gates, honest
+// non-guarantees, and the anti-spyware externalization.
 const MUST_MENTION = {
-  "docs/PBOM.md": ["Policy Matrix"],
-  "docs/TRUST_CENTER.md": ["Policy Matrix"],
-  "docs/PRIVACY_MODEL.md": ["strictest", "Policy Matrix"],
-  "docs/ROADMAP.md": ["TECH-13"],
-  "docs/IMPLEMENTATION_GATES.md": ["Policy Matrix"],
-  "docs/POLICY_MATRIX.md": ["deny", "strictest", "future_gate"],
+  "docs/PBOM.md": ["Policy Matrix", "telemetry", "external assets", "push", "externalized"],
+  "docs/TRUST_CENTER.md": ["Policy Matrix", "anonymity", "externalized"],
+  "docs/PRIVACY_MODEL.md": ["strictest", "Policy Matrix", "push"],
+  "docs/ROADMAP.md": ["TECH-13", "TECH-14", "externalized"],
+  "docs/IMPLEMENTATION_GATES.md": ["Policy Matrix", "anti-spyware"],
+  "docs/POLICY_MATRIX.md": ["deny", "strictest", "future_gate", "externalized"],
+  "docs/NETWORK_MODEL.md": ["telemetry", "link preview", "push"],
+  "docs/THREAT_MODEL.md": ["policy drift", "anonymity"],
 };
 
 for (const [file, phrases] of Object.entries(MUST_MENTION)) {

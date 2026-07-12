@@ -78,6 +78,14 @@ The matrix is a living contract, not a proof: it does not verify crypto/protocol
 
 Every rule carries `testCoverage` (`covered`/`partial`/`deferred`); 40+ matrix tests plus cross-policy agreement tests keep the matrix and the concrete engines in lockstep. Validation: `pnpm check:policy-matrix` (structure/invariants) and `pnpm check:policy-docs` (doc consistency), both in CI.
 
+## Conflict regression suite (TECH-14)
+
+The matrix is now guarded by a dedicated conflict suite: 17 conflict categories (`allow_vs_deny`, `persistent_allowed_conflict`, `future_gate_treated_as_allow`, `externalized_component_marked_implemented`, …), table-driven matrix↔engine comparisons, intentional-contradiction fixtures the validator provably detects, and `check:policy-conflicts` in CI. Current status: **0 conflicts** ([audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md)).
+
+**Adding a row without creating conflicts:** pick a unique spec id and a unique `domain|operation` pair; default to `deny`/`future_gate`; never mark an always-forbidden behavior (telemetry, external assets, automatic previews, push, remote AI) as allowing; keep Ghost/Bunker persistent sinks and Offline network denied; mirror the change into `policy-matrix.v1.json` (the sync test fails otherwise); add/extend an agreement test if a concrete engine covers the row.
+
+**Endpoint-defense rows are hooks, not implementation.** The anti-spyware project is **externalized**; capability rows (`clipboard_copy`, `secure_input`, `task_switcher_preview`, `screenshot_blocking`, `tauri_desktop_permissions`) stay `future_gate` until the [integration gate](IMPLEMENTATION_GATES.md) opens.
+
 ## How contributors update it
 
 Any PR that changes privacy/security behavior must update, in the same PR: (1) the spec table in `packages/privacy/src/policyMatrix.ts`, (2) the mirrored `docs/policy-matrix.v1.json` (the sync test fails on drift), (3) the relevant model doc + [PBOM](PBOM.md), and (4) tests. See [CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md).

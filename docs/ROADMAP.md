@@ -155,7 +155,8 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 - ✅ TECH-10 Metadata Firewall — exit criteria met: MetadataPolicy v0 (40 events × 12 sinks × 7 modes, default-deny, fail-closed, strictest-wins); metadata side-effect barrier reusing the WeakSet `PolicyDecision` provenance; receipts/typing/presence denied in Private+; notifications/link-preview/external-asset/telemetry/AI metadata denied; v0 invariant (no metadata persists or egresses); redacted audit events + payloads (sentinel-free); `check:no-metadata-bypass` guardrail (in CI + `audit:privacy`); StoragePolicy/NetworkPolicy integration tests; research + threat-model + reconciliation + precheck + audit docs; 47 new tests (220 total).
 - ✅ TECH-11 Link Preview / External Asset Blocking — exit criteria met: `LinkPreviewPolicy` + `ExternalAssetPolicy` (all automatic previews + 16 remote-asset kinds denied in every mode, room tighten-only, sealed redaction); pure `classifyUrl` URL classifier (query/credential redaction, dangerous-scheme denial, zero network); `renderPlainTextUrlLabel` safe renderer; hardened `check:no-external-assets` (CDNs/protocol-relative/connection-hints/favicon/OpenGraph) + fixtures, `check:no-network-deps` (scraper packages), `check:no-metadata-bypass` (unfurl/favicon/avatar fetchers); Metadata/Network/Storage integration tests; [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md); research + threat-model + precheck + audit docs; 24 new tests (257 total).
 - ✅ TECH-12 Notification Privacy Model — exit criteria met: `NotificationPolicy` (operation × content-class × surface taxonomy; default-deny, fail-closed, strictest-wins); permission requests / push / service-worker / badge / sound / vibration / all OS surfaces denied every mode; sensitive content denied every mode; only a generic content-free memory-only in-app indicator allowed (Standard/Private); notification barrier reusing the WeakSet `PolicyDecision` provenance; `redactNotificationContent`; `check:no-notification-bypass` guardrail + fixtures + runtime notification trap; Tauri-plugin + service-worker/push audits (both absent); Metadata/Storage/Network integration tests; research + threat-model + precheck + audit docs; 29 new tests (286 total).
-- ✅ TECH-13 Policy Matrix v1 — exit criteria met: canonical matrix (`packages/privacy/src/policyMatrix.ts`, 94 specs → 658 rules across 7 modes × 12 domains); `evaluatePolicyMatrix` (fail-closed, deny-overrides, strictest-wins, tighten-only room/ScreenShield composition); machine-readable export ([policy-matrix.v1.json](policy-matrix.v1.json)) with verbatim sync test; `check:policy-matrix` + `check:policy-docs` validators (in `audit:privacy` + CI); 34 coverage + cross-engine agreement tests (Storage/Network/Metadata/LinkPreview/ExternalAsset/Notification all agree); [POLICY_MATRIX.md](POLICY_MATRIX.md) human summary; research + threat-model + precheck + audit docs; 320 tests total. **Next: TECH-14 — Policy Conflict Regression Suite**
+- ✅ TECH-13 Policy Matrix v1 — exit criteria met: canonical matrix (`packages/privacy/src/policyMatrix.ts`, 94 specs → 658 rules across 7 modes × 12 domains); `evaluatePolicyMatrix` (fail-closed, deny-overrides, strictest-wins, tighten-only room/ScreenShield composition); machine-readable export ([policy-matrix.v1.json](policy-matrix.v1.json)) with verbatim sync test; `check:policy-matrix` + `check:policy-docs` validators (in `audit:privacy` + CI); 34 coverage + cross-engine agreement tests (Storage/Network/Metadata/LinkPreview/ExternalAsset/Notification all agree); [POLICY_MATRIX.md](POLICY_MATRIX.md) human summary; research + threat-model + precheck + audit docs; 320 tests total.
+- ✅ TECH-14 Policy Conflict Regression Suite — exit criteria met: 17 first-class conflict categories + deterministic redacted `explainPolicyConflict`; cross-policy assertion helpers comparing REAL resolver outcomes against the matrix (Storage/Network/Metadata/LinkPreview/ExternalAsset/Notification all agree); composition safety (room/feature tighten-only, Emergency override, Offline denial); gated features not executable; unknown inputs deny everywhere; intentional-contradiction fixtures (48+10 findings) proving the validator detects each category; `check:policy-conflicts` (matrix invariants + Trust Center overclaim scan + docs statements + endpoint-monitoring/push dependency ban) in `audit:privacy` + CI; anti-spyware externalization documented and enforced ([audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md)); [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md) — 0 conflicts; 17 new tests (337 total). **Next: TECH-15 — Policy Developer Experience + Contributor Workflow**
 
 ### Identity Firewall (Gate G)
 
@@ -189,24 +190,13 @@ The macro phases above stay authoritative for sequencing; this is the finer-grai
 
 - ⬜ Tauri hardening · PWA hardening · parser fuzzing · SBOM/PBOM automation · signed releases · alpha checklist (Gate J)
 
-## Endpoint Defense / ScreenShield track (ADR-0012)
+## Endpoint Defense / ScreenShield track (ADR-0012) — EXTERNALIZED
 
-**Dependency: ProtectedContent/ScreenShield must be designed before serious messaging UI and protected document UI** — retrofitting endpoint defense onto a shipped UI is how it fails.
+> [!IMPORTANT]
+> **The anti-spyware / Endpoint Defense / ScreenShield implementation has been split into a separate standalone project** (TECH-14 direction update). FreeLayer core keeps **policy hooks and compatibility contracts only** — ScreenShield levels as policy-tightening inputs, endpoint data classes/metadata events, matrix rows marked `future_gate`, docs/PBOM/Trust Center honesty. Once the standalone project is completed, it may be integrated through the dedicated **Endpoint Defense / Anti-spyware Integration Gate** ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)) with its own ADR, threat model, PBOM update, and native-permission audit. The concept remains part of the product vision; only the *implementation location* changed. Enforcement: [audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md).
 
-- ✅ RESEARCH-EDL-01 — Endpoint Defense + ScreenShield Research and Architecture *(this pass)*
-- ⬜ TECH-EDL-02 — ScreenShield Policy Schema
-- ⬜ TECH-EDL-03 — ProtectedContent Rendering Contract
-- ⬜ TECH-EDL-04 — Secure Surface Adapter Interfaces
-- ⬜ TECH-EDL-05 — Clipboard Firewall
-- ⬜ TECH-EDL-06 — Secure Input Firewall
-- ⬜ TECH-EDL-07 — Anti-Overlay/Tapjacking Guard
-- ⬜ TECH-EDL-08 — Device Risk Engine
-- ⬜ TECH-EDL-09 — Capture-Aware Rooms
-- ⬜ TECH-EDL-10 — Protected View / Sealed View
-- ⬜ TECH-EDL-11 — Panic / Auto-Redact / Decoy
-- ⬜ TECH-EDL-12 — Leak Canary / Dynamic Watermark
-- ⬜ AUDIT-EDL-13 — ScreenShield Regression Tests
-- ⬜ AUDIT-EDL-14 — Endpoint Defense Audit
+- ✅ RESEARCH-EDL-01 — Endpoint Defense + ScreenShield Research and Architecture (informs the external project; the research stays canonical here)
+- ▸ TECH-EDL-02 … AUDIT-EDL-14 — **externalized** to the standalone anti-spyware project (ScreenShield policy schema, ProtectedContent contract, secure surfaces, clipboard/input firewalls, anti-overlay, device risk engine, capture-aware rooms, protected/sealed view, panic/decoy, canary/watermark, regression tests, audit). FreeLayer core tracks only the **integration gate**.
 
 ## Infrastructure track (separate from the technical phases)
 

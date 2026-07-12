@@ -76,6 +76,9 @@ jobs:
       - name: Policy docs consistency
         run: pnpm check:policy-docs
 
+      - name: Policy conflict regression (cross-layer contradictions)
+        run: pnpm check:policy-conflicts
+
       - name: Build artifact zero-egress (after build)
         run: pnpm check:build-zero-egress
 
