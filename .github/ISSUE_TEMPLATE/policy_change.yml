@@ -1,0 +1,45 @@
+name: Policy change proposal
+description: Propose changing a Policy Matrix row or a policy resolver.
+title: "[policy] "
+labels: ["policy"]
+body:
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Policy domain
+      options: [storage, network, metadata, link_preview, external_asset, notification, ai, endpoint, room, identity, capsule, crypto]
+    validations:
+      required: true
+  - type: input
+    id: row
+    attributes:
+      label: Matrix row(s) affected
+      description: Spec id(s) from packages/privacy/src/policyMatrix.ts (e.g. metadata.read_receipt)
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed behavior + why
+    validations:
+      required: true
+  - type: textarea
+    id: strict
+    attributes:
+      label: Why this does NOT weaken strict modes
+      description: Ghost/Bunker/Offline/Emergency must not get looser. Explain.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Tests / docs / PBOM / Trust Center impact
+      description: Which conflict-regression tests, model docs, PBOM sections, and Trust Center claims change?
+    validations:
+      required: true

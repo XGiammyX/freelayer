@@ -241,6 +241,10 @@ The anti-spyware / Endpoint Defense / ScreenShield **implementation is externali
 
 The PBOM must agree with the Policy Matrix and the conflict checks: `check:policy-conflicts` fails CI if a dependency contradicts a "not implemented" claim here (push SDKs, endpoint monitoring, remote-AI clients), if the Trust Center overclaims, or if the exported matrix marks an always-forbidden behavior as allowed. Conflict status: [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md).
 
+## 20. Contributor workflow checks (TECH-15)
+
+The governance surface itself is machine-checked: `check:contributor-workflow` (CI) verifies the workflow docs, PR/issue templates, ADR template, CODEOWNERS, and the anti-spyware externalization statements all exist and stay consistent. **No anti-spyware dependencies may enter core**; any future integration goes through Gate R and requires updating this PBOM first ([CONTRIBUTOR_WORKFLOW.md](CONTRIBUTOR_WORKFLOW.md) §5).
+
 ## Maintenance rules
 
 - Every PR that changes network behavior, storage, permissions, dependencies, caches, logs, or AI behavior **must** update this file (PR checklist item).

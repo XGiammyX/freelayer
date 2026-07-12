@@ -1,0 +1,49 @@
+name: Privacy bug
+description: A privacy boundary behaves differently than policy says it should. (Real vulnerabilities → SECURITY.md, privately.)
+title: "[privacy] "
+labels: ["privacy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not include real secrets, message content, contact names, or sensitive screenshots.**
+        If this is an exploitable vulnerability, report privately per [SECURITY.md](../../SECURITY.md) instead.
+  - type: dropdown
+    id: boundary
+    attributes:
+      label: Privacy boundary affected
+      options: [Storage/persistence, Network/egress, Metadata, Link preview / external assets, Notifications, AI, Endpoint-defense hooks, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Privacy mode affected
+      options: [standard, private, ghost, bunker, offline_capsule, emergency, sovereign_room, multiple/all]
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected policy behavior
+      description: What the Policy Matrix / model docs say should happen (link the row/doc).
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: leak
+    attributes:
+      label: Possible leak
+      description: What metadata/storage/network artifact could leak? No real sensitive data — describe the class, not the content.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmations
+      options:
+        - label: This report contains no real secrets or sensitive content
+          required: true

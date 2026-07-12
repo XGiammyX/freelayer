@@ -164,6 +164,21 @@ TECH-14 is complete only if all hold:
 - [x] [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md) — 0 conflicts
 - [x] All local checks pass (337 tests)
 
+## Gate S — Contributor Workflow Gate (TECH-15)
+
+*Opens: permanently active — the governance surface must stay intact (`check:contributor-workflow` in CI).*
+
+TECH-15 is complete only if all hold:
+
+- [x] [CONTRIBUTOR_WORKFLOW.md](CONTRIBUTOR_WORKFLOW.md) + [POLICY_DEVELOPER_GUIDE.md](POLICY_DEVELOPER_GUIDE.md) + [COMMANDS.md](COMMANDS.md) exist
+- [x] PR template asks privacy/security impact + requires matrix/PBOM/Trust Center updates + anti-spyware boundary confirmation
+- [x] Issue forms: privacy bug, policy change, feature gate proposal, anti-spyware integration proposal (Gate R)
+- [x] [ADR_WORKFLOW.md](ADR_WORKFLOW.md) + [adr/ADR-TEMPLATE.md](adr/ADR-TEMPLATE.md) exist
+- [x] [OpenSSF readiness checklist](audits/OPENSSF_READINESS_CHECKLIST.md) (honest; no badge/score claimed)
+- [x] CODEOWNERS extended + solo-dev limits documented ([audits/CODEOWNERS_REVIEW_AUDIT.md](audits/CODEOWNERS_REVIEW_AUDIT.md))
+- [x] Anti-spyware boundary documented across contributor surface; `check:contributor-workflow` validates it in CI
+- [x] PBOM/Trust Center updated; all local checks pass (348 tests)
+
 ## Gate R — Endpoint Defense / Anti-spyware Integration Gate
 
 *Opens: only when the standalone anti-spyware project is completed and its integration is proposed.*

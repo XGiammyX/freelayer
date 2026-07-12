@@ -22,3 +22,19 @@
 
 # CI is part of the supply chain.
 /.github/workflows/         @maintainers
+
+# Policy contracts and privacy/security governance (TECH-15).
+/packages/transports/       @maintainers
+/packages/core/             @maintainers
+/scripts/                   @maintainers
+/docs/PBOM.md               @maintainers
+/docs/TRUST_CENTER.md       @maintainers
+/docs/POLICY_MATRIX.md      @maintainers
+/docs/policy-matrix.v1.json @maintainers
+/docs/IMPLEMENTATION_GATES.md @maintainers
+/SECURITY.md                @maintainers
+/GOVERNANCE.md              @maintainers
+
+# Anti-spyware integration boundary — implementation is EXTERNALIZED; core
+# keeps hooks only. Changes here go through Gate R (IMPLEMENTATION_GATES.md).
+/docs/audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md @maintainers

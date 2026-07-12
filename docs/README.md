@@ -44,6 +44,12 @@
 ## 🔐 Contributing and security
 
 - [Contributing](../CONTRIBUTING.md) — process, standards, and the hard lines.
+- [Contributor Workflow](CONTRIBUTOR_WORKFLOW.md) — setup → PR → policy-change → gate workflows, and the required command list.
+- [Policy Developer Guide](POLICY_DEVELOPER_GUIDE.md) — how to change policy without creating conflicts or overclaims.
+- [Commands](COMMANDS.md) — every command, troubleshooting, and what never to bypass.
+- [ADR Workflow](ADR_WORKFLOW.md) — when/how to write an ADR ([template](adr/ADR-TEMPLATE.md)).
+- [Labels](LABELS.md) — recommended issue/PR labels.
+- [Docs Canonical Workflow](DOCS_CANONICAL_WORKFLOW.md) — `docs/` first, wiki second.
 - [Contributing (security-sensitive)](CONTRIBUTING_SECURITY.md) — stricter rules for crypto/privacy/storage paths.
 - [Security Review Checklist](SECURITY_REVIEW_CHECKLIST.md) — what reviewers verify on every sensitive PR.
 - [Implementation Gates](IMPLEMENTATION_GATES.md) — the checkpoints that block implementation until design is done.

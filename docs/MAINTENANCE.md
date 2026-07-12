@@ -45,6 +45,8 @@ For any major version bump:
 
 ## Supply-chain discipline
 
+**Anti-spyware dependency rule (TECH-15):** the Endpoint Defense / anti-spyware implementation is externalized; **no endpoint-monitoring dependencies** (screenshot/clipboard/keystroke/overlay/process monitoring — e.g. `iohook`, `robotjs`, `screenshot-desktop`, key listeners) may enter core without the Gate R integration ADR. `check:policy-conflicts` fails CI on them. Update the [Policy Matrix](POLICY_MATRIX.md), [PBOM](PBOM.md), and [Trust Center](TRUST_CENTER.md) whenever a dependency changes network/storage/metadata/notification behavior.
+
 - New dependencies follow [DEPENDENCY_POLICY.md](DEPENDENCY_POLICY.md): stated case, license (AGPL-compatible), maintenance health, transitive footprint, install-script review. Sensitive packages default to zero dependencies.
 - `check:no-network-deps` fails on any network-client/analytics/AI SDK (TECH-09). Adding one is a review-blocking event.
 - Actions pinned by commit SHA; `pnpm-lock.yaml` committed; CI uses `--frozen-lockfile`.

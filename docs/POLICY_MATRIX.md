@@ -82,6 +82,8 @@ Every rule carries `testCoverage` (`covered`/`partial`/`deferred`); 40+ matrix t
 
 The matrix is now guarded by a dedicated conflict suite: 17 conflict categories (`allow_vs_deny`, `persistent_allowed_conflict`, `future_gate_treated_as_allow`, `externalized_component_marked_implemented`, …), table-driven matrix↔engine comparisons, intentional-contradiction fixtures the validator provably detects, and `check:policy-conflicts` in CI. Current status: **0 conflicts** ([audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md)).
 
+Full contributor procedure with worked examples: **[POLICY_DEVELOPER_GUIDE.md](POLICY_DEVELOPER_GUIDE.md)** (TECH-15). Every row change must keep the conflict regression suite green.
+
 **Adding a row without creating conflicts:** pick a unique spec id and a unique `domain|operation` pair; default to `deny`/`future_gate`; never mark an always-forbidden behavior (telemetry, external assets, automatic previews, push, remote AI) as allowing; keep Ghost/Bunker persistent sinks and Offline network denied; mirror the change into `policy-matrix.v1.json` (the sync test fails otherwise); add/extend an agreement test if a concrete engine covers the row.
 
 **Endpoint-defense rows are hooks, not implementation.** The anti-spyware project is **externalized**; capability rows (`clipboard_copy`, `secure_input`, `task_switcher_preview`, `screenshot_blocking`, `tauri_desktop_permissions`) stay `future_gate` until the [integration gate](IMPLEMENTATION_GATES.md) opens.
