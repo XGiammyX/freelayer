@@ -30,7 +30,10 @@ const MAJOR_DOMAINS = [
   "ai",
   "endpoint",
 ];
-const DEFERRED_DOMAINS = ["crypto", "capsule", "room", "identity"];
+// "room" graduated in TECH-16 (local RoomOS foundation rows exist); room SYNC
+// stays future-gated via the explicit spec-id check below.
+const DEFERRED_DOMAINS = ["crypto", "capsule", "identity"];
+const FUTURE_GATED_SPEC_IDS = ["room.sync"];
 const ALLOWING_EFFECTS = ["allow", "memory_only", "redact", "coarsen", "delay", "batch"];
 const EFFECTS = [
   "allow",
@@ -142,6 +145,12 @@ for (const rule of rules) {
     rule.effect !== "not_implemented"
   ) {
     violations.push(`${rule.id}: deferred domain must be future_gate/not_implemented`);
+  }
+  if (
+    FUTURE_GATED_SPEC_IDS.some((id) => rule.id.startsWith(`${id}:`)) &&
+    rule.effect !== "future_gate"
+  ) {
+    violations.push(`${rule.id}: must stay future_gate (deferred gate)`);
   }
 }
 

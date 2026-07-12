@@ -117,6 +117,16 @@ export type PolicySideEffectScope =
   | "notification.push_receive"
   | "notification.service_worker_show"
   | "notification.audit"
+  // RoomOS scopes (TECH-16). Room operations are policy-controlled LOCAL
+  // state transitions; each decision is scoped to exactly one of these
+  // (docs/SOVEREIGN_ROOMS.md).
+  | "room.create"
+  | "room.mutate"
+  | "room.project"
+  | "room.operation_log.append"
+  | "room.audit"
+  | "room.policy_update"
+  | "room.lifecycle_update"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

@@ -26,7 +26,25 @@ They are **not just group chats.** A room may contain:
 
 ## Current status
 
-**Design stage.** No implementation exists; implementation is blocked behind Gate H ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)). This document must be complete enough for design review — that is a Phase 0.5 exit criterion.
+**Local foundation implemented (TECH-16); everything distributed remains design-stage behind its gates.** `packages/rooms` now contains the first safe, testable room data model — sync (Gate H), crypto (Gate F), identity (Gate G), and capsule transport (Gate E) remain blocked; the CRDT decision stays deliberately open.
+
+### TECH-16 — RoomOS foundation (what exists)
+
+- **Identifiers:** branded local placeholders (`RoomLocalId`, `RoomMemberRef`, `RoomDeviceRef`) with slug-validated constructors — no real identity (Gate G).
+- **Lifecycle/kind/trust:** `draft → active_local → sealed/archived/emergency_locked/deleted_tombstone`; five room kinds; `RoomTrustState` where `verified_placeholder` explicitly ≠ verification.
+- **Object taxonomy:** 12 kinds (message/note/task/decision/poll/file_ref/room_setting/member_ref/audit_event/ai_memory_ref/endpoint_hook_ref/unknown), each with data class + sensitivity + content-bearing flag; content-bearing kinds cannot be plaintext-persisted; `file_ref` is reference-only; `endpoint_hook_ref` is a compatibility placeholder — **the anti-spyware implementation is externalized and no active endpoint protection exists in core**.
+- **Operation taxonomy:** 18 operations; every unimplemented feature carries the `_placeholder` suffix.
+- **RoomPolicy v1** (`resolveRoomPolicy`): tighten-only composition; v1 invariants — nothing persists, nothing syncs, no metadata/notification/AI side effects, in every mode; Emergency denies normal mutation; Bunker/critical-risk redact titles; member display always redacted.
+- **Barrier** (`assertRoomOperationAllowed`): authentic `PolicyDecision` (WeakSet provenance) with exact `room.*` scope, before any state transition.
+- **Operation log placeholder:** versioned events (`version: 1`), sequence-only IDs, `local:`-labeled timestamps (never trusted time), no crypto/CRDT metadata; **memory-only** — persistence denied by policy + matrix + StoragePolicy.
+- **Materialized projection** (`projectRoomState`): a pure, deterministic, rebuildable fold — NOT collaborative merge; summaries never carry content; projection persistence denied.
+- **Factory** (`createLocalRoom`): the only sanctioned creation path.
+- **Redacted room audit:** numeric/boolean details only; no titles/member names/content.
+- **Machine checks:** 9 matrix rows (`room.*`), `check:no-roomos-bypass` guardrail, 21 regression tests.
+
+### What does NOT exist (honest)
+
+No real messaging, no sync, no CRDT selection, no crypto/room keys, no identity/invites, no capsule import/export, no persistent storage (Standard fails hard until the encrypted backend; Ghost/Bunker never persist), no notifications, no AI, **no anti-spyware** — rooms are NOT safe for real secrets.
 
 ## Design direction
 

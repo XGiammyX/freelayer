@@ -164,6 +164,22 @@ TECH-14 is complete only if all hold:
 - [x] [audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md) — 0 conflicts
 - [x] All local checks pass (337 tests)
 
+## Gate T — RoomOS Foundation Gate (TECH-16)
+
+*Opens: any feature building on Sovereign Rooms (messaging UI, documents, tasks, decisions).*
+
+TECH-16 is complete only if all hold:
+
+- [x] `packages/rooms` foundation exists: identifiers, lifecycle/kind/trust, object + operation taxonomies ([SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md))
+- [x] `RoomPolicy` v1 (tighten-only) + room barrier requiring authentic, exactly-scoped `PolicyDecision`s
+- [x] Versioned operation events (memory-only; `local:` timestamps; no crypto/CRDT metadata) + pure rebuildable projection + redacted room audit
+- [x] Policy integrations tested: Matrix `room` rows (sync pinned `future_gate`), StoragePolicy (no persistence), Metadata/Network/Notification denials, no-side-effect traps
+- [x] `check:no-roomos-bypass` guardrail (+fixtures) in `audit:privacy` + CI
+- [x] No sync/crypto/identity/CRDT/anti-spyware implemented or depended upon
+- [x] Docs/PBOM (§21)/Trust Center updated; 21 new tests (369 total) pass
+
+Sync remains **Gate H**; room content persistence remains **Gate F**; identity remains **Gate G**; capsule transport remains **Gate E**; endpoint defense remains **Gate R** (externalized).
+
 ## Gate S — Contributor Workflow Gate (TECH-15)
 
 *Opens: permanently active — the governance surface must stay intact (`check:contributor-workflow` in CI).*

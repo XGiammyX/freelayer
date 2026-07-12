@@ -37,7 +37,9 @@ const PRIVATE_PLUS = [
   "emergency",
   "sovereign_room",
 ];
-const DEFERRED_DOMAINS = ["crypto", "capsule", "room", "identity"];
+// "room" graduated in TECH-16 (local RoomOS foundation rows exist); room SYNC
+// stays future-gated via the explicit check below.
+const DEFERRED_DOMAINS = ["crypto", "capsule", "identity"];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.
 const NEVER_ALLOWED_PREFIXES = [
@@ -193,6 +195,20 @@ function checkMatrix(matrixPath) {
       }
       if (spec.id === "crypto.operation" && effect !== "future_gate") {
         violations.push(`[future_gate_treated_as_allow] ${id} — crypto must stay future_gate`);
+      }
+      if (spec.id === "room.sync" && effect !== "future_gate") {
+        violations.push(
+          `[future_gate_treated_as_allow] ${id} — room sync must stay future_gate (Gate H)`,
+        );
+      }
+      if (
+        spec.domain === "room" &&
+        spec.sink === "local_persistent_storage" &&
+        ALLOWING_EFFECTS.includes(effect)
+      ) {
+        violations.push(
+          `[persistent_allowed_conflict] ${id} — room log/projection persistence allowed`,
+        );
       }
     }
   }
