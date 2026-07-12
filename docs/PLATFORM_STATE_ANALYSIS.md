@@ -1,6 +1,25 @@
 # Platform State Analysis — Problems, Limits, Decisions
 
-_Date: 2026-07-09 · Baseline: `edb3654` + the stabilize/harden pass. Status: main green, 173 tests, 13 checks, 0 open PRs._
+_Refreshed: 2026-07-12 · Baseline: `main` @ TECH-15 merged. Status: main green, **348 tests**, **20 checks/guards** (13 CI steps + policy validators), **0 open PRs**. Original register (2026-07-09, `edb3654`, 173 tests) preserved below; the refresh section records everything resolved since._
+
+## 2026-07-12 refresh — what changed since the original register
+
+| Area | Then (2026-07-09) | Now |
+| --- | --- | --- |
+| Roadmap progress | TECH-01…09 | **TECH-10…15 complete and merged**: Metadata Firewall, Link/Asset Blocking, Notification Privacy Model, Policy Matrix v1 (94 specs → 658 rules), Policy Conflict Regression Suite (17 categories, 0 conflicts), Contributor Workflow/DX |
+| Tests / guards | 173 tests, 13 checks | **348 tests**; guards added: `check:no-metadata-bypass`, `check:no-notification-bypass`, `check:policy-matrix`, `check:policy-docs`, `check:policy-conflicts`, `check:contributor-workflow`, plus `check:all` |
+| Policy drift risk (new class) | untracked | ✅ **RESOLVED** — the Policy Matrix is the canonical oracle; cross-engine agreement + conflict fixtures + validators fail CI on any contradiction ([audits/POLICY_CONFLICT_REPORT.md](audits/POLICY_CONFLICT_REPORT.md): 0 conflicts) |
+| Endpoint Defense / ScreenShield (was TECH-EDL roadmap) | deferred in-repo | ▸ **EXTERNALIZED** — implementation split into a standalone project; core keeps policy hooks only; integration behind Gate R; enforced by tests + dependency bans ([audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md)) |
+| Overclaim risk | manual honesty | ✅ machine-scanned — Trust Center overclaim scanner in `check:policy-conflicts` |
+| Contributor workflow (E-class gaps) | ad hoc | ✅ **RESOLVED** — workflow + policy developer guide + PR/issue templates + ADR template + OpenSSF readiness checklist + `check:contributor-workflow` (TECH-15) |
+| B4 — TypeScript major | TS 7 deferred | **TS 6.0.3 + ESLint 10 + globals 17 adopted** via the MAINTENANCE major-migration checklist (#39, all green); TS 7 (native compiler) remains the tracked deferred major; `@types/node` stays on 24 (tracks the pinned runtime — Dependabot #32 closed on this rule) |
+| C7/C8 notification decisions | recorded on paper | ✅ **implemented** — NotificationPolicy enforces both (content storage born denied; fail-hard standard persistence unchanged) |
+
+Everything else in the original register below stands: A3 (compile-time construction) and A4 (reflection reuse) remain Gate-B items; C1–C6 stay correctly gated (crypto/sync/identity/wire-format/CC0/timestamping); D1/D2 (desktop shell, Playwright E2E) remain deferred; E1 (solo-dev CODEOWNERS/admin) remains accepted and is now more thoroughly documented ([audits/CODEOWNERS_REVIEW_AUDIT.md](audits/CODEOWNERS_REVIEW_AUDIT.md)); the permanent honest limitations are unchanged.
+
+---
+
+_Original register (2026-07-09 · `edb3654` + stabilize/harden · 173 tests):_
 
 ## Purpose
 
