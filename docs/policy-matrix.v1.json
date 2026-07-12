@@ -66,12 +66,13 @@
     "capsule.wire_format",
     "capsule.transport",
     "room.sync",
+    "room.snapshot_future",
     "identity.invite",
     "identity.verification",
     "endpoint.tauri_desktop_permissions"
   ],
-  "specCount": 103,
-  "ruleCount": 721,
+  "specCount": 107,
+  "ruleCount": 749,
   "specs": [
     {
       "id": "storage.content_persistent_write",
@@ -1521,6 +1522,70 @@
       "docsRefs": [
         "docs/SOVEREIGN_ROOMS.md",
         "docs/METADATA_MODEL.md"
+      ]
+    },
+    {
+      "id": "room.operation_log_read",
+      "domain": "room",
+      "operation": "room.operation_log.read",
+      "sink": "local_memory",
+      "effect": "memory_only",
+      "effectOverrides": {
+        "emergency": "deny"
+      },
+      "reasonCode": "default_deny",
+      "reasonOverrides": {
+        "emergency": "emergency_mode"
+      },
+      "rationale": "Reading the memory-only operation log is a local, policy-gated access.",
+      "testCoverage": "covered",
+      "docsRefs": [
+        "docs/SOVEREIGN_ROOMS.md"
+      ]
+    },
+    {
+      "id": "room.operation_log_clear",
+      "domain": "room",
+      "operation": "room.operation_log.clear",
+      "sink": "local_memory",
+      "effect": "memory_only",
+      "reasonCode": "default_deny",
+      "rationale": "Clearing the memory log is allowed in every mode (wipe direction, incl. Emergency).",
+      "testCoverage": "covered",
+      "docsRefs": [
+        "docs/SOVEREIGN_ROOMS.md"
+      ]
+    },
+    {
+      "id": "room.replay_local",
+      "domain": "room",
+      "operation": "room.replay",
+      "sink": "local_memory",
+      "effect": "memory_only",
+      "effectOverrides": {
+        "emergency": "deny"
+      },
+      "reasonCode": "default_deny",
+      "reasonOverrides": {
+        "emergency": "emergency_mode"
+      },
+      "rationale": "Deterministic replay is a pure, local, in-memory reconstruction of accepted events.",
+      "testCoverage": "covered",
+      "docsRefs": [
+        "docs/SOVEREIGN_ROOMS.md"
+      ]
+    },
+    {
+      "id": "room.snapshot_future",
+      "domain": "room",
+      "operation": "room.project.snapshot",
+      "effect": "future_gate",
+      "reasonCode": "deferred_gate",
+      "rationale": "Snapshots/compaction are a future derived-data storage class: they can retain deleted content and depend on Gate F encryption + StoragePolicy/PBOM review.",
+      "testCoverage": "deferred",
+      "docsRefs": [
+        "docs/SOVEREIGN_ROOMS.md",
+        "docs/STORAGE_MODEL.md"
       ]
     },
     {

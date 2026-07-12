@@ -13,3 +13,4 @@ const overclaim = { endpointDefenseActive: true, screenShieldActive: true };
 import * as Y from "yjs";
 // @ts-ignore
 import { next } from "@automerge/automerge";
+console.log(JSON.stringify(event));

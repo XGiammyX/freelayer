@@ -42,6 +42,19 @@ They are **not just group chats.** A room may contain:
 - **Redacted room audit:** numeric/boolean details only; no titles/member names/content.
 - **Machine checks:** 9 matrix rows (`room.*`), `check:no-roomos-bypass` guardrail, 21 regression tests.
 
+## TECH-17 — Local operation log and deterministic projection
+
+> The RoomOS local operation log is **not a CRDT, distributed ledger, tamper-proof log or synchronization protocol.**
+
+- **Log-grade event schema v1** (`RoomOperationEventV1`): explicit `schemaVersion: 1` + `projectionVersion: 1`; branded `RoomEventId` + `RoomLocalSequence`; typed operation-specific payload union (unknown fields rejected; no real content anywhere). Unknown versions/operations/object kinds **reject** — no coercion, no silent defaults.
+- **Local sequence semantics:** positive safe integer, scoped to ONE local log, contiguous and ascending; a complete replay starts at 1 (no snapshots exist). **It is not global or causal ordering** — timestamps (`local:`-labeled) never influence order. No sorting, no deduplication, no skipping, no repair.
+- **Event creation boundary:** injected `RoomLocalClock` + `RoomEventIdGenerator`; requires an authentic room-scoped `PolicyDecision`; accepted events are validated, defensively cloned, and frozen.
+- **Deterministic replay** (`replayRoomOperationEventsV1`): validates ALL events (structure, room, uniqueness, contiguity, lifecycle transitions) **before applying any** — failure yields no partial result; the reducer is pure (no clock/randomness/storage/network/notification/AI/endpoint calls — guardrail-scanned and trap-tested); same seed + same events ⇒ deep-equal projection, proven across 15 golden fixtures. Replay reconstructs previously **accepted** events and does not re-run write authorization (determinism under policy change); log access itself stays policy-gated; external event ingestion remains Gate E.
+- **Lifecycle state machine:** one explicit table (`draft → active_local → sealed/archived/emergency_locked → deleted_tombstone`); tombstone is terminal. **Tombstoning is not forensic deletion** — visible summaries clear, but the in-memory log may retain prior placeholder events until explicitly cleared.
+- **Retention:** `InMemoryRoomOperationLog` (memory-only; clone-on-append/read; unique IDs; contiguous sequence; instances share nothing) and `NullRoomOperationLog` (retains nothing; replay unavailable; an ephemeral projection may exist in-process but cannot be rebuilt). **No persistent plaintext event log exists**; persistence is denied everywhere until Gate F. No snapshots/compaction (future gate — they can retain deleted content and need Gate F encryption + StoragePolicy/PBOM review).
+- **Separate decisions:** a room mutation and a log append/read/clear are separate side effects, each requiring its own exactly-scoped `PolicyDecision` — cross-scope use rejects.
+- **Not a hostile-input parser:** `validateRoomOperationEventV1` checks internal invariants over trusted local/fixture data only (Gate E owns external parsing). No crypto (Gate F), no sync (Gate H), no endpoint-defense implementation (externalized, Gate R).
+
 ### What does NOT exist (honest)
 
 No real messaging, no sync, no CRDT selection, no crypto/room keys, no identity/invites, no capsule import/export, no persistent storage (Standard fails hard until the encrypted backend; Ghost/Bunker never persist), no notifications, no AI, **no anti-spyware** — rooms are NOT safe for real secrets.

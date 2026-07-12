@@ -177,6 +177,10 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-17 — operation-log metadata
+
+The log adds metadata surfaces, all governed: event existence, local sequence, operation kind, local timing, retained event count, replay availability, and tombstone existence. Log `status()` is metadata-only (never payloads); audit stays redacted; Ghost/Bunker keep event metadata memory-only (nothing persists); no receipts/typing/presence/last-seen signals exist; no endpoint-protection signal exists. Future sync metadata (peer visibility of sequences/timing) is a Gate H design concern, recorded not solved.
+
 ## TECH-16 — room metadata
 
 RoomOS adds room-shaped metadata surfaces, all governed: room titles and member display are redacted in strict modes (and always display-redacted for members in v1); room activity, operation timing, and projection existence are metadata — no receipts/typing/presence signals exist and `room.activity` stays denied; room audit events are redacted (numeric/boolean details only); event timestamps carry an explicit `local:` label and are never trusted time.
