@@ -41,6 +41,7 @@
     "clean": "turbo run clean"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@freelayer/ai": "workspace:*",
     "@freelayer/core": "workspace:*",
     "@freelayer/crypto": "workspace:*",
@@ -49,15 +50,14 @@
     "@freelayer/security": "workspace:*",
     "@freelayer/storage": "workspace:*",
     "@freelayer/transports": "workspace:*",
-    "@eslint/js": "^9.18.0",
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "^4.1.10",
-    "eslint": "^9.18.0",
-    "globals": "^15.14.0",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
     "prettier": "^3.9.5",
     "turbo": "^2.3.3",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.20.0",
-    "typescript": "^5.7.2",
     "vitest": "^4.1.10"
   }
 }
