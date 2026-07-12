@@ -70,6 +70,12 @@ jobs:
       - name: No notification-bypass (Notification Privacy Model)
         run: pnpm check:no-notification-bypass
 
+      - name: Policy Matrix validation
+        run: pnpm check:policy-matrix
+
+      - name: Policy docs consistency
+        run: pnpm check:policy-docs
+
       - name: Build artifact zero-egress (after build)
         run: pnpm check:build-zero-egress
 

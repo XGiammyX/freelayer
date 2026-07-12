@@ -178,6 +178,8 @@ Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_M
 
 **Link previews & external assets (TECH-11):** no automatic link previews and no remote assets in any mode. Relaxed modes may show a URL as redacted plain text (domain-only); Private/Ghost/Bunker follow the content-rendering policy; ScreenShield sealed redacts the URL display entirely. A real, user-initiated preview requires a new design gate. Room policy cannot loosen these denials.
 
+**Policy Matrix v1 (TECH-13) is canonical.** The privacy modes are now *defined* through matrix behavior: [POLICY_MATRIX.md](POLICY_MATRIX.md) (94 specs → 658 rules) is the single contract for what each mode permits/denies/redacts/future-gates, with strictest-policy-wins and deny-overrides composition. Undefined behavior defaults deny. Any PR that changes policy behavior must update the matrix in the same PR ([CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md)).
+
 **Notifications (TECH-12):** notification content is denied in strict modes (and, in v0, never shown on any OS surface in any mode). Ghost/Bunker deny badge/sound/vibration by default (all denied in v0). Permission prompts are explicit user actions only — never automatic. Push is not implemented and denied. The notification-content storage class is born denied in strict modes and never plaintext in audit. Only a generic, content-free, memory-only in-app indicator may exist (Standard/Private); room policy cannot loosen device notification policy.
 
 ## TODO

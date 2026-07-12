@@ -20,6 +20,7 @@
 
 - [Architecture](ARCHITECTURE.md) — layering, the non-bypassable rules, and the operation pipeline.
 - [Privacy Model](PRIVACY_MODEL.md) — the seven privacy modes and the strictest-policy-wins rule.
+- [Policy Matrix v1](POLICY_MATRIX.md) — the single canonical mode × domain × operation contract ([machine-readable](policy-matrix.v1.json)).
 - [Threat Model](THREAT_MODEL.md) — attackers, assets, and what FreeLayer honestly cannot protect against.
 - [Metadata Model](METADATA_MODEL.md) — the leaks beyond message content, and what reduces them (incl. the TECH-10 Metadata Firewall).
 - [Storage Model](STORAGE_MODEL.md) — the write barrier: nothing persists without policy approval.
