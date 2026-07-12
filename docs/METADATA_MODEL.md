@@ -179,7 +179,14 @@ Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_f
 
 ## TECH-18 — object-model metadata
 
-Object mutations add metadata surfaces, all governed: object existence, kind, `revision`, lifecycle, and `contentPresent` (a boolean flag only). `RoomObjectSummaryV1` is metadata-only and NEVER carries content; strict modes (Ghost/Bunker/Emergency) suppress even the revision and content-present flag. No receipts/typing/presence/last-seen are emitted; a due date or file ref triggers no notification, reminder, calendar, or link preview. Future sync metadata (peer visibility of object activity) is Gate H design work, recorded not solved.
+Object mutations add metadata surfaces, all governed via `RoomObjectSummaryV1` (metadata-only; NEVER carries content):
+
+- object existence, object kind, `revision`, lifecycle, update timing (local labels only)
+- assignee-placeholder relationships (Gate-G placeholders, not authenticated identities)
+- poll existence, file-reference existence
+- `contentPresent` — a boolean flag only, never the content
+
+**Strict-mode suppression:** Ghost/Bunker/Emergency suppress even the `revision` and `contentPresent` signals. No receipts/typing/presence/last-seen are emitted; a due date or file ref triggers no notification, reminder, calendar, or link preview. Future sync metadata (peer visibility of object activity) is Gate H design work, recorded not solved.
 
 ## TECH-17 — operation-log metadata
 
