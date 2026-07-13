@@ -195,6 +195,24 @@ TECH-17 is complete only if all hold:
 - [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
 - [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
 
+## Gate X — RoomOS Membership + Capability Scaffolding Gate (TECH-20)
+
+*Opens: any feature relying on room membership or capability-informed authorization (permission UIs, member management, capability-scoped operations).*
+
+TECH-20 is complete only if all hold:
+
+- [x] Versioned membership model (opaque IDs, positive local revision, `verification: "unverified_placeholder"`)
+- [x] Lifecycle enforcement (active↔suspended→removed_tombstone; tombstone terminal; duplicate/stale-revision reject)
+- [x] Placeholder roles as ABAC attributes via an explicit role→capability table (eligibility necessary, not sufficient)
+- [x] Non-authoritative capability descriptors (bound to room+membership+revision; no wildcard; serialization/persistence forbidden; delegation not implemented)
+- [x] Attenuation tests (narrow-only; widening/subset/object-kind/exact-object/view widening reject)
+- [x] Stale-revision / currency checks (role/state/revision/room change → stale)
+- [x] Last-owner continuity invariant (remove/suspend/demote of the last active owner rejects)
+- [x] `PolicyDecision` integration (authentic exact-scope decision always required; descriptor authorizes nothing alone; separate mutation vs storage decisions)
+- [x] Object/query integration path (capability resolution + authorization context available to facades)
+- [x] No identity/invite/crypto/sync implementation; local revocation ≠ distributed revocation
+- [x] 18 matrix rows; guardrail + CI; 21 new tests (481 total); docs/PBOM(§25)/Trust Center updated
+
 ## Gate W — RoomOS Query Model Gate (TECH-19)
 
 *Opens: any feature reading room data for display (message views, task boards, search).*

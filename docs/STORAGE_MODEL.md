@@ -204,6 +204,20 @@ Storage is not only a content surface — its artifacts are metadata:
 - Preview/thumbnail existence is metadata; protected-content reveal state is metadata.
 - **Cache denial must align with MetadataPolicy.** StoragePolicy denies preview/thumbnail caches in Private+, AI caches everywhere, and reveal-state persistence in strict/sealed; MetadataPolicy denies the corresponding `preview.generated` / `cache.exists` / `ai.cache_exists` / `protected_content.revealed` events. Agreement is guarded by `tests/privacy-regression/metadata/metadata-integration.test.ts`. See [METADATA_MODEL.md](METADATA_MODEL.md).
 - **(TECH-11) Preview/favicon/OpenGraph/avatar/thumbnail caches are denied.** A preview cache would persist a URL, title, and image (content-adjacent); a favicon cache would persist browsing interests; a remote-avatar cache would persist contact-graph hints. `LinkPreviewPolicy` denies all preview caching (`cacheAllowed`/`thumbnailAllowed`/`faviconAllowed` false), and Ghost/Bunker deny any persistent URL/preview artifact. Agreement with StoragePolicy is guarded by `tests/privacy-regression/link-preview/`.
+- **(TECH-20) Membership records/projections/events and capability descriptors are memory-only; capability persistence is forbidden.** The membership layer introduces these logical data classes, all **memory/null only, never persisted in v1**: `room_membership_record`, `room_membership_projection`, `room_membership_event`, `room_membership_query_result`, `room_membership_count`, `room_capability_descriptor` (transient). `room_capability_cache` and capability persistence are **forbidden** (matrix `room.capability.persist` → deny; descriptors are not credentials). `room_invite_future` and `room_identity_proof_future` are **not implemented** (Gates G/E). Ghost/Bunker retain no membership data (null log). Membership existence, relationship, role, state, revision, count, timestamps, and role-change history are metadata — no telemetry, no query history, no plaintext audit payload.
+
+  | Logical data class            | Behavior (all modes)         |
+  | ----------------------------- | ---------------------------- |
+  | `room_membership_record`      | Memory/null only             |
+  | `room_membership_projection`  | Memory/null only             |
+  | `room_membership_event`       | Memory/null only             |
+  | `room_membership_query_result`| Memory-only; redacted        |
+  | `room_membership_count`       | Memory-only; own scope       |
+  | `room_capability_descriptor`  | Memory-only; transient       |
+  | `room_capability_cache`       | Forbidden                    |
+  | `room_invite_future`          | Not implemented — Gate G/E   |
+  | `room_identity_proof_future`  | Not implemented — Gate G     |
+
 - **(TECH-19) Query snapshots, results, cursors, and terms are memory-only; history/cache/index are denied.** The query layer introduces these logical data classes, all **memory-only and never persisted in v1**: `room_query_snapshot`, `room_query_result`, `room_query_cursor`, `room_query_term`. The query term is additionally **never logged, audited, or retained** (no history). `room_query_history`, `room_query_cache`, `room_search_index`, and `room_search_snippet` are **denied in every mode** (matrix rows `room.query.history`/`result_cache`/`search_index` → deny) — a persistent index would duplicate content; enabling any of them requires a future design gate. StoragePolicy, QueryPolicy, and the Policy Matrix agree (test-enforced).
 
   | Logical data class     | Behavior (all modes)        |

@@ -6,6 +6,7 @@
 
 import type { PrivacyMode } from "@freelayer/privacy";
 import type { RoomPolicy } from "./room-policy";
+import type { RoomMembershipRecordV1 } from "./membership/membership-types";
 import type {
   RoomKind,
   RoomLifecycleState,
@@ -41,6 +42,12 @@ export interface RoomMaterializedState {
   readonly title?: string;
   readonly members: readonly RoomMemberSummary[];
   readonly objects: readonly RoomObjectSummary[];
+  /**
+   * TECH-20: local, unverified membership records (relationship metadata).
+   * Optional so pre-membership construction stays valid; memory-only, never
+   * persisted. Changed only through the membership reducer.
+   */
+  readonly membershipRecords?: readonly RoomMembershipRecordV1[];
   /** LOCAL label only ("local:" prefix) — never trusted time. */
   readonly lastLocalUpdateAt?: string;
   readonly policy: RoomPolicy;

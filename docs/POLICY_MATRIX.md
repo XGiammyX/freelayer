@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS membership + capability rows (TECH-20)
+
+Eighteen rows joined the `room` domain: `room.membership.bootstrap` (memory_only, Emergency deny); `add`/`change_role`/`reactivate` (memory_only, Bunker/Emergency deny — expansion); `suspend`/`remove` (memory_only, restrictive/wipe direction, survive strict modes but preserve last-owner continuity); `membership_log.append` (memory_only, own storage decision); `query.list`/`query.detail` (memory_only, Bunker/Emergency deny); `query.count` (memory_only, Private/Ghost/Bunker/Emergency deny); `capability.resolve` (memory_only, pure); `capability.persist` (**deny**); `capability.serialize` (**deny**); `capability.delegate` (**not_implemented**); `membership.invite`/`identity_verify`/`distributed_revocation`/`endpoint_risk_integration` (**future_gate** — Gates G/E/H/R). Per-mode/role behavior is derived by `resolveRoomMembershipPolicyV1` + `resolveRoomLocalCapabilityV1`; these rows pin the class-level rule. Matrix is now **149 specs → 1043 rules**.
+
 ## RoomOS query rows (TECH-19)
 
 Eleven rows joined the `room` domain for the query model: `room.query.summary` is `memory_only` (allowed minimally even in Emergency, redacted); `room.query.list`/`detail`/`count` are `memory_only` (Emergency denies; count also denied in Private/Ghost/Bunker by policy); `room.query.search` is `memory_only` (Offline/Emergency deny; Bunker denies by policy); `room.query.history`/`result_cache`/`search_index` are `deny` in every mode; `room.query.semantic`/`remote`/`bunker_content_view` are `future_gate` (Gates I/H + a protected-presentation gate). Per-mode view/field suppression is derived by `resolveRoomQueryPolicy`; these rows pin the class-level rule. Matrix is now **131 specs → 917 rules**.

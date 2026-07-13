@@ -282,6 +282,26 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 | Tombstone forensic deletion     | Not claimed               |
 | Endpoint Defense                | Externalized / hooks only |
 
+## 25. RoomOS membership + capability behavior (TECH-20)
+
+| Behavior                    | Status                        |
+| --------------------------- | ----------------------------- |
+| Local membership records    | In-memory foundation          |
+| Membership verification     | Not implemented — Gate G      |
+| Local placeholder roles     | Implemented foundation        |
+| Capability descriptors      | Non-authoritative scaffolding |
+| Capability tokens           | Not implemented               |
+| Capability persistence      | Forbidden                     |
+| Capability serialization    | Forbidden                     |
+| Capability delegation       | Not implemented               |
+| Local role revocation       | Current local projection only |
+| Distributed revocation      | Not implemented — Gate H      |
+| Invites                     | Not implemented — Gate G/E    |
+| Presence / last seen        | Forbidden                     |
+| Persistent membership graph | Forbidden                     |
+| Membership network / notification / AI | None               |
+| Endpoint assurance          | Externalized / not integrated |
+
 ## 24. RoomOS local query behavior (TECH-19)
 
 | Behavior                  | Status                                  |

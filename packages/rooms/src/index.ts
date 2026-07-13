@@ -50,3 +50,9 @@ export * from "./objects";
 //      gated read boundary over an immutable snapshot. No history/cache/index,
 //      no network/AI, no UI, no persistent search engine.
 export * from "./query";
+
+// ---- TECH-20: local membership + non-authoritative capability scaffolding.
+//      Unverified relationships + narrow capability descriptors that inform
+//      policy — never authentication, invites, crypto, sync, or authority by
+//      themselves. Only an authentic exact-scope PolicyDecision authorizes.
+export * from "./membership";
