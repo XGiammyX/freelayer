@@ -53,7 +53,7 @@ Most communication tools force you to trust a central service. Even with encrypt
 | ⚖️ | **Policy Engine** | Core rules that block unsafe storage, network, previews, AI or copy actions |
 | 🪪 | **Identity Firewall** | No phone number, no email, no central account — ever |
 | 🌫️ | **Metadata Firewall** | Fewer silent leaks: typing, read receipts, presence, link previews |
-| 🛡️ | **ScreenShield** | Endpoint protection developed as a **separate standalone project** — FreeLayer core keeps policy hooks only; nothing is active in core yet |
+| 🛡️ | **ScreenShield** | Endpoint protection developed as a **separate standalone project** — FreeLayer core keeps policy hooks only; nothing is active in core yet. **DevicePosture verification is not implemented** (core resolves only `unverified`/`at_risk`; untrusted claims never elevate), so rooms requiring a hardened device deny protected content until Secure Device integrates |
 | 🧊 | **Ghost Vault** | Planned mode keeping identity keys on an offline device |
 
 Every term, honestly labeled with its real status → **[Glossary](docs/GLOSSARY.md)**

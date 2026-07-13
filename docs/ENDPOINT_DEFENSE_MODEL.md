@@ -13,6 +13,14 @@ Define FreeLayer's model for protecting sensitive data **after decryption** — 
 
 **Research/design only.** No platform code is implemented; no Tauri or mobile permissions exist. Everything here is design direction gated behind Gate K ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)).
 
+## Project separation — Secure Device is external (TECH-22)
+
+**FreeLayer / ChatControl and Secure Device / Endpoint Defense are now two clearly separated projects.** The device-management, anti-spyware, GrapheneOS, ScreenShield-runtime, and ProtectedContent responsibilities belong to the **separate Secure Device project** (developed elsewhere; research direction: supported Pixel devices, GrapheneOS, isolated ChatControl user profile, Device Posture Checker, Bunker Session Mode, ScreenShield, ProtectedContent — only after real validation). **FreeLayer core keeps ONLY:** interfaces, policy inputs, compatibility contracts, minimum-posture room requirements, protected-content requirements, future integration hooks, and honest PBOM/Trust Center disclosures.
+
+FreeLayer core does **not** implement: anti-spyware/stalkerware/malware scanners, a phone-wide firewall, Device Owner/MDM, GrapheneOS install/update/management, custom ROM/firmware, Accessibility/overlay/keyboard/process/clipboard/screen-recording inspection, app-inventory scanning, device/hardware/Play-Integrity attestation, remote device management, an endpoint-risk scoring engine, or a native Secure Device bridge.
+
+**The DevicePosture contract (TECH-22):** core defines the enum `unverified | basic | hardened | high_assurance | managed_bunker | at_risk` and a fail-closed resolver. **No provider is integrated**, so core resolves only `unverified` (default) or `at_risk` (untrusted tightening); a caller/UI claim of a higher posture is ignored and reduced to `unverified`; `at_risk` always overrides; unknown/missing fail closed. **An untrusted or endpoint-risk signal may tighten or deny an operation — it must NEVER grant access, restore access, or prove identity.** Real posture verification (`basic`+) is supplied later by Secure Device behind the **Secure Device Integration Gate** (dedicated ADR, provider trust model, posture provenance, freshness/expiration, anti-replay, native-permission audit, compromised-provider threat model — see [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)). Device posture is an environment attribute, **never identity** ([membership and device assurance remain separate inputs](SOVEREIGN_ROOMS.md)).
+
 ## Threats covered
 
 - Screenshots (user- or software-initiated)

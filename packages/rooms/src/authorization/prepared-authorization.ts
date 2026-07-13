@@ -22,6 +22,10 @@ import {
   type RoomMembershipRecordV1,
   type RoomMembershipRevision,
 } from "../membership";
+import {
+  resolveEffectiveDevicePostureV1,
+  type DevicePostureSignalV1,
+} from "../policy-composition/device-posture";
 import { RoomAuthorizationError } from "./authorization-errors";
 import {
   roomAuthorizationRevisionV1,
@@ -64,8 +68,10 @@ export function prepareRoomAuthorizationV1(input: {
   requestedView?: RoomQueryViewClass;
   targetMembership?: RoomMembershipRecordV1;
   deviceRiskLevel?: "low" | "medium" | "high" | "critical" | "unknown";
+  devicePostureSignal?: DevicePostureSignalV1;
 }): PreparedRoomAuthorizationV1 {
   const { roomState, membership, roomPolicy } = input;
+  const effectivePosture = resolveEffectiveDevicePostureV1(input.devicePostureSignal);
 
   // Actor membership must be the CURRENT active record for this room.
   const current = (roomState.membershipRecords ?? []).find(
@@ -91,7 +97,13 @@ export function prepareRoomAuthorizationV1(input: {
 
   const prepared: PreparedRoomAuthorizationV1 = {
     schemaVersion: 1,
-    revision: roomAuthorizationRevisionV1({ roomState, membership: current, roomPolicy }),
+    revision: roomAuthorizationRevisionV1({
+      roomState,
+      membership: current,
+      roomPolicy,
+      effectiveDevicePosture: effectivePosture.effectivePosture,
+      devicePostureSignalRevision: effectivePosture.signalRevision,
+    }),
     membershipId: current.membershipId,
     memberRef: current.memberRef,
     capability: resolution.descriptor,

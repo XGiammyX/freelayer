@@ -195,6 +195,28 @@ TECH-17 is complete only if all hold:
 - [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
 - [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
 
+## Gate Z — RoomOS Room Policy Composition + Governance Gate (TECH-22)
+
+*Opens: any feature relying on composed room policy, minimum device posture, or room governance.*
+
+TECH-22 is complete only if all hold:
+
+- [x] Policy layers explicit (fixed taxonomy; no caller-controlled names)
+- [x] Strictness ordering + deny-overrides (unknown effect denies; `deny`/`not_implemented`/`future_gate` never permit)
+- [x] DevicePosture contract exists; untrusted posture cannot elevate; `at_risk` tightens; minimum-posture ordering explicit
+- [x] Protected-content future requirements deny safely (no silent downgrade, no active-protection claim)
+- [x] RoomPolicyDocument v1 (versioned) + monotonic tighten-only comparison
+- [x] Governance is tighten-only (owner-only; only `stricter` succeeds; policy revision + posture invalidate authorization)
+- [x] Operation pipelines use composition; sensitive-room admission is deterministic
+- [x] Guardrail + CI; 21 new tests (521 total); docs/PBOM(§27)/Trust Center updated
+- [x] No Secure Device provider / posture verification / ScreenShield runtime / signed-distributed governance implemented
+
+## Secure Device Integration Gate (future)
+
+*Opens: any real device-posture verification or protected-presentation enforcement in FreeLayer.*
+
+Future requirements before integration: the separate **Secure Device project is mature** and validated · integration ADR · provider trust model · posture **provenance** · **freshness/expiration** rules · **anti-replay** design · failure behavior (fail-closed) · native-permission audit · GrapheneOS/device-support assumptions reviewed · PBOM + Trust Center updates · **compromised-provider** threat model · **no claim of spyware-proof protection** · integration tests · rollback plan. Until it opens, core resolves posture to `unverified`/`at_risk` only, stricter room requirements deny content, and `activeProtectionClaim` stays `false`.
+
 ## Gate Y — RoomOS Local Revocation + Authorization Regression Gate (TECH-21)
 
 *Opens: any feature that grants a member a capability and later relies on it staying revoked (permission UIs, capability-scoped operations after membership changes).*

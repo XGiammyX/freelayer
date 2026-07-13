@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS policy composition + governance rows (TECH-22)
+
+Fourteen rows joined the `room` domain: `room.policy.compose`/`room.governance.update`/`room.governance_log.append`/`room.device_posture.resolve`/`room.sensitive_admission.resolve` are `memory_only`; `room.policy.loosen`/`room.device_posture.elevate`/`room.protected_content.claim_active` are `deny`; `room.device_posture.persist` is `deny` (posture history forbidden); `room.device_posture.verify`/`room.protected_content.require`/`room.secure_device.integration`/`room.governance.distributed_consensus`/`room.governance.signed_policy` are `future_gate` (Secure Device / Gates H/F/G). Composition uses deny-overrides + strictest-wins; governance is tighten-only; posture cannot elevate. Matrix is now **171 specs → 1197 rules**.
+
 ## RoomOS revocation + authorization rows (TECH-21)
 
 Eight rows joined the `room` domain: `room.authorization.prepare` and `room.authorization.revalidate` are `memory_only` (pure, side-effect-free); `room.authorization.cache`/`context_persist` are `deny` (persistent-storage forbidden) and `context_serialize` is `deny`; `room.authorization.endpoint_assurance` is `deny` (endpoint state can never grant/restore/prove authority); `room.authorization.distributed_revocation`/`signed_revocation` are `future_gate` (Gates H/F/G). Per-scenario invalidation (suspension/removal/role-change/reactivation/policy/mode) is enforced by `assertPreparedRoomAuthorizationCurrentV1` against the current revision fence. Matrix is now **157 specs → 1099 rules**.

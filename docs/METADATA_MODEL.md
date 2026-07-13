@@ -177,6 +177,10 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-22 — policy composition + device posture metadata
+
+Policy composition adds metadata surfaces, all governed: device posture, room sensitivity, minimum posture requirement, governance changes (field codes + previous/resulting enum values + revisions), and conflict/admission metadata. Rules: **no device telemetry, no posture history, no persistence**; posture is transient and never a caller-controlled elevation; conflict reports + governance events are content-free (layer names/field codes only — no room title, member ref, or object content); strict-mode redaction from prior phases still applies. Room sensitivity and minimum posture can reveal room purpose, so they are never emitted or persisted. Future distributed policy metadata (peer visibility of governance) is a Gate H concern, recorded not solved.
+
 ## TECH-21 — revocation + authorization metadata
 
 Revocation/authorization adds metadata surfaces, all governed: revocation existence, membership state/revision changes, role-change metadata, authorization-failure signals, and invalidation timing. Rules: **no authorization telemetry**; no failure counters exported; invalidation reports are content-free (no member ref/role/reason; state `current_local_projection_only`; `distributedRevocation: false`); errors carry codes + STATIC detail only (never a current role/state/target); prepared contexts are transient and never persisted. Strict-mode redaction from TECH-20 still applies. Distributed revocation metadata (peer visibility of local invalidations) is a Gate H concern, recorded not solved.

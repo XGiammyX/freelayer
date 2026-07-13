@@ -282,6 +282,28 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 | Tombstone forensic deletion     | Not claimed               |
 | Endpoint Defense                | Externalized / hooks only |
 
+## 27. RoomOS device posture + room governance (TECH-22)
+
+| Behavior                    | Status                           |
+| --------------------------- | -------------------------------- |
+| Room policy composition     | Local v1 foundation              |
+| Strictest-policy-wins       | Implemented/tested foundation    |
+| Room policy tightening      | Local foundation                 |
+| Room policy loosening       | Forbidden                        |
+| Minimum device posture      | Policy contract only             |
+| Device posture verification | Not implemented                  |
+| Effective current posture   | Unverified or at-risk tightening |
+| Secure Device provider      | Not integrated                   |
+| Sensitive-room admission    | Local policy decision foundation |
+| ScreenShield enforcement    | Not integrated                   |
+| ProtectedContent runtime    | Not implemented                  |
+| Device posture history      | Forbidden                        |
+| Device telemetry            | Forbidden                        |
+| MDM / Device Owner          | Not implemented                  |
+| GrapheneOS manager          | Not implemented                  |
+| Anti-spyware scanner        | External Secure Device project   |
+| Custom ROM                  | Not planned in core              |
+
 ## 26. RoomOS local revocation + authorization behavior (TECH-21)
 
 | Behavior                           | Status                      |
