@@ -17,6 +17,7 @@ import type {
   RoomMembershipRecordV1,
   RoomMembershipRevision,
 } from "../membership";
+import type { DevicePosture } from "../policy-composition/device-posture";
 
 export interface RoomAuthorizationRevisionV1 {
   readonly schemaVersion: 1;
@@ -26,6 +27,10 @@ export interface RoomAuthorizationRevisionV1 {
   readonly roomPolicyRevision: number;
   readonly roomLifecycle: RoomLifecycleState;
   readonly privacyMode: PrivacyMode;
+  // TECH-22: bind the effective device posture + signal revision so a posture
+  // change (esp. → at_risk) invalidates a prepared authorization.
+  readonly effectiveDevicePosture: DevicePosture;
+  readonly devicePostureSignalRevision: number;
 }
 
 /**
@@ -67,6 +72,8 @@ export function roomAuthorizationRevisionV1(input: {
   roomState: RoomMaterializedState;
   membership: RoomMembershipRecordV1;
   roomPolicy: RoomPolicy;
+  effectiveDevicePosture?: DevicePosture;
+  devicePostureSignalRevision?: number;
 }): RoomAuthorizationRevisionV1 {
   const { roomState, membership, roomPolicy } = input;
   return {
@@ -77,6 +84,9 @@ export function roomAuthorizationRevisionV1(input: {
     roomPolicyRevision: roomPolicyRevisionOfV1(roomState, roomPolicy),
     roomLifecycle: roomState.lifecycle,
     privacyMode: roomState.mode,
+    // No posture signal → conservative default: unverified, revision 0.
+    effectiveDevicePosture: input.effectiveDevicePosture ?? "unverified",
+    devicePostureSignalRevision: input.devicePostureSignalRevision ?? 0,
   };
 }
 
@@ -91,6 +101,8 @@ export function roomAuthorizationRevisionEqualV1(
     (a.membershipRevision as number) === (b.membershipRevision as number) &&
     a.roomPolicyRevision === b.roomPolicyRevision &&
     a.roomLifecycle === b.roomLifecycle &&
-    a.privacyMode === b.privacyMode
+    a.privacyMode === b.privacyMode &&
+    a.effectiveDevicePosture === b.effectiveDevicePosture &&
+    a.devicePostureSignalRevision === b.devicePostureSignalRevision
   );
 }

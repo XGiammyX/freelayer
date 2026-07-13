@@ -165,6 +165,11 @@ export type PolicySideEffectScope =
   | "room.membership.query.list"
   | "room.membership.query.detail"
   | "room.membership.query.count"
+  // RoomOS governance scopes (TECH-22). Room policy tightening + governance-log
+  // storage are SEPARATE side effects; each decision is scoped to exactly one.
+  // Governance is tighten-only; a capability descriptor never substitutes.
+  | "room.governance.update"
+  | "room.governance_log.append"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

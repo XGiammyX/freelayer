@@ -83,6 +83,9 @@ function isAllowlisted(rel) {
   return (
     rel.endsWith(".test.ts") ||
     rel.endsWith(".test.tsx") ||
+    // The Policy Matrix legitimately NAMES denied operations (e.g. a
+    // room.policy.loosen DENY row) as data — not an authorization bypass.
+    rel.endsWith("packages/privacy/src/policyMatrix.ts") ||
     rel.endsWith("check-no-room-membership-bypass.mjs")
   );
 }

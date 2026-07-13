@@ -1791,6 +1791,177 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     testCoverage: "covered",
     docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
   },
+  // ---- TECH-22: room policy composition + governance. Strictest-policy-wins +
+  //      deny-overrides; governance tighten-only; DevicePosture externalized
+  //      (Secure Device is separate) — untrusted cannot elevate, at_risk
+  //      tightens; protected-content future-required denies; no active
+  //      protection claim; distributed/signed governance future-gated. ----
+  {
+    id: "room.policy_compose",
+    domain: "room",
+    operation: "room.policy.compose",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Policy composition is a pure, local, deterministic computation using strictest-policy-wins + deny-overrides. No side effects, no content in the result.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/POLICY_MATRIX.md"],
+  },
+  {
+    id: "room.policy_loosen",
+    domain: "room",
+    operation: "room.policy.loosen",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "Room governance is tighten-only; there is no loosen/reset/enable-forbidden-feature/lower-posture/disable-protection command.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "room.governance_update",
+    domain: "room",
+    operation: "room.governance.update",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A room governance update (tighten/increase-posture/increase-sensitivity/strengthen-protected/disable-feature) is a memory-only, owner-only, monotonic transition; may run in Emergency (restrictive direction).",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "room.governance_log_append",
+    domain: "room",
+    operation: "room.governance_log.append",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: EMERGENCY_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "The governance event log is a memory-only placeholder; append needs its OWN storage decision, separate from the update.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "room.device_posture_resolve",
+    domain: "room",
+    operation: "room.device_posture.resolve",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Effective device posture is resolved locally and fail-closed: unverified by default, at_risk on untrusted tightening; never elevated.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "room.device_posture_elevate",
+    domain: "room",
+    operation: "room.device_posture.elevate",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "An untrusted/caller signal may reduce trust but may NEVER increase it. No provider is integrated; higher-posture claims are ignored.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "room.device_posture_persist",
+    domain: "room",
+    operation: "room.device_posture.persist",
+    sink: "local_persistent_storage",
+    dataClass: "device_risk_state",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "Device posture signals + posture history are transient memory-only; persistence is forbidden.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "room.device_posture_verify_future",
+    domain: "room",
+    operation: "room.device_posture.verify",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Real device-posture verification (basic/hardened/high_assurance/managed_bunker) is supplied by the SEPARATE Secure Device project — future integration gate + ADR.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/SOVEREIGN_ROOMS.md",
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/ENDPOINT_DEFENSE_MODEL.md",
+    ],
+  },
+  {
+    id: "room.protected_content_require_future",
+    domain: "room",
+    operation: "room.protected_content.require",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Protected-content presentation (Secure Device / ScreenShield) is not integrated; any future-required protection DENIES content display now (no silent downgrade).",
+    testCoverage: "deferred",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "room.protected_content_claim_active",
+    domain: "room",
+    operation: "room.protected_content.claim_active",
+    effect: "deny",
+    reasonCode: "screen_shield_strict",
+    rationale:
+      "Core never claims active capture protection / ScreenShield. `activeProtectionClaim` is structurally false.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/TRUST_CENTER.md"],
+  },
+  {
+    id: "room.sensitive_admission_resolve",
+    domain: "room",
+    operation: "room.sensitive_admission.resolve",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Sensitive-room admission is a deterministic local decision gating content by posture + protected presentation; content denies when the provider is absent.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "room.secure_device_integration_future",
+    domain: "room",
+    operation: "room.secure_device.integration",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Secure Device provider integration (posture provenance/freshness/anti-replay) is a SEPARATE project + dedicated gate/ADR; not integrated in core.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "room.governance_distributed_consensus_future",
+    domain: "room",
+    operation: "room.governance.distributed_consensus",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale: "Distributed governance consensus / synchronized policy revision is Gate H.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "room.governance_signed_policy_future",
+    domain: "room",
+    operation: "room.governance.signed_policy",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Signed/verified room policy + governance authorship require crypto + identity (Gates F/G).",
+    testCoverage: "deferred",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
   {
     id: "identity.invite",
     domain: "identity",

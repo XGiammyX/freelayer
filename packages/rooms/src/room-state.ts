@@ -7,6 +7,7 @@
 import type { PrivacyMode } from "@freelayer/privacy";
 import type { RoomPolicy } from "./room-policy";
 import type { RoomMembershipRecordV1 } from "./membership/membership-types";
+import type { RoomPolicyDocumentV1 } from "./policy-composition/room-policy-document";
 import type {
   RoomKind,
   RoomLifecycleState,
@@ -56,6 +57,12 @@ export interface RoomMaterializedState {
    * derived fingerprint of the current RoomPolicy when absent.
    */
   readonly policyRevision?: number;
+  /**
+   * TECH-22: the explicit, versioned, tighten-only room policy document.
+   * Optional (pre-governance construction stays valid); memory-only, never
+   * persisted. Changed only through the governance reducer.
+   */
+  readonly policyDocument?: RoomPolicyDocumentV1;
   /** LOCAL label only ("local:" prefix) — never trusted time. */
   readonly lastLocalUpdateAt?: string;
   readonly policy: RoomPolicy;

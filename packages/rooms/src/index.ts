@@ -63,3 +63,10 @@ export * from "./membership";
 //      mode changes invalidate stale local authority. Local only — not
 //      distributed revocation, identity, crypto, or endpoint assurance.
 export * from "./authorization";
+
+// ---- TECH-22: room policy composition + governance. Strictest-policy-wins +
+//      deny-overrides; room governance can only TIGHTEN; DevicePosture is an
+//      externalized future signal (Secure Device is separate) that can only
+//      reduce trust; protected-content requirements deny when integration is
+//      absent. Local only — no consensus/crypto/identity/endpoint assurance.
+export * from "./policy-composition";

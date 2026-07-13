@@ -21,6 +21,10 @@ import {
   type RoomMembershipRecordV1,
 } from "../membership";
 import {
+  resolveEffectiveDevicePostureV1,
+  type DevicePostureSignalV1,
+} from "../policy-composition/device-posture";
+import {
   AuthorizationObjectBindingError,
   AuthorizationOperationBindingError,
   AuthorizationRevisionMismatchError,
@@ -49,6 +53,8 @@ export function assertPreparedRoomAuthorizationCurrentV1(input: {
   actualObjectKind?: RoomObjectV1["kind"];
   actualRequestedView?: RoomQueryViewClass;
   actualTargetMembership?: RoomMembershipRecordV1;
+  /** Current device-posture signal (TECH-22). A posture change invalidates. */
+  currentDevicePostureSignal?: DevicePostureSignalV1;
 }): void {
   const { prepared, currentRoomState: rs, currentMembership: m, currentRoomPolicy } = input;
 
@@ -88,6 +94,17 @@ export function assertPreparedRoomAuthorizationCurrentV1(input: {
   // 11. Room lifecycle matches.
   if (rs.lifecycle !== prepared.revision.roomLifecycle) {
     throw new AuthorizationRevisionMismatchError("lifecycle");
+  }
+  // 11b. Device posture matches (TECH-22). Any change (esp. → at_risk)
+  // invalidates; posture improvement also requires fresh authorization.
+  {
+    const currentPosture = resolveEffectiveDevicePostureV1(input.currentDevicePostureSignal);
+    if (
+      currentPosture.effectivePosture !== prepared.revision.effectiveDevicePosture ||
+      currentPosture.signalRevision !== prepared.revision.devicePostureSignalRevision
+    ) {
+      throw new AuthorizationRevisionMismatchError("device_posture");
+    }
   }
   // 12. Capability descriptor remains current (defence in depth).
   assertRoomCapabilityDescriptorCurrentV1({

@@ -149,6 +149,10 @@ Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favi
 
 NetworkPolicy must not contradict the [Policy Matrix](POLICY_MATRIX.md) (agreement is test-enforced): Offline Capsule's total network denial, the always-forbidden operations (telemetry / external assets / link previews / remote AI / update checks / push), and the future-gated real transports are all matrix-covered rows.
 
+### TECH-22 — policy composition + posture are zero-network
+
+Room policy composition, DevicePosture resolution, and governance perform zero network I/O. There are **no remote posture checks, no device-assurance service, no policy distribution, and no Secure Device network bridge** — the (external) Secure Device project would supply posture locally in a future integration, never over a FreeLayer network call. Offline Capsule remains offline; room policy `networkAllowed`/`directPeerAllowed` are conservative and RoomOS stays zero-network in v1 regardless.
+
 ### TECH-19 — queries are zero-network
 
 RoomOS queries perform zero network I/O (trap-tested). There is no remote query API, no remote/synchronized search, no file resolution, and no link preview from a query. URL-like text in a message is returned as plain text and never triggers a preview or fetch; file-reference views expose only an opaque `localRefId`. Remote/synchronized queries remain Gate H.
