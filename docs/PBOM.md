@@ -9,7 +9,7 @@
 
 A single, auditable inventory of everything FreeLayer software does that touches privacy: network endpoints, storage, permissions, telemetry (none), dependencies, AI behavior, caches, and logs. Like an SBOM, but for privacy-relevant behavior. From the first alpha, the PBOM is a release artifact; divergence between PBOM and actual behavior is treated as a bug of the highest severity.
 
-**Rule: any behavior not listed in the PBOM is considered undocumented and therefore a bug** — regardless of whether the behavior itself is benign. The inventory being complete *is* the guarantee.
+**Rule: any behavior not listed in the PBOM is considered undocumented and therefore a bug** — regardless of whether the behavior itself is benign. The inventory being complete _is_ the guarantee.
 
 ## Current status
 
@@ -27,62 +27,62 @@ Actual behavior of the current codebase (verified by tests and static guards):
 
 ## 1. Network endpoints
 
-| Endpoint | Purpose | Status |
-| --- | --- | --- |
-| — | FreeLayer-owned backend | **Does not exist and never will** (hard constraint) |
-| User-chosen relays | Capsule store-and-forward | Not implemented yet (Phase 4) |
-| User-initiated transports (email, LAN, etc.) | Blind courier channels | Not implemented yet |
+| Endpoint                                     | Purpose                   | Status                                              |
+| -------------------------------------------- | ------------------------- | --------------------------------------------------- |
+| —                                            | FreeLayer-owned backend   | **Does not exist and never will** (hard constraint) |
+| User-chosen relays                           | Capsule store-and-forward | Not implemented yet (Phase 4)                       |
+| User-initiated transports (email, LAN, etc.) | Blind courier channels    | Not implemented yet                                 |
 
 ### Runtime network behavior — default build (TECH-09)
 
 The built app makes **zero automatic network egress on load**, verified by static source + build-artifact + runtime-trap + dependency scans:
 
-| Behavior | Default build status |
-| --- | --- |
-| FreeLayer-owned backend | Does not exist |
-| Runtime network calls | **Forbidden / tested** (runtime trap) |
-| Telemetry | **Forbidden / tested** |
-| Analytics | **Forbidden / tested** (dependency + build scan) |
-| Crash reporting | Not implemented |
-| Remote fonts / images / scripts | **Forbidden / tested** (remote-asset + build scan) |
-| Link previews | Not implemented / forbidden |
-| Remote AI | Not implemented / forbidden |
-| Update checks | Not implemented |
-| WebSocket / WebRTC | **Forbidden / tested** |
-| Service worker network | **Not implemented** (none registered — [audit](audits/PWA_SERVICE_WORKER_NETWORK_AUDIT.md)) |
-| Relay transport | Not implemented |
+| Behavior                        | Default build status                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------- |
+| FreeLayer-owned backend         | Does not exist                                                                              |
+| Runtime network calls           | **Forbidden / tested** (runtime trap)                                                       |
+| Telemetry                       | **Forbidden / tested**                                                                      |
+| Analytics                       | **Forbidden / tested** (dependency + build scan)                                            |
+| Crash reporting                 | Not implemented                                                                             |
+| Remote fonts / images / scripts | **Forbidden / tested** (remote-asset + build scan)                                          |
+| Link previews                   | Not implemented / forbidden                                                                 |
+| Remote AI                       | Not implemented / forbidden                                                                 |
+| Update checks                   | Not implemented                                                                             |
+| WebSocket / WebRTC              | **Forbidden / tested**                                                                      |
+| Service worker network          | **Not implemented** (none registered — [audit](audits/PWA_SERVICE_WORKER_NETWORK_AUDIT.md)) |
+| Relay transport                 | Not implemented                                                                             |
 
 **Benign strings in the build (not egress):** `github.com` (navigation anchors), `www.w3.org` (React XML/SVG namespaces), `react.dev` (React error-message links) — documented allowlist, never fetched.
 
-> **Development tooling may contact package registries and GitHub.** That is *not* app runtime behavior: `pnpm install` uses the npm registry; GitHub Actions/CodeQL/Dependabot are GitHub-side. See the [GitHub Actions egress audit](audits/GITHUB_ACTIONS_EGRESS_AUDIT.md). No third-party upload, telemetry, or deploy occurs in CI.
+> **Development tooling may contact package registries and GitHub.** That is _not_ app runtime behavior: `pnpm install` uses the npm registry; GitHub Actions/CodeQL/Dependabot are GitHub-side. See the [GitHub Actions egress audit](audits/GITHUB_ACTIONS_EGRESS_AUDIT.md). No third-party upload, telemetry, or deploy occurs in CI.
 
 ### Network behavior — current implementation (TECH-08)
 
-| Behavior | Status |
-| --- | --- |
-| FreeLayer-owned backend | **Does not exist** (ADR-0001) |
-| Real network transports | **Not implemented** |
-| Relay client | Not implemented |
-| HTTP / fetch | **Forbidden** outside a future approved provider (CI guard) |
-| WebSocket | **Forbidden** (CI guard) |
-| WebRTC / direct peer | **Forbidden** (CI guard + policy; IP exposure) |
-| Telemetry / `sendBeacon` | **Forbidden** (always) |
-| External assets | **Forbidden** (always) |
-| Automatic link previews | **Forbidden** (always) |
-| Remote AI API | **Forbidden** (default build) |
-| Update checks | **Not implemented** (manual/future only) |
-| Mock / Noop transport | Implemented — `performsRealNetwork: false` |
-| NetworkPolicy v0 + barrier | Implemented + regression-tested |
+| Behavior                   | Status                                                      |
+| -------------------------- | ----------------------------------------------------------- |
+| FreeLayer-owned backend    | **Does not exist** (ADR-0001)                               |
+| Real network transports    | **Not implemented**                                         |
+| Relay client               | Not implemented                                             |
+| HTTP / fetch               | **Forbidden** outside a future approved provider (CI guard) |
+| WebSocket                  | **Forbidden** (CI guard)                                    |
+| WebRTC / direct peer       | **Forbidden** (CI guard + policy; IP exposure)              |
+| Telemetry / `sendBeacon`   | **Forbidden** (always)                                      |
+| External assets            | **Forbidden** (always)                                      |
+| Automatic link previews    | **Forbidden** (always)                                      |
+| Remote AI API              | **Forbidden** (default build)                               |
+| Update checks              | **Not implemented** (manual/future only)                    |
+| Mock / Noop transport      | Implemented — `performsRealNetwork: false`                  |
+| NetworkPolicy v0 + barrier | Implemented + regression-tested                             |
 
 Any network behavior not listed here is undocumented and must be treated as a privacy bug.
 
-The default build must make **zero** network calls not explicitly initiated by the user. Update checks: none by default; a manual "check for updates" action is the likely future design *(TODO decide, Phase 9)*.
+The default build must make **zero** network calls not explicitly initiated by the user. Update checks: none by default; a manual "check for updates" action is the likely future design _(TODO decide, Phase 9)_.
 
 Future entries required at Gate D: **relay usage** (per-relay leakage profile) and **external-app courier flows** (including the mandatory UX leakage warnings — [METADATA_MODEL.md](METADATA_MODEL.md) invariants 9–10).
 
 ## 2. External services
 
-None. No analytics providers, no push-notification services, no CDN assets, no font services, no error trackers. *(Standing entry — any change requires GOVERNANCE-level review.)*
+None. No analytics providers, no push-notification services, no CDN assets, no font services, no error trackers. _(Standing entry — any change requires GOVERNANCE-level review.)_
 
 ## 3. Telemetry
 
@@ -94,21 +94,21 @@ None. No analytics providers, no push-notification services, no CDN assets, no f
 
 ### Storage behavior — current implementation
 
-| Data / behavior | Current status |
-| --- | --- |
-| Persistent content storage | **Not implemented** |
-| Memory storage | Implemented/**hardened** (per-instance, policy-gated, clone-at-boundaries, key-validated, metadata-only listing) |
-| Null storage | Implemented/**hardened** (validates decision/scope/policy/key, stores nothing, zero value state) |
-| Encrypted persistent storage | Placeholder only — every use throws |
-| Storage logs | No sensitive values — barrier rejects content-grade payloads; sentinel-tested |
-| Storage errors | Redacted — generic stable messages, never values/keys; sentinel-tested |
-| localStorage | **Forbidden** (CI guard) |
-| IndexedDB | **Forbidden** (CI guard) |
-| Filesystem writes | **Forbidden** outside a future reviewed provider (CI guard incl. `fs.writeFile*`, Deno/Bun/Tauri) |
-| Browser cache / service-worker cache | **Forbidden** (CI guard) |
-| AI cache | Not implemented; policy hooks exist (denied in all modes v0) |
-| Preview/thumbnail cache | Not implemented; policy hooks exist (denied in Private+/sealed) |
-| ScreenShield reveal state | Not implemented; policy hooks exist (denied to persist; denied entirely at high risk) |
+| Data / behavior                      | Current status                                                                                                   |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Persistent content storage           | **Not implemented**                                                                                              |
+| Memory storage                       | Implemented/**hardened** (per-instance, policy-gated, clone-at-boundaries, key-validated, metadata-only listing) |
+| Null storage                         | Implemented/**hardened** (validates decision/scope/policy/key, stores nothing, zero value state)                 |
+| Encrypted persistent storage         | Placeholder only — every use throws                                                                              |
+| Storage logs                         | No sensitive values — barrier rejects content-grade payloads; sentinel-tested                                    |
+| Storage errors                       | Redacted — generic stable messages, never values/keys; sentinel-tested                                           |
+| localStorage                         | **Forbidden** (CI guard)                                                                                         |
+| IndexedDB                            | **Forbidden** (CI guard)                                                                                         |
+| Filesystem writes                    | **Forbidden** outside a future reviewed provider (CI guard incl. `fs.writeFile*`, Deno/Bun/Tauri)                |
+| Browser cache / service-worker cache | **Forbidden** (CI guard)                                                                                         |
+| AI cache                             | Not implemented; policy hooks exist (denied in all modes v0)                                                     |
+| Preview/thumbnail cache              | Not implemented; policy hooks exist (denied in Private+/sealed)                                                  |
+| ScreenShield reveal state            | Not implemented; policy hooks exist (denied to persist; denied entirely at high risk)                            |
 
 ### Zero-persistence modes (TECH-07)
 
@@ -247,20 +247,20 @@ The governance surface itself is machine-checked: `check:contributor-workflow` (
 
 ## 21. RoomOS / Sovereign Rooms (TECH-16)
 
-| Behavior                        | Status                                     |
-| ------------------------------- | ------------------------------------------ |
-| Local room data model           | Implemented foundation                     |
-| Room operation log              | Placeholder / policy-controlled (memory-only) |
+| Behavior                        | Status                                                   |
+| ------------------------------- | -------------------------------------------------------- |
+| Local room data model           | Implemented foundation                                   |
+| Room operation log              | Placeholder / policy-controlled (memory-only)            |
 | Room projection                 | Implemented foundation / policy-controlled (memory-only) |
-| Real messaging                  | Not implemented                            |
-| Real sync                       | Future Gate H                              |
-| CRDT engine                     | Not selected                               |
-| Crypto room keys                | Future Gate F                              |
-| Identity/invites                | Future Gate G                              |
-| Capsule import/export           | Future Gate E                              |
-| Endpoint Defense / Anti-spyware | Externalized / hooks only                  |
-| Room notifications              | Not implemented / denied by policy         |
-| Room AI                         | Not implemented / denied in strict modes   |
+| Real messaging                  | Not implemented                                          |
+| Real sync                       | Future Gate H                                            |
+| CRDT engine                     | Not selected                                             |
+| Crypto room keys                | Future Gate F                                            |
+| Identity/invites                | Future Gate G                                            |
+| Capsule import/export           | Future Gate E                                            |
+| Endpoint Defense / Anti-spyware | Externalized / hooks only                                |
+| Room notifications              | Not implemented / denied by policy                       |
+| Room AI                         | Not implemented / denied in strict modes                 |
 
 Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md)); machine-checked by `check:no-roomos-bypass` + the room regression suites. Rooms are NOT safe for real secrets.
 
@@ -306,88 +306,88 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 
 ## 26. RoomOS local revocation + authorization behavior (TECH-21)
 
-| Behavior                           | Status                      |
-| ---------------------------------- | --------------------------- |
-| Local membership suspension        | Implemented foundation      |
-| Local membership removal           | Tombstone foundation        |
-| Role-change invalidation           | Local revision-bound        |
-| Reactivation invalidation          | Local revision-bound        |
-| Execution-time authorization check | Implemented foundation      |
-| Prepared authorization             | Non-authoritative/transient |
-| Authorization cache                | Forbidden                   |
-| Capability persistence             | Forbidden                   |
-| Prepared-context persistence/serialization | Forbidden           |
-| Distributed revocation             | Not implemented — Gate H    |
-| Signed revocation                  | Not implemented — Gates F/G |
-| Single-use / nonce-bound decisions | Not implemented — Gate B    |
-| Global authorization consistency   | Not implemented             |
-| Endpoint assurance                 | Externalized / unavailable  |
+| Behavior                                   | Status                      |
+| ------------------------------------------ | --------------------------- |
+| Local membership suspension                | Implemented foundation      |
+| Local membership removal                   | Tombstone foundation        |
+| Role-change invalidation                   | Local revision-bound        |
+| Reactivation invalidation                  | Local revision-bound        |
+| Execution-time authorization check         | Implemented foundation      |
+| Prepared authorization                     | Non-authoritative/transient |
+| Authorization cache                        | Forbidden                   |
+| Capability persistence                     | Forbidden                   |
+| Prepared-context persistence/serialization | Forbidden                   |
+| Distributed revocation                     | Not implemented — Gate H    |
+| Signed revocation                          | Not implemented — Gates F/G |
+| Single-use / nonce-bound decisions         | Not implemented — Gate B    |
+| Global authorization consistency           | Not implemented             |
+| Endpoint assurance                         | Externalized / unavailable  |
 
 ## 25. RoomOS membership + capability behavior (TECH-20)
 
-| Behavior                    | Status                        |
-| --------------------------- | ----------------------------- |
-| Local membership records    | In-memory foundation          |
-| Membership verification     | Not implemented — Gate G      |
-| Local placeholder roles     | Implemented foundation        |
-| Capability descriptors      | Non-authoritative scaffolding |
-| Capability tokens           | Not implemented               |
-| Capability persistence      | Forbidden                     |
-| Capability serialization    | Forbidden                     |
-| Capability delegation       | Not implemented               |
-| Local role revocation       | Current local projection only |
-| Distributed revocation      | Not implemented — Gate H      |
-| Invites                     | Not implemented — Gate G/E    |
-| Presence / last seen        | Forbidden                     |
-| Persistent membership graph | Forbidden                     |
-| Membership network / notification / AI | None               |
-| Endpoint assurance          | Externalized / not integrated |
+| Behavior                               | Status                        |
+| -------------------------------------- | ----------------------------- |
+| Local membership records               | In-memory foundation          |
+| Membership verification                | Not implemented — Gate G      |
+| Local placeholder roles                | Implemented foundation        |
+| Capability descriptors                 | Non-authoritative scaffolding |
+| Capability tokens                      | Not implemented               |
+| Capability persistence                 | Forbidden                     |
+| Capability serialization               | Forbidden                     |
+| Capability delegation                  | Not implemented               |
+| Local role revocation                  | Current local projection only |
+| Distributed revocation                 | Not implemented — Gate H      |
+| Invites                                | Not implemented — Gate G/E    |
+| Presence / last seen                   | Forbidden                     |
+| Persistent membership graph            | Forbidden                     |
+| Membership network / notification / AI | None                          |
+| Endpoint assurance                     | Externalized / not integrated |
 
 ## 24. RoomOS local query behavior (TECH-19)
 
-| Behavior                  | Status                                  |
-| ------------------------- | --------------------------------------- |
-| Local room summary query  | In-memory foundation                    |
-| Local object list query   | In-memory foundation                    |
-| Local object detail query | Policy-gated                            |
-| Exact plain-text search   | Direct memory scan only                 |
-| Search index              | Not implemented                         |
-| Query history             | Forbidden                               |
-| Result cache              | Forbidden                               |
-| Search snippets           | Not implemented                         |
-| Total counts              | Separately policy-gated                 |
-| Cursors                   | Local, content-free, non-authority      |
-| Remote query API          | Not implemented — Gate H                |
-| Semantic search           | Future AI gate (Gate I)                 |
-| Bunker content view       | Denied pending future presentation gate |
-| Query-side network / notification / AI | None                       |
-| Endpoint Defense          | Externalized / not integrated           |
+| Behavior                               | Status                                  |
+| -------------------------------------- | --------------------------------------- |
+| Local room summary query               | In-memory foundation                    |
+| Local object list query                | In-memory foundation                    |
+| Local object detail query              | Policy-gated                            |
+| Exact plain-text search                | Direct memory scan only                 |
+| Search index                           | Not implemented                         |
+| Query history                          | Forbidden                               |
+| Result cache                           | Forbidden                               |
+| Search snippets                        | Not implemented                         |
+| Total counts                           | Separately policy-gated                 |
+| Cursors                                | Local, content-free, non-authority      |
+| Remote query API                       | Not implemented — Gate H                |
+| Semantic search                        | Future AI gate (Gate I)                 |
+| Bunker content view                    | Denied pending future presentation gate |
+| Query-side network / notification / AI | None                                    |
+| Endpoint Defense                       | Externalized / not integrated           |
 
 ## 23. RoomOS object model (TECH-18)
 
-| Behavior                                   | Status                    |
-| ------------------------------------------ | ------------------------- |
-| Concrete objects (message/note/task/…)     | Local data objects (v1)   |
-| Content storage                            | Memory only               |
-| Persistent plaintext content               | Denied — Gate F           |
-| Object mutation log                        | Memory/null only          |
-| Explicit command mutations                 | Implemented               |
-| Generic/JSON patch                         | Not available (forbidden) |
-| Local revision (optimistic concurrency)    | Implemented               |
-| Distributed versioning / merge             | Not implemented — Gate H  |
-| Messaging transport / send / receive       | Not implemented           |
-| Read receipts / typing / presence          | Not implemented           |
-| Rich text / HTML / Markdown rendering      | Not implemented (forbidden) |
-| Link preview / thumbnail                   | Forbidden                 |
-| File bytes / path / URL                    | Never stored              |
-| File resolve / fetch / upload / download   | Not implemented — Gate E  |
-| Poll voting / tallies / voter identity     | Not implemented — Gate G/H |
-| Object content encryption / signatures     | Not implemented — Gate F  |
-| Verified identity / authoritative voting   | Not implemented — Gate G  |
-| External object parser                     | Not implemented — Gate E  |
-| Tombstone forensic deletion                | Not claimed               |
-| AI memory objects                          | Placeholder — Gate I      |
-| Endpoint hook objects                      | Externalized — Gate R     |
+| Behavior                                 | Status                      |
+| ---------------------------------------- | --------------------------- |
+| Concrete objects (message/note/task/…)   | Local data objects (v1)     |
+| Content storage                          | Memory only                 |
+| Persistent plaintext content             | Denied — Gate F             |
+| Object mutation log                      | Memory/null only            |
+| Explicit command mutations               | Implemented                 |
+| Generic/JSON patch                       | Not available (forbidden)   |
+| Local revision (optimistic concurrency)  | Implemented                 |
+| Distributed versioning / merge           | Not implemented — Gate H    |
+| Messaging transport / send / receive     | Not implemented             |
+| Read receipts / typing / presence        | Not implemented             |
+| Rich text / HTML / Markdown rendering    | Not implemented (forbidden) |
+| Link preview / thumbnail                 | Forbidden                   |
+| File bytes / path / URL                  | Never stored                |
+| File resolve / fetch / upload / download | Not implemented — Gate E    |
+| Poll voting / tallies / voter identity   | Not implemented — Gate G/H  |
+| Object content encryption / signatures   | Not implemented — Gate F    |
+| Verified identity / authoritative voting | Not implemented — Gate G    |
+| External object parser                   | Not implemented — Gate E    |
+| Tombstone forensic deletion              | Not claimed                 |
+| AI memory objects                        | Placeholder — Gate I        |
+| Endpoint hook objects                    | Externalized — Gate R       |
 
 ## Maintenance rules
 
@@ -400,3 +400,24 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 - [ ] Crypto dependency table (Phase 4)
 - [ ] PBOM auto-diff tooling (Phase 10)
 - [ ] Publish PBOM as a signed release artifact (Phase 11)
+
+## TECH-23 — Secure Device admission contract (Relying Party only)
+
+FreeLayer core is the future **RATS Relying Party** for device posture (RFC 9334). It is **not** a Secure Device provider. Secure Device / Endpoint Defense (posture measurement, ScreenShield, Bunker Session Mode, anti-spyware) is a **separate, externalized** project. This PBOM row set records exactly what core does and does not do.
+
+| Secure Device element                                                    | State in FreeLayer core                                                    |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| Provider port + roles + admission contract                               | **contract implemented** (`packages/rooms/src/secure-device/`)             |
+| Trusted Secure Device provider                                           | **not implemented** — only the deterministic **Null provider** ships       |
+| Real posture verification (basic/hardened/high_assurance/managed_bunker) | **verification unavailable** — posture is `unverified` (or `at_risk`) only |
+| Device posture assessment                                                | **transient** (memory-only, current-process, never persisted)              |
+| Raw attestation evidence / measurement logs                              | **forbidden / not received** (rejected on sight)                           |
+| Device identifiers / serials / OS build fingerprint                      | **forbidden / not collected**                                              |
+| Installed-app / package inventory                                        | **forbidden / not collected**                                              |
+| Assessment history                                                       | **forbidden** (no persistent history / tracking record)                    |
+| Telemetry                                                                | **forbidden**                                                              |
+| ScreenShield / ProtectedContent native surface                           | **external** (Secure Device project); requirement denies content in core   |
+| Managed Bunker Session Mode                                              | **external** (Secure Device project); requirement denies content in core   |
+| Anti-spyware / MDM / GrapheneOS management / Play Integrity              | **external / not implemented** in core                                     |
+
+No provider network calls, no persistence, and no active-protection claim exist in core. The single provenance mechanism (`isAcceptedDevicePostureAssessmentV1`) is a same-realm registry, **not** cryptographic (Gate F). This complements the **Policy Matrix** rows for the `room.secure_device.*` / `room.device_posture.*` operations and the anti-spyware **externalized** statements elsewhere in this PBOM. Not safe for real secrets.

@@ -70,3 +70,12 @@ export * from "./authorization";
 //      reduce trust; protected-content requirements deny when integration is
 //      absent. Local only — no consensus/crypto/identity/endpoint assurance.
 export * from "./policy-composition";
+
+// ---- TECH-23: Secure Device admission CONTRACT. FreeLayer is the future RATS
+//      Relying Party ONLY — it consumes a normalized, transient posture
+//      assessment and applies its own sensitive-room admission policy. No
+//      provider is integrated (deterministic Null provider only); posture above
+//      `unverified` cannot be established; `at_risk` can only restrict. No raw
+//      evidence, device identifiers, attestation, GrapheneOS management, MDM,
+//      anti-spyware, ScreenShield, or Bunker runtime. Secure Device is external.
+export * from "./secure-device";

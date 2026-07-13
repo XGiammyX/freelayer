@@ -27,42 +27,49 @@ Strictest policy wins. Undefined behavior is a bug (fails closed).
 ## Mode summaries
 
 ### Standard
+
 Private by default: no telemetry, no external assets, no automatic previews, no real network. Content persistence targets the future encrypted backend and **fails hard** until Gate F (no silent memory fallback). Memory-only caches allowed; notifications limited to a generic content-free in-app indicator.
 
 ### Private
+
 Standard + stricter metadata: receipts/typing/presence/last-seen denied; WebRTC/direct peers denied; notification content denied; preview/thumbnail caches denied.
 
 ### Ghost
+
 Memory/null only — no persistent writes, no AI, no notification content or indicators, no direct network, no metadata signals, no cache/preview persistence, no spool timestamps. **Application-level, not forensic.**
 
 ### Bunker
+
 Stricter than Ghost: null preferred; no badges/sound/vibration; no reveal state even in memory; endpoint hooks strictest. **Not a guarantee against a compromised device.**
 
 ### Offline Capsule
+
 All network denied. QR/file/USB remain conceptual offline channels. Local memory-only behavior where policy-compatible.
 
 ### Emergency
+
 Normal writes/network/metadata generation denied. Only a redacted wipe/revoke audit placeholder. Null/safe behavior preferred.
 
 ### Sovereign Room
+
 Composes with the device mode: room policy tightens, never loosens; strictest wins. A hostile client can ignore room policy — an **accepted limitation**.
 
 ## Mode × domain behavior (summary)
 
-| Domain | Standard | Private | Ghost | Bunker | Offline | Emergency |
-| --- | --- | --- | --- | --- | --- | --- |
-| Storage (persistent) | future_gate | deny | deny | deny | deny | deny |
-| Storage (memory content) | future_gate¹ | memory_only | memory_only | memory_only | memory_only | deny |
-| Network (any egress) | deny² | deny² | deny | deny | deny | deny |
-| Metadata (receipts/typing/presence) | deny | deny | deny | deny | deny | deny |
-| Metadata (redacted audit/log) | redact | redact | redact | redact | redact | audit-only |
-| Link preview (automatic) | deny | deny | deny | deny | deny | deny |
-| External assets (all 12 kinds) | deny | deny | deny | deny | deny | deny |
-| Notification (content/OS surface) | deny | deny | deny | deny | deny | deny |
-| Notification (generic in-app) | memory_only | memory_only | deny | deny | deny | deny |
-| AI (local) | future_gate | future_gate | deny | deny | future_gate | deny |
-| AI (remote / caches) | deny | deny | deny | deny | deny | deny |
-| Endpoint (protected reveal) | memory_only³ | memory_only³ | deny | deny | memory_only³ | deny |
+| Domain                              | Standard     | Private      | Ghost       | Bunker      | Offline      | Emergency  |
+| ----------------------------------- | ------------ | ------------ | ----------- | ----------- | ------------ | ---------- |
+| Storage (persistent)                | future_gate  | deny         | deny        | deny        | deny         | deny       |
+| Storage (memory content)            | future_gate¹ | memory_only  | memory_only | memory_only | memory_only  | deny       |
+| Network (any egress)                | deny²        | deny²        | deny        | deny        | deny         | deny       |
+| Metadata (receipts/typing/presence) | deny         | deny         | deny        | deny        | deny         | deny       |
+| Metadata (redacted audit/log)       | redact       | redact       | redact      | redact      | redact       | audit-only |
+| Link preview (automatic)            | deny         | deny         | deny        | deny        | deny         | deny       |
+| External assets (all 12 kinds)      | deny         | deny         | deny        | deny        | deny         | deny       |
+| Notification (content/OS surface)   | deny         | deny         | deny        | deny        | deny         | deny       |
+| Notification (generic in-app)       | memory_only  | memory_only  | deny        | deny        | deny         | deny       |
+| AI (local)                          | future_gate  | future_gate  | deny        | deny        | future_gate  | deny       |
+| AI (remote / caches)                | deny         | deny         | deny        | deny        | deny         | deny       |
+| Endpoint (protected reveal)         | memory_only³ | memory_only³ | deny        | deny        | memory_only³ | deny       |
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
@@ -119,3 +126,7 @@ Full contributor procedure with worked examples: **[POLICY_DEVELOPER_GUIDE.md](P
 ## How contributors update it
 
 Any PR that changes privacy/security behavior must update, in the same PR: (1) the spec table in `packages/privacy/src/policyMatrix.ts`, (2) the mirrored `docs/policy-matrix.v1.json` (the sync test fails on drift), (3) the relevant model doc + [PBOM](PBOM.md), and (4) tests. See [CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md).
+
+## TECH-23 rows — Secure Device admission contract
+
+TECH-23 adds 24 `room`-domain rows (195 specs → 1365 rules): provider status/capability reads and posture-assessment reads (memory-only); `at_risk` tightening (restriction only); raw evidence input/persist, device identifier/history/inventory (**deny**); redacted/full summary and content read/mutate/search (admission-gated memory-only, Emergency denies); content export/copy/file-open/local-AI (`not_implemented`); protected-content intent + session create/revalidate (memory-only); and trusted-provider elevation / ScreenShield / Bunker requirements (**future_gate** — Secure Device is external). Raw evidence and identifiers are never allowed; posture is never treated as identity. These agree with the concrete Secure Device contract module and are enforced by the conflict suite.

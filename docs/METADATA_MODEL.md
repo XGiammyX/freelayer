@@ -12,84 +12,84 @@ Inventory the metadata FreeLayer's design can generate, classify who can observe
 
 ### 1. Communication-pattern metadata
 
-| Item | Observable by | Initial direction |
-| --- | --- | --- |
-| Message timing | Transport operators, network observers | Batching and randomized send windows in stricter modes; dead-drop delivery decouples send from receive *(TODO research: latency cost)* |
-| Message frequency | Same | Cover traffic is expensive; document rather than promise *(TODO research)* |
-| Message size | Same | Capsule padding to size buckets; bucket sizes TBD in protocol design |
-| Communication relationships (who↔whom) | Transport operators; strong observers via correlation | Per-transport blinding; relays see opaque destinations *(design in CAPSULENET.md)*; honest limit: correlation attacks remain possible |
+| Item                                   | Observable by                                         | Initial direction                                                                                                                      |
+| -------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Message timing                         | Transport operators, network observers                | Batching and randomized send windows in stricter modes; dead-drop delivery decouples send from receive _(TODO research: latency cost)_ |
+| Message frequency                      | Same                                                  | Cover traffic is expensive; document rather than promise _(TODO research)_                                                             |
+| Message size                           | Same                                                  | Capsule padding to size buckets; bucket sizes TBD in protocol design                                                                   |
+| Communication relationships (who↔whom) | Transport operators; strong observers via correlation | Per-transport blinding; relays see opaque destinations _(design in CAPSULENET.md)_; honest limit: correlation attacks remain possible  |
 
 ### 2. Network metadata
 
-| Item | Observable by | Initial direction |
-| --- | --- | --- |
-| IP address exposure | Relays, direct peers, network path | No direct connections (WebRTC) in Private+; relay indirection; future Tor/proxy support |
-| Relay exposure | The relay operator | Relays receive only ciphertext + minimal routing hint; relay choice is user-controlled and diverse |
-| Transport-native metadata (email headers, messenger accounts, file timestamps) | That transport's provider | Documented per transport; users choose transports knowing their leakage profile |
+| Item                                                                           | Observable by                      | Initial direction                                                                                  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| IP address exposure                                                            | Relays, direct peers, network path | No direct connections (WebRTC) in Private+; relay indirection; future Tor/proxy support            |
+| Relay exposure                                                                 | The relay operator                 | Relays receive only ciphertext + minimal routing hint; relay choice is user-controlled and diverse |
+| Transport-native metadata (email headers, messenger accounts, file timestamps) | That transport's provider          | Documented per transport; users choose transports knowing their leakage profile                    |
 
 ### 3. Application-signal metadata
 
-| Item | Default in Standard | Private and above |
-| --- | --- | --- |
-| Read receipts | Off *(TBD — may be per-conversation opt-in)* | Hard off |
-| Typing indicators | Off | Hard off |
-| Online/presence status | Off | Hard off |
-| Delivery acknowledgements | Minimal, encrypted as normal capsules | Batched/delayed |
+| Item                      | Default in Standard                          | Private and above |
+| ------------------------- | -------------------------------------------- | ----------------- |
+| Read receipts             | Off _(TBD — may be per-conversation opt-in)_ | Hard off          |
+| Typing indicators         | Off                                          | Hard off          |
+| Online/presence status    | Off                                          | Hard off          |
+| Delivery acknowledgements | Minimal, encrypted as normal capsules        | Batched/delayed   |
 
 Signals, when enabled, are themselves carried as encrypted capsule content — never as transport-visible plaintext.
 
 ### 4. Content-adjacent leaks
 
-| Item | Risk | Initial direction |
-| --- | --- | --- |
-| Link previews | Fetching a link reveals the URL and reader IP to the target server at read time | Off by default in all modes; if enabled, explicit per-click, never automatic |
-| External assets (remote images, fonts, scripts) | Tracking pixels, IP + fingerprint leaks | Banned by default project-wide (hard constraint); no exceptions in v1 |
-| Remote avatars | Same as external assets | Avatars travel as capsule content, never as remote fetches |
+| Item                                            | Risk                                                                            | Initial direction                                                            |
+| ----------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Link previews                                   | Fetching a link reveals the URL and reader IP to the target server at read time | Off by default in all modes; if enabled, explicit per-click, never automatic |
+| External assets (remote images, fonts, scripts) | Tracking pixels, IP + fingerprint leaks                                         | Banned by default project-wide (hard constraint); no exceptions in v1        |
+| Remote avatars                                  | Same as external assets                                                         | Avatars travel as capsule content, never as remote fetches                   |
 
 ### 5. Local metadata
 
-| Item | Risk | Initial direction |
-| --- | --- | --- |
-| Local logs | Plaintext residue of activity | No sensitive data in logs (hard constraint); log levels respect storage policy |
-| Crash reports | Memory dumps may contain plaintext/keys | No crash reporting by default; any future opt-in must scrub and be documented in PBOM |
-| AI prompts/cache | Derived plaintext of room content | Follow room storage policy; see [LOCAL_AI.md](LOCAL_AI.md) |
-| Media/preview caches | Content residue after deletion | Cache policy bound to mode; emergency wipe covers caches |
+| Item                 | Risk                                    | Initial direction                                                                     |
+| -------------------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
+| Local logs           | Plaintext residue of activity           | No sensitive data in logs (hard constraint); log levels respect storage policy        |
+| Crash reports        | Memory dumps may contain plaintext/keys | No crash reporting by default; any future opt-in must scrub and be documented in PBOM |
+| AI prompts/cache     | Derived plaintext of room content       | Follow room storage policy; see [LOCAL_AI.md](LOCAL_AI.md)                            |
+| Media/preview caches | Content residue after deletion          | Cache policy bound to mode; emergency wipe covers caches                              |
 
 ### 6. Endpoint exposure metadata (local-only)
 
 Endpoint defense generates its own metadata ([ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md)):
 
-| Item | Nature | Initial direction |
-| --- | --- | --- |
-| Screenshot events (where detectable) | Local event | Local audit only, redacted |
-| Screen recording / capture active | Local state | Drives redaction; never uploaded |
-| Reveal timing / protected-view duration | Local behavioral metadata | Memory-only in strict modes; never uploaded |
-| Clipboard events (sensitive copy) | Local event | Clipboard Firewall state; expiry tracked locally |
-| Focus/blur events on protected surfaces | Local event | Drives auto-redact; not persisted in strict modes |
-| Task-switcher exposure state | Local state | Redaction coordination only |
-| External display / cast state | Local state | Device Risk input |
-| Platform capability state | Local state | Shown in UI; PBOM-listed |
+| Item                                    | Nature                    | Initial direction                                 |
+| --------------------------------------- | ------------------------- | ------------------------------------------------- |
+| Screenshot events (where detectable)    | Local event               | Local audit only, redacted                        |
+| Screen recording / capture active       | Local state               | Drives redaction; never uploaded                  |
+| Reveal timing / protected-view duration | Local behavioral metadata | Memory-only in strict modes; never uploaded       |
+| Clipboard events (sensitive copy)       | Local event               | Clipboard Firewall state; expiry tracked locally  |
+| Focus/blur events on protected surfaces | Local event               | Drives auto-redact; not persisted in strict modes |
+| Task-switcher exposure state            | Local state               | Redaction coordination only                       |
+| External display / cast state           | Local state               | Device Risk input                                 |
+| Platform capability state               | Local state               | Shown in UI; PBOM-listed                          |
 
 **These are local-only by rule: no upload, no telemetry (ADR-0008), audit events redacted, PBOM entries required, storage policy applies** ([STORAGE_MODEL.md](STORAGE_MODEL.md)) — local metadata still leaks through logs/caches if mishandled, which is why it falls under the same write-barrier and no-plaintext-logging discipline as content.
 
 TECH-07 additions: strict modes also reduce **storage-shaped metadata** — capsule spool existence/timing stays in memory-only record metadata (never persisted), cache existence is denied outright (a cache that doesn't exist can't be enumerated), and mode-transition state leaves no persistent trace. Development-time metadata is covered too: test/CI artifacts are sentinel-scanned so secrets can't leak into snapshots, coverage, or build output.
 
-Storage itself also *generates* metadata: the existence of a capsule spool, cache entries, reveal state, device-risk state, capture audit events, storage keys/names, bundle-export timestamps, and materialized room state all describe behavior even when encrypted. Mitigations (TECH-05 onward): coarse timestamps where needed, no plaintext in logs/audit (barrier-enforced), no caches in strict modes (matrix-enforced), PBOM enumeration of every storage class, and privacy-regression tests over the machine-checkable parts.
+Storage itself also _generates_ metadata: the existence of a capsule spool, cache entries, reveal state, device-risk state, capture audit events, storage keys/names, bundle-export timestamps, and materialized room state all describe behavior even when encrypted. Mitigations (TECH-05 onward): coarse timestamps where needed, no plaintext in logs/audit (barrier-enforced), no caches in strict modes (matrix-enforced), PBOM enumeration of every storage class, and privacy-regression tests over the machine-checkable parts.
 
 ## Network metadata leakage labels (TECH-08)
 
 Each transport carries an honest, plain-language leakage label (`describeNetworkMetadataLeakage`, `packages/transports`) surfaced in UX and docs so a transport choice is never a silent metadata decision:
 
-| Transport | IP | Timing | Size | Relationship | Third-party endpoint | Exposure |
-| --- | --- | --- | --- | --- | --- | --- |
-| QR / file / USB | no | no | (file/usb: size) | no | no | local_only / low |
-| LAN | yes | yes | yes | yes | no | medium |
-| relay | yes | yes | yes | yes | yes | medium (high without Tor/proxy) |
-| email / external_app | yes | yes | yes | yes | yes | high |
-| WebRTC | yes (real IP via ICE/STUN) | yes | yes | yes | yes | high — **denied in Private+** |
-| HTTP / WebSocket | yes | yes | yes | yes | yes | high — forbidden until approved |
-| tor_proxy (future) | no (from relay) | yes | yes | no | no | medium |
-| unknown | assumed yes | yes | yes | yes | yes | unknown — **denied** |
+| Transport            | IP                         | Timing | Size             | Relationship | Third-party endpoint | Exposure                        |
+| -------------------- | -------------------------- | ------ | ---------------- | ------------ | -------------------- | ------------------------------- |
+| QR / file / USB      | no                         | no     | (file/usb: size) | no           | no                   | local_only / low                |
+| LAN                  | yes                        | yes    | yes              | yes          | no                   | medium                          |
+| relay                | yes                        | yes    | yes              | yes          | yes                  | medium (high without Tor/proxy) |
+| email / external_app | yes                        | yes    | yes              | yes          | yes                  | high                            |
+| WebRTC               | yes (real IP via ICE/STUN) | yes    | yes              | yes          | yes                  | high — **denied in Private+**   |
+| HTTP / WebSocket     | yes                        | yes    | yes              | yes          | yes                  | high — forbidden until approved |
+| tor_proxy (future)   | no (from relay)            | yes    | yes              | no           | no                   | medium                          |
+| unknown              | assumed yes                | yes    | yes              | yes          | yes                  | unknown — **denied**            |
 
 TECH-09: **zero egress by default reduces the metadata surface at the root** — with no automatic network calls on load, there is no IP/timing/fingerprint leak from remote assets, no update-check or telemetry beacon, and no link-preview fetch to correlate. Any future egress reintroduces these channels and must be policy-gated and PBOM-listed. Development/CI metadata (registry/GitHub contact during `pnpm install`/Actions) is separate from app-runtime metadata and documented in [PBOM.md](PBOM.md).
 
@@ -126,7 +126,7 @@ TODO:
 ## Risks
 
 - **Overpromising.** Metadata reduction has hard limits; a determined observer of both endpoints can correlate. All user-facing text must reflect this.
-- **Transport composition surprises**: a user combining a "safe" mode with a leaky transport (e.g. email courier) may assume more protection than exists. Mitigation: per-transport leakage labels in UI *(TODO design)*.
+- **Transport composition surprises**: a user combining a "safe" mode with a leaky transport (e.g. email courier) may assume more protection than exists. Mitigation: per-transport leakage labels in UI _(TODO design)_.
 - **Padding/batching cost**: bandwidth and latency overhead may push users to disable mitigations.
 
 ## Open questions
@@ -148,6 +148,7 @@ The Metadata Firewall is now a real policy engine in `packages/privacy` (Metadat
 **Taxonomy.** A `MetadataEventKind` (40 events) × `MetadataSink` (12 sinks) triple resolves through `resolveMetadataPolicy(input)` to a `MetadataPolicy` — `{ action, allowed, persistentAllowed, networkAllowed, userVisibleWarningRequired, reason }`. Events are grouped: application-signal (receipts/typing/presence/room-activity), notification, external-fetch (link preview / remote asset/avatar / navigation), derived-preview (cache/preview/thumbnail existence), network-metadata (timing/size/relay/LAN/ICE), AI-derived, local-state (spool existence/timestamp), log/audit, and endpoint/ScreenShield.
 
 **Default-deny behavior.**
+
 - Unknown mode/event/sink → **fail closed**.
 - Receipts/typing/presence/last-seen → off by default, denied in Private+ (v0 denies all — no messaging exists).
 - Link preview / external assets / remote avatars / crash reports / telemetry-shaped → forbidden every mode (ADR-0008).
@@ -235,3 +236,7 @@ Enforced by a barrier reusing the WeakSet `PolicyDecision` provenance; audit eve
 - [ ] First wire-level privacy-regression tests (Phase 10)
 - [ ] `Referrer-Policy: no-referrer` + user-initiated-only preview model (TECH-11)
 - [ ] Re-audit this inventory at each phase boundary
+
+## Posture + admission as sensitive metadata (TECH-23)
+
+Device posture, provider status, room minimum-posture requirements, and admission outcomes are treated as **sensitive metadata**: transient, redacted (codes only — no content, no raw evidence, no identifiers), and never emitted as telemetry. Admission decisions and errors carry stable generic reason codes and never echo room titles, member refs, object content, the full assessment object, or the leak sentinel.

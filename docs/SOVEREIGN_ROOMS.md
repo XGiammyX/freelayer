@@ -19,8 +19,8 @@ They are **not just group chats.** A room may contain:
 - decisions
 - polls
 - room memory
-- local AI summaries *(future, policy-gated — [LOCAL_AI.md](LOCAL_AI.md))*
-- document Q&A *(future, policy-gated)*
+- local AI summaries _(future, policy-gated — [LOCAL_AI.md](LOCAL_AI.md))_
+- document Q&A _(future, policy-gated)_
 - room operation log
 - encrypted audit history
 
@@ -87,7 +87,7 @@ They are **not just group chats.** A room may contain:
 - **Membership records:** one local, unverified room-member relationship each (`verification: "unverified_placeholder"` always). Carry no display name/email/phone/key/avatar/presence/last-seen/IP/location/fingerprint/contact/endpoint-risk data. Versioned (`schemaVersion 1`), with a positive local `revision` (optimistic concurrency — not a distributed clock).
 - **Placeholder roles:** `owner_placeholder` / `editor_placeholder` / `viewer_placeholder` / `auditor_placeholder` — never admin/root/wildcard/verified. A role is ONE ABAC attribute; role eligibility is **necessary but never sufficient** (an explicit role→capability table, not scattered `if (role === …)` checks). Owner-placeholder is **not** cryptographic ownership.
 - **Lifecycle:** `active_local_unverified ↔ suspended_local → removed_tombstone` (tombstone terminal; no resurrection; no invite/remote/verified states). Duplicate active room/member pairs reject; expected-revision required for updates.
-- **Last-owner continuity:** an active local room keeps ≥1 active owner placeholder — the last one cannot be removed, suspended, or demoted. *A local continuity invariant, not proof of ownership, identity, or governance legitimacy.*
+- **Last-owner continuity:** an active local room keeps ≥1 active owner placeholder — the last one cannot be removed, suspended, or demoted. _A local continuity invariant, not proof of ownership, identity, or governance legitimacy._
 - **Non-authoritative capability descriptors:** a narrow, attenuable description of what a current membership is ELIGIBLE for, bound to room + membership + revision. Literally `authoritative: false`, `serialization: "forbidden"`, `delegation: "not_implemented"`, `persistence: "forbidden"`. It is NOT a token, NOT a bearer credential, and authorizes nothing on its own. There is **no wildcard capability**. Attenuation may only NARROW (widening rejects; subset-checked).
 - **Local revocation only:** changing/removing a local membership invalidates descriptors bound to the older revision **in the current local projection**. It does not revoke unknown remote copies or distributed state (Gate H).
 - **Authorization context:** `assertRoomAuthorizationContextV1` requires a current membership + a current descriptor + an authentic exact-scope `PolicyDecision` — a forged descriptor without a real decision fails. Membership mutation and membership-log append are SEPARATE decisions.
@@ -143,16 +143,16 @@ No real messaging, no sync, no CRDT selection, no crypto/room keys, no identity/
 
 ### Room object model
 
-| Object | Notes |
-| --- | --- |
-| Messages | Chat, threads — one object type among many |
-| Notes | Shared free-form notes |
-| Documents | Versioned collaborative documents (merge model TBD — see open decision) |
-| Files | Encrypted blobs referenced by room objects |
-| Tasks | Assignable, stateful items |
-| Decisions | Explicit signed records; see decision ledger |
-| Polls | Structured group choice |
-| Room memory | Curated durable knowledge (pinned facts, agreements) with provenance display |
+| Object       | Notes                                                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Messages     | Chat, threads — one object type among many                                                                                      |
+| Notes        | Shared free-form notes                                                                                                          |
+| Documents    | Versioned collaborative documents (merge model TBD — see open decision)                                                         |
+| Files        | Encrypted blobs referenced by room objects                                                                                      |
+| Tasks        | Assignable, stateful items                                                                                                      |
+| Decisions    | Explicit signed records; see decision ledger                                                                                    |
+| Polls        | Structured group choice                                                                                                         |
+| Room memory  | Curated durable knowledge (pinned facts, agreements) with provenance display                                                    |
 | AI artifacts | Derived suggestions only; human-confirmed before entering room state ([ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md)) |
 
 ### Room operation log
@@ -171,13 +171,13 @@ Decisions are first-class, explicitly signed records — deliberately attributab
 
 **The CRDT/operation-log implementation is deliberately not chosen yet.** A formal evaluation is **required before implementation** (Gate H), and its outcome will be recorded in a new ADR. Candidates:
 
-| Candidate | For | Against / must verify |
-| --- | --- | --- |
-| **Event-sourced operation log** (custom, per-object-type merge rules) | Full control; natural fit for capsule delivery; minimal dependency surface; audit history for free | Concurrent document editing needs real merge semantics; "custom" carries design risk |
-| **Yjs** | Mature, fast, wide ecosystem | Metadata characteristics under encryption (actor IDs, update structure); GC/tombstone behavior vs. no-persistence modes; dependency weight — **TODO research** |
-| **Automerge** | Principled CRDT model, audit-friendly change history | Payload size and performance envelope; same metadata questions — **TODO research** |
-| **Loro** | Modern CRDT engine, strong performance focus, rich-text support | Younger ecosystem; maturity, audit history, and metadata characteristics — **TODO research** |
-| **Custom CRDT-lite** (LWW registers + ordered logs for specific object types) | Tailored to exactly our object types; small surface | Easy to get subtly wrong; must not become "custom crypto" of the data layer — needs review discipline |
+| Candidate                                                                     | For                                                                                                | Against / must verify                                                                                                                                          |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Event-sourced operation log** (custom, per-object-type merge rules)         | Full control; natural fit for capsule delivery; minimal dependency surface; audit history for free | Concurrent document editing needs real merge semantics; "custom" carries design risk                                                                           |
+| **Yjs**                                                                       | Mature, fast, wide ecosystem                                                                       | Metadata characteristics under encryption (actor IDs, update structure); GC/tombstone behavior vs. no-persistence modes; dependency weight — **TODO research** |
+| **Automerge**                                                                 | Principled CRDT model, audit-friendly change history                                               | Payload size and performance envelope; same metadata questions — **TODO research**                                                                             |
+| **Loro**                                                                      | Modern CRDT engine, strong performance focus, rich-text support                                    | Younger ecosystem; maturity, audit history, and metadata characteristics — **TODO research**                                                                   |
+| **Custom CRDT-lite** (LWW registers + ordered logs for specific object types) | Tailored to exactly our object types; small surface                                                | Easy to get subtly wrong; must not become "custom crypto" of the data layer — needs review discipline                                                          |
 
 Likely hybrid outcome (to validate, not assume): operation log as the backbone for all object types, with a CRDT engine only for collaborative document bodies. Evaluation criteria: convergence guarantees under out-of-order/duplicated delivery, metadata leakage inside encrypted payloads, payload size vs. capsule padding buckets, tombstone/history behavior vs. Ghost/Bunker, dependency health, auditability.
 
@@ -185,12 +185,12 @@ Likely hybrid outcome (to validate, not assume): operation log as the backbone f
 
 Named threats this design must answer (tracked against [THREAT_MODEL.md](THREAT_MODEL.md)):
 
-- **Malicious room member** — full plaintext access is inherent; the design bounds what they can *forge*, *rewrite*, or *inject*, not what they can read or leak.
+- **Malicious room member** — full plaintext access is inherent; the design bounds what they can _forge_, _rewrite_, or _inject_, not what they can read or leak.
 - **Operation replay** — replaying old operations (own or captured) to corrupt state; requires binding operations to room/epoch context.
 - **History rewriting** — reordering or selectively withholding operations when syncing others; candidate mitigations: per-author hash-linked logs, cross-member attestation.
 - **Unauthorized operation injection** — operations from non-members or forged authorship; requires member-scoped authentication of every operation.
 - **Stale room bundle import** — importing an old bundle must never roll back state or resurrect removed members' access; import is merge, never replace.
-- **Member removal and key rotation** — departed members keep what they received (unavoidable); confidentiality of *future* operations requires key rotation on membership change (crypto dependency, Gate F).
+- **Member removal and key rotation** — departed members keep what they received (unavoidable); confidentiality of _future_ operations requires key rotation on membership change (crypto dependency, Gate F).
 - **Document merge conflicts** — merge behavior must be deterministic and non-destructive; a conflict must never silently drop a member's contribution.
 - **AI prompt injection through room documents** — a hostile member crafts content that steers AI features; threat annex required before any Q&A ships (Gate I).
 - **Derived cache leaks** — search indexes, previews, AI artifacts outliving the room's storage policy; prevented structurally by cache inheritance ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md)).
@@ -222,7 +222,7 @@ Out-of-order, partial, duplicated delivery is the **normal case** under multi-tr
 ## Open questions
 
 - One log per room vs. per object type per room?
-- Pre-join history: the default (**no pre-join history**) is locked in the design direction above; whether rooms may *opt in* to sharing history with new members remains open *(TODO decide before Gate H)*
+- Pre-join history: the default (**no pre-join history**) is locked in the design direction above; whether rooms may _opt in_ to sharing history with new members remains open _(TODO decide before Gate H)_
 - What substitutes for trusted time in decisions/polls without a server?
 - Epoch/snapshot design for log compaction without breaking auditability?
 
@@ -240,3 +240,12 @@ Out-of-order, partial, duplicated delivery is the **normal case** under multi-tr
 - [ ] Room bundle format aligned with CapsuleNet bundles
 - [ ] Decision ledger + proof-of-agreement draft
 - [ ] Design review of this document (Phase 0.5 exit criterion)
+
+## Sensitive-room admission + Secure Device contract (TECH-23)
+
+A sensitive room gates content by a **minimum device posture** and a **protected-content requirement**. Because no Secure Device provider is integrated (`packages/rooms/src/secure-device/`), a room requiring `basic+` or a future protected presentation **denies content now**; a redacted summary may still be separately permitted.
+
+- **Actions/outcomes:** 11 explicit `SensitiveRoomAdmissionActionV1` (summary redacted/full, content read/mutate/search/export/copy, file open, local AI, membership/policy manage) × 13 fail-closed `SensitiveRoomAdmissionOutcomeV1`. Unknown actions/outcomes fail closed.
+- **Resolver order:** validate → global policy/mode → lifecycle → membership/capability → assessment provenance → reduce untrusted elevation to `unverified` → `at_risk` denial → provider lifecycle → freshness → minimum posture → protected presentation → Bunker session → action-specific → redacted deterministic decision.
+- **Transient session:** `SensitiveRoomSessionV1` is current-process only, never persisted, and invalidates on any posture/provider/policy/membership/mode/lifecycle/action change. It is **not** a UI/OS/profile session, Bunker Session Mode, or capture protection.
+- **Per-operation revalidation:** every protected operation re-resolves current admission immediately before authorization/execution; admission is never cached across relevant revisions.

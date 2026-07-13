@@ -7,7 +7,7 @@
 
 ## Purpose
 
-One honest page answering: *how much should you trust FreeLayer right now?* This document is updated at every phase boundary and every security-relevant event. It states what has been verified, what hasn't, and what "verified" even means at each stage.
+One honest page answering: _how much should you trust FreeLayer right now?_ This document is updated at every phase boundary and every security-relevant event. It states what has been verified, what hasn't, and what "verified" even means at each stage.
 
 ## Can I trust FreeLayer today?
 
@@ -27,14 +27,14 @@ In plain language:
 
 ## Claim-by-claim status
 
-| Claim | Current status |
-| --- | --- |
-| No telemetry | Guardrail active: `check:no-telemetry` fails CI on known SDKs; none exist |
-| No external assets | Guardrail active: `check:no-external-assets` fails CI on CDN/font patterns; none exist |
-| No crypto | Intentionally not implemented — the only provider throws (ADR-0004) |
+| Claim              | Current status                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| No telemetry       | Guardrail active: `check:no-telemetry` fails CI on known SDKs; none exist                         |
+| No external assets | Guardrail active: `check:no-external-assets` fails CI on CDN/font patterns; none exist            |
+| No crypto          | Intentionally not implemented — the only provider throws (ADR-0004)                               |
 | No central backend | Architecture rule (ADR-0001); nothing in the repo contacts a FreeLayer server because none exists |
-| ScreenShield | Research/design only (ADR-0012) — no screenshot blocking implemented |
-| Safe for secrets | **No** |
+| ScreenShield       | Research/design only (ADR-0012) — no screenshot blocking implemented                              |
+| Safe for secrets   | **No**                                                                                            |
 
 ## Trust level
 
@@ -44,27 +44,27 @@ This line is updated only when verified reality changes — never ahead of it.
 
 ## Current maturity
 
-| Area | Status |
-| --- | --- |
-| Architecture Decision Lock (Phase 0.5) | **Complete** — ADR-0001…ADR-0011 accepted; see [docs/adr/](adr/) (external design review still pending) |
-| Monorepo / app shell (Phase 1) | **Started** — typed scaffolding + minimal local-only web status page; no product behavior |
-| Product features | **None implemented** — no chat, no rooms, no capsules, no real networking |
-| Cryptography | **Not implemented** — deliberately ([CRYPTO_DESIGN.md](CRYPTO_DESIGN.md), [ADR-0004](adr/ADR-0004-no-crypto-implementation-before-review.md)); the only provider throws |
-| Local AI | **Not implemented** — the only provider rejects ([ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md)) |
-| Design documents | Initial drafts, not externally reviewed |
-| External audit | None |
-| Releases | None |
-| Security posture | **Design-only** — every property is a documented intention; none are verified |
+| Area                                   | Status                                                                                                                                                                  |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Architecture Decision Lock (Phase 0.5) | **Complete** — ADR-0001…ADR-0011 accepted; see [docs/adr/](adr/) (external design review still pending)                                                                 |
+| Monorepo / app shell (Phase 1)         | **Started** — typed scaffolding + minimal local-only web status page; no product behavior                                                                               |
+| Product features                       | **None implemented** — no chat, no rooms, no capsules, no real networking                                                                                               |
+| Cryptography                           | **Not implemented** — deliberately ([CRYPTO_DESIGN.md](CRYPTO_DESIGN.md), [ADR-0004](adr/ADR-0004-no-crypto-implementation-before-review.md)); the only provider throws |
+| Local AI                               | **Not implemented** — the only provider rejects ([ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md))                                                              |
+| Design documents                       | Initial drafts, not externally reviewed                                                                                                                                 |
+| External audit                         | None                                                                                                                                                                    |
+| Releases                               | None                                                                                                                                                                    |
+| Security posture                       | **Design-only** — every property is a documented intention; none are verified                                                                                           |
 
 ### Repository and CI (Infra-01)
 
-| Item | Status |
-| --- | --- |
-| Public repository | <https://github.com/XGiammyX/freelayer> — GitHub is the development platform only; the runtime has no GitHub dependency |
-| CI (typecheck/lint/test/build + 4 privacy guards) | Live status: see [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md) and the badges on the README |
-| CodeQL | Workflow present (security-extended); results under the Security tab |
-| Dependency review | Workflow present; runs on every PR |
-| Branch protection | See [GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md) / [GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md) for the verified state |
+| Item                                              | Status                                                                                                                                           |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Public repository                                 | <https://github.com/XGiammyX/freelayer> — GitHub is the development platform only; the runtime has no GitHub dependency                          |
+| CI (typecheck/lint/test/build + 4 privacy guards) | Live status: see [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md) and the badges on the README                                                             |
+| CodeQL                                            | Workflow present (security-extended); results under the Security tab                                                                             |
+| Dependency review                                 | Workflow present; runs on every PR                                                                                                               |
+| Branch protection                                 | See [GITHUB_REPOSITORY_SETUP.md](GITHUB_REPOSITORY_SETUP.md) / [GITHUB_SECURITY_SETTINGS.md](GITHUB_SECURITY_SETTINGS.md) for the verified state |
 
 Unchanged by publication: **no release, no production-ready crypto, no chat, no AI — do not use for real secrets.**
 
@@ -72,14 +72,14 @@ Unchanged by publication: **no release, no production-ready crypto, no chat, no 
 
 The Endpoint Defense Layer is now an official **design pillar** (ADR-0012) — and nothing more yet:
 
-| Area | Status |
-| --- | --- |
-| ScreenShield design | Initial docs |
-| Platform protections | Research stage |
-| ProtectedContent | Not implemented |
-| Clipboard Firewall | Not implemented |
+| Area                  | Status          |
+| --------------------- | --------------- |
+| ScreenShield design   | Initial docs    |
+| Platform protections  | Research stage  |
+| ProtectedContent      | Not implemented |
+| Clipboard Firewall    | Not implemented |
 | Secure Input Firewall | Not implemented |
-| Device Risk Engine | Not implemented |
+| Device Risk Engine    | Not implemented |
 
 Plainly: **no endpoint protections are implemented, no screenshot blocking exists, and there is no spyware-protection guarantee — device compromise remains a major limitation.** Future trust status will be platform-specific ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)).
 
@@ -87,17 +87,17 @@ Plainly: **no endpoint protections are implemented, no screenshot blocking exist
 
 The storage layer now has foundation-level policy tests, but **FreeLayer still does not provide production-grade encrypted storage** — nothing persists at all.
 
-| Piece | Status |
-| --- | --- |
-| StoragePolicy v0 (mode × data-class matrix, default deny, strictest wins) | Implemented + regression-tested |
-| Write barrier (exact-scope `PolicyDecision` required per operation) | Implemented + regression-tested |
-| MemoryStorageProvider / NullStorageProvider | Implemented, hardened (no browser/filesystem APIs, values never in errors/logs) |
-| Encrypted persistent storage | **Not implemented** — throwing placeholder (Gate F) |
-| Real message/room storage | **Does not exist** — no crypto, nothing persists, not safe for real secrets |
+| Piece                                                                     | Status                                                                          |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| StoragePolicy v0 (mode × data-class matrix, default deny, strictest wins) | Implemented + regression-tested                                                 |
+| Write barrier (exact-scope `PolicyDecision` required per operation)       | Implemented + regression-tested                                                 |
+| MemoryStorageProvider / NullStorageProvider                               | Implemented, hardened (no browser/filesystem APIs, values never in errors/logs) |
+| Encrypted persistent storage                                              | **Not implemented** — throwing placeholder (Gate F)                             |
+| Real message/room storage                                                 | **Does not exist** — no crypto, nothing persists, not safe for real secrets     |
 
 **TECH-09 zero-egress default build:** the built app is verified to make no automatic network egress on load — static source scan, build-artifact scan (real `apps/web/dist` clean), runtime egress trap (FreeLayer's load path calls no network API; positive controls fire), and a network-client dependency scan. No service worker exists; a GitHub Actions egress audit confirms CI contacts only GitHub. **What is verified:** the default app runtime + build artifacts + repository source. **What is not:** full in-browser render egress (future Playwright E2E) and — always outside application control — the OS, browser, extensions, package manager, and GitHub CI infrastructure (which necessarily use the network for development). Still not safe for real secrets; no crypto; no messaging.
 
-**TECH-08 NetworkPolicy:** the network side-effect barrier is now implemented as policy — default-deny `resolveNetworkPolicy`, exact-scope decision enforcement, mock/noop transports (`performsRealNetwork: false`), endpoint validation, per-transport metadata leakage labels, a forbidden-network CI guard, and a runtime egress trap (positive controls prove it fires). **No real networking exists:** no fetch, WebSocket, WebRTC, relay, telemetry, external assets, or update checks. WebRTC/direct peer is denied in Private+; Offline Capsule/Emergency deny all network; Ghost/Bunker deny direct network. **What the tests do not prove:** they verify FreeLayer *application* behavior, not that the OS/browser/extensions/package-manager make no network calls (that is TECH-09's built-app scope and, ultimately, outside application control). Still not safe for real secrets; no crypto; no messaging.
+**TECH-08 NetworkPolicy:** the network side-effect barrier is now implemented as policy — default-deny `resolveNetworkPolicy`, exact-scope decision enforcement, mock/noop transports (`performsRealNetwork: false`), endpoint validation, per-transport metadata leakage labels, a forbidden-network CI guard, and a runtime egress trap (positive controls prove it fires). **No real networking exists:** no fetch, WebSocket, WebRTC, relay, telemetry, external assets, or update checks. WebRTC/direct peer is denied in Private+; Offline Capsule/Emergency deny all network; Ghost/Bunker deny direct network. **What the tests do not prove:** they verify FreeLayer _application_ behavior, not that the OS/browser/extensions/package-manager make no network calls (that is TECH-09's built-app scope and, ultimately, outside application control). Still not safe for real secrets; no crypto; no messaging.
 
 **TECH-07 zero-persistence verification:** Ghost/Bunker "write nothing persistent" is now machine-checked — 38 additional tests (116 total): full mode×class matrix sweeps (8 configurations × 22+ classes), runtime persistence-API traps with positive controls (a planted `fs.writeFileSync` is caught **and prevented**; browser APIs trapped or verified inert), fail-closed unknowns (unknown backend/class/mode ⇒ deny), mode-transition no-auto-flush proofs, capsule-spool/cache/log strict-mode denials, and artifact sentinel scans. **What is still not guaranteed:** anything below the application — OS swap, crash dumps, browser internals, forensic residue, compromised processes. No production encrypted storage exists; not safe for real secrets.
 
@@ -156,7 +156,7 @@ The seven policy layers are now unified under one canonical contract: [POLICY_MA
 
 ### Metadata Firewall v0 (TECH-10, 2026-07-10)
 
-MetadataPolicy v0 landed in `packages/privacy`: a default-deny, fail-closed engine that classifies 40 metadata events × 12 sinks and composes with StoragePolicy and NetworkPolicy under strictest-policy-wins. **What is machine-checked:** receipts/typing/presence denied in Private+; notification content denied in Ghost/Bunker; link preview / external assets / telemetry-shaped / AI metadata denied; nothing metadata-shaped persists or egresses in v0; redacted audit events and payloads (numeric/boolean only — the sentinel never survives); the metadata barrier rejects forged/mis-scoped decisions via the existing WeakSet provenance; MetadataPolicy agrees with StoragePolicy/NetworkPolicy (47 tests, 220 total). **What is NOT solved:** no messaging, no real network, no notifications — this is metadata *reduction*, not anonymity, and a global passive adversary and transport-native metadata remain out of scope ([audits/TECH_10_METADATA_THREAT_MODEL.md](audits/TECH_10_METADATA_THREAT_MODEL.md)). Platform reconciliation confirmed the baseline matched with no resolved item redone ([audits/TECH_10_PLATFORM_RECONCILIATION.md](audits/TECH_10_PLATFORM_RECONCILIATION.md)).
+MetadataPolicy v0 landed in `packages/privacy`: a default-deny, fail-closed engine that classifies 40 metadata events × 12 sinks and composes with StoragePolicy and NetworkPolicy under strictest-policy-wins. **What is machine-checked:** receipts/typing/presence denied in Private+; notification content denied in Ghost/Bunker; link preview / external assets / telemetry-shaped / AI metadata denied; nothing metadata-shaped persists or egresses in v0; redacted audit events and payloads (numeric/boolean only — the sentinel never survives); the metadata barrier rejects forged/mis-scoped decisions via the existing WeakSet provenance; MetadataPolicy agrees with StoragePolicy/NetworkPolicy (47 tests, 220 total). **What is NOT solved:** no messaging, no real network, no notifications — this is metadata _reduction_, not anonymity, and a global passive adversary and transport-native metadata remain out of scope ([audits/TECH_10_METADATA_THREAT_MODEL.md](audits/TECH_10_METADATA_THREAT_MODEL.md)). Platform reconciliation confirmed the baseline matched with no resolved item redone ([audits/TECH_10_PLATFORM_RECONCILIATION.md](audits/TECH_10_PLATFORM_RECONCILIATION.md)).
 
 ### Stabilization & hardening (2026-07-09)
 
@@ -227,3 +227,16 @@ The Privacy Bill of Materials — what the software actually collects, stores, c
 - [ ] Update at each phase boundary (checklist item in phase exit criteria)
 - [ ] Publish maintainer signing keys before first release
 - [ ] External design review of THREAT_MODEL.md and CRYPTO_DESIGN.md (earliest meaningful audit step — before implementation, not after)
+
+## Secure Device posture — what we honestly claim (TECH-23)
+
+FreeLayer applies **device posture** as one input to sensitive-room admission, but you should know its limits:
+
+- Secure Device / Endpoint Defense is a **separate, externalized** project. FreeLayer core is only the future relying party.
+- The **Null provider** is the only provider that ships today. No trusted provider exists.
+- A device posture **above `unverified` cannot currently be established** in core. An untrusted signal can only **restrict** (tighten to `at_risk`); it can never grant, restore, or prove anything.
+- We collect **no raw device evidence, no device identifiers, no OS fingerprint, no installed-app inventory, no assessment history, and no telemetry**.
+- We do **not** run GrapheneOS management, MDM, hardware attestation, ScreenShield, or a Bunker runtime in core.
+- We make **no spyware-proof and no capture-proof claim**. A compromised endpoint, a camera pointed at the screen, or a hostile input method remains outside our control. FreeLayer is **not safe for real secrets** today.
+
+These statements are enforced by the automated **policy conflict** overclaim scanner and are consistent with the anti-spyware **externalized** posture recorded across the Trust Center.
