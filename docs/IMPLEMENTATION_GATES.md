@@ -479,6 +479,26 @@ Live results: [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md). Also satisfied for Gate A:
 
 ---
 
+## Identity Architecture Gate (future) — opened for research by RESEARCH-ID-01
+
+*Opens: any identity implementation (identity roots, personas, aliases, device keys, device passports, invites, verification, recovery, trust notebook, directory).*
+
+Identity is **Gate G** design work; identity cryptography is **Gate F**. RESEARCH-ID-01 produced the research package; **TECH-ID-02 — Identity Architecture ADR** must decide the model. No identity code may be written until **all** of the following are settled by the ADR:
+
+- [ ] Terminology accepted (`identity root` / `persona` / `alias` / `member reference` / `device` / `device key` / `device passport` / `DevicePosture` / `verification` / `recovery` distinct — see [research/IDENTITY_TERMINOLOGY_MODEL.md](research/IDENTITY_TERMINOLOGY_MODEL.md))
+- [ ] Root / persona / alias model chosen (global vs. pairwise; per-contact/per-room scope; persona unlinkability)
+- [ ] Multi-device model chosen (device approval, subordinate device keys, removal & rotation, stale-device handling)
+- [ ] Recovery approach chosen — **no administrator or project-owned master key**; assurance reduction disclosed
+- [ ] Verification semantics defined (what a QR/code actually verifies = key control, not personhood; trust binding to keys)
+- [ ] One-time invite requirements defined (narrow, expiring, single-use, capability-limited, revocable)
+- [ ] Metadata / correlation analysis complete (no globally visible root; no directory enumeration; recovery/transparency metadata bounded)
+- [ ] Crypto dependencies identified (Gate F) — no algorithm selected in research
+- [ ] Storage policies identified (identity secrets never plaintext/logged; Ghost/Bunker persistence restrictions)
+- [ ] PBOM / Trust Center identity claims approved (no unsupported "verified identity" claims)
+- [ ] **No endpoint/identity conflation** — DevicePosture stays an external environment attribute, never identity
+
+Until it opens: no identity keys, no recovery, no invites, no aliases/personas, no device passports, no key transparency, no QR verification, no directory; `RoomMemberRef` remains a local unverified placeholder; identity state fails closed.
+
 ## Rules
 
 - Gate criteria may be **added** by PR review; removing or weakening a criterion requires GOVERNANCE-level review and, where it touches an ADR, a superseding ADR.

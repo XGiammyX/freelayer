@@ -421,3 +421,22 @@ FreeLayer core is the future **RATS Relying Party** for device posture (RFC 9334
 | Anti-spyware / MDM / GrapheneOS management / Play Integrity              | **external / not implemented** in core                                     |
 
 No provider network calls, no persistence, and no active-protection claim exist in core. The single provenance mechanism (`isAcceptedDevicePostureAssessmentV1`) is a same-realm registry, **not** cryptographic (Gate F). This complements the **Policy Matrix** rows for the `room.secure_device.*` / `room.device_posture.*` operations and the anti-spyware **externalized** statements elsewhere in this PBOM. Not safe for real secrets.
+
+## RESEARCH-ID-01 — Identity status (research only)
+
+Identity is **not implemented** in FreeLayer. RESEARCH-ID-01 is a research/architecture-preparation phase only; no identity, cryptography, recovery, invite, device-key, device-passport, DID/VC, login, or directory code was added, and **no runtime dependency** was introduced.
+
+| Identity element | State in FreeLayer core |
+| --- | --- |
+| Verified identity / identity proofing | **not implemented** (self-asserted only; Gate G) |
+| Identity keys / cryptographic aliases / unlinkable personas | **not implemented** (Gate F/G) |
+| Device keys / device passport | **not implemented** (future design) |
+| Key transparency | **not implemented / research** |
+| QR verification | **not implemented** (contract design only) |
+| Recovery (any form) | **not implemented** — and no administrator or project-owned master key will ever exist |
+| Public directory / username lookup | **not implemented** (none planned by default) |
+| Phone / email / central account | **not required, not present** |
+| Local unverified membership (`RoomMemberRef`) | present — a placeholder, authorizes nothing, **not identity** |
+| DevicePosture as identity | **never** — external environment attribute (Secure Device project) |
+
+Next: **TECH-ID-02 — Identity Architecture ADR**. This complements the anti-spyware **externalized** statements and the **Policy Matrix** claims elsewhere in this PBOM.

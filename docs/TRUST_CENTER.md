@@ -240,3 +240,15 @@ FreeLayer applies **device posture** as one input to sensitive-room admission, b
 - We make **no spyware-proof and no capture-proof claim**. A compromised endpoint, a camera pointed at the screen, or a hostile input method remains outside our control. FreeLayer is **not safe for real secrets** today.
 
 These statements are enforced by the automated **policy conflict** overclaim scanner and are consistent with the anti-spyware **externalized** posture recorded across the Trust Center.
+
+## Identity — what we honestly claim (RESEARCH-ID-01)
+
+FreeLayer does **not** have identity yet. Please read these limits before trusting any identity-like signal:
+
+- There is **no verified identity, no device passport, no key transparency, no QR verification, no recovery, and no secure identity storage** implemented. Identity is future design (Gate G); identity cryptography is Gate F.
+- A room membership (`RoomMemberRef`) is a **local, unverified placeholder** — it is not identity and authorizes nothing on its own.
+- A profile name is not a verified identity; DevicePosture is not identity; a hardened device is not a verified person.
+- FreeLayer requires **no phone number and no email**, keeps **no central identity database**, and will never ship an **administrator recovery backdoor or a project-owned master key**.
+- We make **no anti-impersonation guarantee** today.
+
+These statements are consistent with the automated **policy conflict** overclaim scanner and with the **externalized** Secure Device posture recorded across the Trust Center. RESEARCH-ID-01 is research only; the model is decided by **TECH-ID-02 — Identity Architecture ADR**.

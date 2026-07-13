@@ -208,3 +208,7 @@ Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_M
 ## Device posture minimization (TECH-23)
 
 Device posture is an **environment attribute**, never identity or authority. FreeLayer minimizes it aggressively: the normalized `DevicePostureAssessmentV1` carries **no raw evidence, no device identifiers/serials, no OS build fingerprint, no installed-app inventory, no measurement log, no persistent history, and no telemetry** (evidence-bearing objects are rejected). Assessments are transient (current-process only). An untrusted signal follows the **strictest**-wins rule: it may tighten to `at_risk` but can never elevate posture. No provider is integrated, so effective posture is `unverified` unless tightened.
+
+## Identity privacy goals (RESEARCH-ID-01, research)
+
+Identity is not implemented. The future Identity Firewall targets **no phone/email**, **no globally visible identity root**, **no public searchable directory by default**, **per-contact and per-room aliases**, presentation separate from cryptographic identity, and **no administrator/master recovery key**. `RoomMemberRef` is a local unverified placeholder, never identity; DevicePosture is an environment attribute, never identity. Correlation, enumeration, and recovery-metadata risks are analyzed in [audits/RESEARCH_ID_01_IDENTITY_THREAT_MODEL.md](audits/RESEARCH_ID_01_IDENTITY_THREAT_MODEL.md). Decisions are deferred to **TECH-ID-02**.

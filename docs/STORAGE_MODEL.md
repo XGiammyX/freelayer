@@ -282,3 +282,7 @@ All Secure Device contract data is **transient (memory-only, current-process)** 
 | `device_identifier` / `device_inventory`          | forbidden                   |
 
 There is no assessment persistence, no history, and no device-identifier storage. Matrix rows `room.raw_device_evidence.persist` and `room.device_assessment_history.persist` deny.
+
+## Identity storage (RESEARCH-ID-01, research)
+
+No identity data is stored today (no identity roots, keys, aliases, personas, device passports, recovery material, or trust notebook). The future model must keep identity secrets **never in plaintext and never in logs**, treat the Trust Notebook as sensitive local data, and apply **Ghost/Bunker persistence restrictions** to identity data. Recovery material must never be cached insecurely and deleted identities must not remain trivially recoverable. Storage policy for identity is an open ADR question (TECH-ID-02).
