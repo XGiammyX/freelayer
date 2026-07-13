@@ -55,6 +55,21 @@ They are **not just group chats.** A room may contain:
 - **Separate decisions:** a room mutation and a log append/read/clear are separate side effects, each requiring its own exactly-scoped `PolicyDecision` — cross-scope use rejects.
 - **Not a hostile-input parser:** `validateRoomOperationEventV1` checks internal invariants over trusted local/fixture data only (Gate E owns external parsing). No crypto (Gate F), no sync (Gate H), no endpoint-defense implementation (externalized, Gate R).
 
+## TECH-20 — Local Membership and Capability Scaffolding
+
+> Membership is **local and UNVERIFIED**; capability descriptors are **non-authoritative**. This is scaffolding that precedes the Identity Firewall (Gate G) — it does **not** implement identity, authentication, invites, cryptographic ownership, or transferable authorization. Only an authentic, current, exact-scope `PolicyDecision` authorizes a side effect.
+
+- **Membership records:** one local, unverified room-member relationship each (`verification: "unverified_placeholder"` always). Carry no display name/email/phone/key/avatar/presence/last-seen/IP/location/fingerprint/contact/endpoint-risk data. Versioned (`schemaVersion 1`), with a positive local `revision` (optimistic concurrency — not a distributed clock).
+- **Placeholder roles:** `owner_placeholder` / `editor_placeholder` / `viewer_placeholder` / `auditor_placeholder` — never admin/root/wildcard/verified. A role is ONE ABAC attribute; role eligibility is **necessary but never sufficient** (an explicit role→capability table, not scattered `if (role === …)` checks). Owner-placeholder is **not** cryptographic ownership.
+- **Lifecycle:** `active_local_unverified ↔ suspended_local → removed_tombstone` (tombstone terminal; no resurrection; no invite/remote/verified states). Duplicate active room/member pairs reject; expected-revision required for updates.
+- **Last-owner continuity:** an active local room keeps ≥1 active owner placeholder — the last one cannot be removed, suspended, or demoted. *A local continuity invariant, not proof of ownership, identity, or governance legitimacy.*
+- **Non-authoritative capability descriptors:** a narrow, attenuable description of what a current membership is ELIGIBLE for, bound to room + membership + revision. Literally `authoritative: false`, `serialization: "forbidden"`, `delegation: "not_implemented"`, `persistence: "forbidden"`. It is NOT a token, NOT a bearer credential, and authorizes nothing on its own. There is **no wildcard capability**. Attenuation may only NARROW (widening rejects; subset-checked).
+- **Local revocation only:** changing/removing a local membership invalidates descriptors bound to the older revision **in the current local projection**. It does not revoke unknown remote copies or distributed state (Gate H).
+- **Authorization context:** `assertRoomAuthorizationContextV1` requires a current membership + a current descriptor + an authentic exact-scope `PolicyDecision` — a forged descriptor without a real decision fails. Membership mutation and membership-log append are SEPARATE decisions.
+- **Events + projection + queries:** versioned membership events (local, unsigned, unencrypted, no identity/invite/key payload) → pure reducer → membership records held in `RoomMaterializedState` (memory-only; Ghost/Bunker null). Redacted membership queries (`list`/`get`/`count`) never return identity proof, contact info, presence, device state, or a capability descriptor; counts have their own scope.
+- **Device-risk placeholder** may only TIGHTEN capability resolution and is never identity assurance or a safety attestation; `endpointIntegration` can never be `active` (anti-spyware stays externalized, Gate R).
+- **Not:** identity, authentication, invites, cryptographic capabilities, distributed revocation, sync, presence. Not safe for real secrets.
+
 ## TECH-19 — Privacy-safe local query model
 
 > The query layer protects data ACCESS inside FreeLayer core. It does **not** guarantee safe rendering on a compromised or externally captured endpoint (endpoint defense is externalized).

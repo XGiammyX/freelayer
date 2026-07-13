@@ -150,6 +150,21 @@ export type PolicySideEffectScope =
   | "room.query.detail"
   | "room.query.search"
   | "room.query.count"
+  // RoomOS Membership + capability scopes (TECH-20). Membership mutation,
+  // membership-log storage, and membership queries are SEPARATE side effects;
+  // each decision is scoped to exactly one. A capability descriptor is NEVER a
+  // substitute for one of these — it is a non-authoritative policy input.
+  | "room.membership.bootstrap"
+  | "room.membership.add"
+  | "room.membership.change_role"
+  | "room.membership.suspend"
+  | "room.membership.reactivate"
+  | "room.membership.remove"
+  | "room.membership_log.append"
+  | "room.membership_log.read"
+  | "room.membership.query.list"
+  | "room.membership.query.detail"
+  | "room.membership.query.count"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
