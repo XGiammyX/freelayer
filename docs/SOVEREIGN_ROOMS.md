@@ -55,6 +55,22 @@ They are **not just group chats.** A room may contain:
 - **Separate decisions:** a room mutation and a log append/read/clear are separate side effects, each requiring its own exactly-scoped `PolicyDecision` — cross-scope use rejects.
 - **Not a hostile-input parser:** `validateRoomOperationEventV1` checks internal invariants over trusted local/fixture data only (Gate E owns external parsing). No crypto (Gate F), no sync (Gate H), no endpoint-defense implementation (externalized, Gate R).
 
+## TECH-19 — Privacy-safe local query model
+
+> The query layer protects data ACCESS inside FreeLayer core. It does **not** guarantee safe rendering on a compromised or externally captured endpoint (endpoint defense is externalized).
+
+- **Read/write separation:** queries are a SEPARATE layer from the TECH-18 mutation pipeline. They are **side-effect-free** — never append events, never mutate the projection, never write storage, never call network/notification/AI/link-preview/file/endpoint hooks.
+- **Immutable snapshot:** a query executes against one frozen, defensively-cloned `RoomQuerySnapshotV1` built from the room state + object projection — never the live projection and never the operation log. (Because TECH-18 keeps full objects in `RoomObjectProjectionV1`, snapshot creation takes both it and `RoomMaterializedState`.)
+- **Query taxonomy:** `room.summary`, `room.objects.list`, `room.object.get`, `room.objects.search_plain_text`, `room.tasks/decisions/polls/file_refs.list`, `room.object_counts`. No query language, no SQL/GraphQL, no dynamic field paths, no regex, no semantic queries, no remote kinds. Unknown kinds/views/filters/sorts deny.
+- **Privacy-safe view classes:** `room_summary(_redacted)`, `object_summary(_redacted)`, `object_detail_redacted`, `object_detail_content`. Summaries carry **no content**; a content detail view returns local in-memory content only when policy explicitly allows it and **never implies capture protection**. The requested view can only be DOWNGRADED, never upgraded.
+- **Policy-gated authorization:** every query needs an authentic `PolicyDecision` scoped to EXACTLY its class (`room.query.summary/list/detail/search/count`). Object IDs and actor refs confer **no authority**; cross-room snapshot/request rejects; a list decision cannot authorize detail, summary cannot authorize search, detail cannot authorize count, and a mutation/storage decision cannot authorize a query.
+- **Structured filters + deterministic sorting:** explicit filter fields only (kinds/lifecycles/redacted/statuses/exactTag — no predicates, no regex); sorts (`object_id_asc`/`created_local_asc`/`updated_local_desc`/`revision_desc`) always apply an object-ID tie-breaker and never mutate source arrays; timestamp sorts are denied in strict modes.
+- **Bounded local cursors:** default limit 25, max 100 (search max 50); cursors are local typed values — **not authorization tokens**, not persisted, not serialized for remote use, content-free; a cursor must match the query's room + sort; one execution uses one immutable snapshot.
+- **Exact in-memory search v1:** exact case-SENSITIVE substring (`String.includes`) over allowed plain-text fields — **no index, history, cache, snippet, ranking, fuzzy, regex, or stemming**; user input never builds a `RegExp`; term ≤256 UTF-8 bytes; redacted/tombstoned content is never searched; the term never appears in errors/logs. Bunker/Emergency deny search.
+- **Counts are metadata:** off by default, behind their own scope; Standard/Offline/Sovereign may allow exact local counts; Private/Ghost/Bunker/Emergency deny.
+- **Strict-mode redaction:** Ghost/Bunker/Emergency suppress actor refs, timestamps, revisions, counts, and relationship metadata; **Bunker denies content views and search** (enabling them needs a future protected-presentation integration gate); Emergency allows only a minimal room summary.
+- **No index/history/cache; no UI; no remote API.** Deterministic + defensively-cloned results — mutating a result cannot mutate source state.
+
 ## TECH-18 — RoomOS Object Model v1
 
 > A RoomOS message object is currently a local data object. **It is not sent, encrypted, synchronized, or delivered.** Notes/tasks/decisions/polls are not collaborative documents; file refs hold no bytes/path/URL; poll voting does not exist.
