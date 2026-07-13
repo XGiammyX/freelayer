@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS revocation + authorization rows (TECH-21)
+
+Eight rows joined the `room` domain: `room.authorization.prepare` and `room.authorization.revalidate` are `memory_only` (pure, side-effect-free); `room.authorization.cache`/`context_persist` are `deny` (persistent-storage forbidden) and `context_serialize` is `deny`; `room.authorization.endpoint_assurance` is `deny` (endpoint state can never grant/restore/prove authority); `room.authorization.distributed_revocation`/`signed_revocation` are `future_gate` (Gates H/F/G). Per-scenario invalidation (suspension/removal/role-change/reactivation/policy/mode) is enforced by `assertPreparedRoomAuthorizationCurrentV1` against the current revision fence. Matrix is now **157 specs → 1099 rules**.
+
 ## RoomOS membership + capability rows (TECH-20)
 
 Eighteen rows joined the `room` domain: `room.membership.bootstrap` (memory_only, Emergency deny); `add`/`change_role`/`reactivate` (memory_only, Bunker/Emergency deny — expansion); `suspend`/`remove` (memory_only, restrictive/wipe direction, survive strict modes but preserve last-owner continuity); `membership_log.append` (memory_only, own storage decision); `query.list`/`query.detail` (memory_only, Bunker/Emergency deny); `query.count` (memory_only, Private/Ghost/Bunker/Emergency deny); `capability.resolve` (memory_only, pure); `capability.persist` (**deny**); `capability.serialize` (**deny**); `capability.delegate` (**not_implemented**); `membership.invite`/`identity_verify`/`distributed_revocation`/`endpoint_risk_integration` (**future_gate** — Gates G/E/H/R). Per-mode/role behavior is derived by `resolveRoomMembershipPolicyV1` + `resolveRoomLocalCapabilityV1`; these rows pin the class-level rule. Matrix is now **149 specs → 1043 rules**.

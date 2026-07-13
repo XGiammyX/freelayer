@@ -1694,6 +1694,103 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     testCoverage: "deferred",
     docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
   },
+  // ---- TECH-21: local revocation + execution-time authorization revalidation.
+  //      Prepared contexts are non-authoritative, transient, revalidated against
+  //      current state; caches/persistence/serialization denied; distributed +
+  //      cryptographic revocation future-gated; endpoint cannot grant authority. ----
+  {
+    id: "room.authorization_prepare",
+    domain: "room",
+    operation: "room.authorization.prepare",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Preparing an authorization context is a pure, local, side-effect-free computation producing a non-authoritative, transient input (never a token).",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "room.authorization_revalidate",
+    domain: "room",
+    operation: "room.authorization.revalidate",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Execution-time revalidation re-checks a prepared context against CURRENT state + an authentic exact-scope decision immediately before the side effect.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/ARCHITECTURE.md"],
+  },
+  {
+    id: "room.authorization_cache",
+    domain: "room",
+    operation: "room.authorization.cache",
+    sink: "local_persistent_storage",
+    dataClass: "materialized_room_state",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "No authorization allow-result, capability descriptor, or prepared context may be cached or reused without current-revision revalidation.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/audits/ROOM_AUTHORIZATION_CACHE_AUDIT.md"],
+  },
+  {
+    id: "room.authorization_context_persist",
+    domain: "room",
+    operation: "room.authorization.context_persist",
+    sink: "local_persistent_storage",
+    dataClass: "materialized_room_state",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale: "Prepared authorization contexts are transient and never persisted.",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "room.authorization_context_serialize",
+    domain: "room",
+    operation: "room.authorization.context_serialize",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "Prepared authorization contexts are never serialized (they are not bearer credentials or transport payloads).",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "room.authorization_distributed_revocation_future",
+    domain: "room",
+    operation: "room.authorization.distributed_revocation",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Distributed/broadcast revocation across devices requires the sync model — future-gated (Gate H). Local invalidation is not distributed revocation.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "room.authorization_signed_revocation_future",
+    domain: "room",
+    operation: "room.authorization.signed_revocation",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Signed revocations / revocation certificates require crypto + identity — future-gated (Gates F/G).",
+    testCoverage: "deferred",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "room.authorization_endpoint_assurance",
+    domain: "room",
+    operation: "room.authorization.endpoint_assurance",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "Endpoint/device-risk state can only TIGHTEN or deny — it can never grant, restore, or prove authority (externalized, Gate R).",
+    testCoverage: "covered",
+    docsRefs: ["docs/SOVEREIGN_ROOMS.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
   {
     id: "identity.invite",
     domain: "identity",

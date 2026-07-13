@@ -282,6 +282,25 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 | Tombstone forensic deletion     | Not claimed               |
 | Endpoint Defense                | Externalized / hooks only |
 
+## 26. RoomOS local revocation + authorization behavior (TECH-21)
+
+| Behavior                           | Status                      |
+| ---------------------------------- | --------------------------- |
+| Local membership suspension        | Implemented foundation      |
+| Local membership removal           | Tombstone foundation        |
+| Role-change invalidation           | Local revision-bound        |
+| Reactivation invalidation          | Local revision-bound        |
+| Execution-time authorization check | Implemented foundation      |
+| Prepared authorization             | Non-authoritative/transient |
+| Authorization cache                | Forbidden                   |
+| Capability persistence             | Forbidden                   |
+| Prepared-context persistence/serialization | Forbidden           |
+| Distributed revocation             | Not implemented — Gate H    |
+| Signed revocation                  | Not implemented — Gates F/G |
+| Single-use / nonce-bound decisions | Not implemented — Gate B    |
+| Global authorization consistency   | Not implemented             |
+| Endpoint assurance                 | Externalized / unavailable  |
+
 ## 25. RoomOS membership + capability behavior (TECH-20)
 
 | Behavior                    | Status                        |

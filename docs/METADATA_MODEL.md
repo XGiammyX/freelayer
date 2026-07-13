@@ -177,6 +177,10 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-21 — revocation + authorization metadata
+
+Revocation/authorization adds metadata surfaces, all governed: revocation existence, membership state/revision changes, role-change metadata, authorization-failure signals, and invalidation timing. Rules: **no authorization telemetry**; no failure counters exported; invalidation reports are content-free (no member ref/role/reason; state `current_local_projection_only`; `distributedRevocation: false`); errors carry codes + STATIC detail only (never a current role/state/target); prepared contexts are transient and never persisted. Strict-mode redaction from TECH-20 still applies. Distributed revocation metadata (peer visibility of local invalidations) is a Gate H concern, recorded not solved.
+
 ## TECH-20 — membership + capability metadata
 
 Membership adds metadata surfaces, all governed: membership existence, the member-room relationship, role (placeholder), state, revision, membership count, timestamps, role-change/suspension/removal history, and capability-use. Rules: strict modes suppress membership IDs/refs/revisions/timestamps; counts are off by default behind their own scope (Standard/Offline/Sovereign only); Bunker/Emergency deny ordinary listing. No presence/last-seen/online status/typing exists. No capability descriptor, identity proof, contact info, or device state is ever returned by a query. No membership telemetry; no query history; audit records only category/mode/reason/`redacted=true`. Future distributed membership metadata (peer visibility) is a Gate H concern, recorded not solved.
