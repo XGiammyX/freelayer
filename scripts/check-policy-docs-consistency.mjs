@@ -34,6 +34,9 @@ const MUST_MENTION = {
   "docs/POLICY_MATRIX.md": ["deny", "strictest", "future_gate", "externalized"],
   "docs/NETWORK_MODEL.md": ["telemetry", "link preview", "push"],
   "docs/THREAT_MODEL.md": ["policy drift", "anonymity"],
+  // RESEARCH-ID-01: the Identity Firewall must stay honest — it must say identity
+  // is research/not-implemented and must keep DevicePosture separate from identity.
+  "docs/IDENTITY_FIREWALL.md": ["research", "not implemented", "DevicePosture is not identity"],
 };
 
 for (const [file, phrases] of Object.entries(MUST_MENTION)) {

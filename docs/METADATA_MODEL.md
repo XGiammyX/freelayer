@@ -240,3 +240,7 @@ Enforced by a barrier reusing the WeakSet `PolicyDecision` provenance; audit eve
 ## Posture + admission as sensitive metadata (TECH-23)
 
 Device posture, provider status, room minimum-posture requirements, and admission outcomes are treated as **sensitive metadata**: transient, redacted (codes only — no content, no raw evidence, no identifiers), and never emitted as telemetry. Admission decisions and errors carry stable generic reason codes and never echo room titles, member refs, object content, the full assessment object, or the leak sentinel.
+
+## Identity metadata (RESEARCH-ID-01, research)
+
+No identity metadata is produced today. When identity is designed (TECH-ID-02), aliases, relationship graphs, invite links, verification events, device lists, and any key-transparency queries are **sensitive metadata** subject to minimization and correlation analysis. A globally visible identity root, a searchable directory, and unbounded recovery/transparency metadata are treated as anti-goals. Which identity metadata (if any) may ever synchronize is an open ADR question — see [research/IDENTITY_ARCHITECTURE_DECISION_INPUTS.md](research/IDENTITY_ARCHITECTURE_DECISION_INPUTS.md).
