@@ -195,6 +195,25 @@ TECH-17 is complete only if all hold:
 - [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
 - [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
 
+## Gate Y — RoomOS Local Revocation + Authorization Regression Gate (TECH-21)
+
+*Opens: any feature that grants a member a capability and later relies on it staying revoked (permission UIs, capability-scoped operations after membership changes).*
+
+TECH-21 is complete only if all hold:
+
+- [x] Prepared authorization model (non-authoritative, transient, non-serializable, revision-bound)
+- [x] Execution-time revalidation as the final gate before every side effect
+- [x] Revision binding (membership revision + local policy revision + mode + lifecycle + room + operation/object/view/target)
+- [x] Suspension / removal / role-downgrade / role-elevation invalidation of old descriptors
+- [x] Reactivation invalidation (revision bump; old descriptors + contexts stale)
+- [x] Room-policy revision + privacy-mode invalidation (even less-restrictive transitions)
+- [x] Operation-data binding (object/operation/view/room/target mismatch reject)
+- [x] Owner-continuity recomputed from the CURRENT projection at execution
+- [x] No authorization cache (audited) + capability/context persistence + serialization forbidden
+- [x] Restrictive-direction enforcement (no expansive smuggling); capability-set role comparison
+- [x] Object/query/membership integration path + guardrail + CI; 19 new tests (500 total); docs/PBOM(§26)/Trust Center updated
+- [x] Local only — no identity/crypto/distributed-revocation/endpoint-assurance implementation
+
 ## Gate X — RoomOS Membership + Capability Scaffolding Gate (TECH-20)
 
 *Opens: any feature relying on room membership or capability-informed authorization (permission UIs, member management, capability-scoped operations).*

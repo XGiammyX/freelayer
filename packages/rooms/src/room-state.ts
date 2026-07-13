@@ -48,6 +48,14 @@ export interface RoomMaterializedState {
    * persisted. Changed only through the membership reducer.
    */
   readonly membershipRecords?: readonly RoomMembershipRecordV1[];
+  /**
+   * TECH-21: a local, positive policy-revision counter incremented on every
+   * accepted (tightening) room-policy change. Bound into prepared authorization
+   * so a policy change invalidates prepared contexts. Local only — NOT a global
+   * version, trusted time, or distributed consistency token. Defaults to a
+   * derived fingerprint of the current RoomPolicy when absent.
+   */
+  readonly policyRevision?: number;
   /** LOCAL label only ("local:" prefix) — never trusted time. */
   readonly lastLocalUpdateAt?: string;
   readonly policy: RoomPolicy;

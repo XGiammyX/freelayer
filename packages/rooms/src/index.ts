@@ -56,3 +56,10 @@ export * from "./query";
 //      policy — never authentication, invites, crypto, sync, or authority by
 //      themselves. Only an authentic exact-scope PolicyDecision authorizes.
 export * from "./membership";
+
+// ---- TECH-21: local revocation + execution-time authorization revalidation.
+//      Prepared contexts are revalidated against current state + an authentic
+//      exact-scope PolicyDecision before every side effect; membership/policy/
+//      mode changes invalidate stale local authority. Local only — not
+//      distributed revocation, identity, crypto, or endpoint assurance.
+export * from "./authorization";
