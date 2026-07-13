@@ -18,7 +18,9 @@ export * from "./policy-layers";
 export * from "./room-policy-document";
 export * from "./policy-comparison";
 export * from "./policy-composition";
-export * from "./sensitive-admission";
+// NOTE (TECH-23): the sensitive-room admission model graduated to the richer,
+// canonical `secure-device` module (../secure-device). The former TECH-22
+// composition-level admission was superseded to avoid a duplicate export.
 export * from "./governance-commands";
 export * from "./governance-events";
 export * from "./governance-pipeline";

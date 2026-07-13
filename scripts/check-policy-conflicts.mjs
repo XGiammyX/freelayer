@@ -72,6 +72,27 @@ const EXTERNALIZED_CAPABILITY_PREFIXES = [
   "endpoint.screenshot_blocking",
 ];
 
+// TECH-23: Secure Device admission-contract behaviors that must never be
+// allowed in core (raw evidence / device identifiers / assessment history /
+// app inventory / posture elevation). Secure Device is a SEPARATE project.
+const SECURE_DEVICE_NEVER_ALLOWED_PREFIXES = [
+  "room.raw_device_evidence.",
+  "room.device_identifier.",
+  "room.device_assessment_history.",
+  "room.device_inventory.",
+  "room.device_posture_elevate",
+  "room.device_posture.elevate",
+];
+// Secure Device gates that must stay future_gate (external implementation).
+const SECURE_DEVICE_FUTURE_GATE_SPEC_IDS = [
+  "room.secure_device.provider_elevation_future",
+  "room.secure_device.screen_shield_require_future",
+  "room.secure_device.bunker_session_require_future",
+  "room.secure_device_integration_future",
+  "room.device_posture_verify_future",
+  "room.protected_content_require_future",
+];
+
 // App-signal metadata that Private+ must never allow.
 const PRIVATE_PLUS_DENIED_PREFIXES = [
   "metadata.read_receipt",
@@ -199,6 +220,20 @@ function checkMatrix(matrixPath) {
       if (spec.id === "room.sync" && effect !== "future_gate") {
         violations.push(
           `[future_gate_treated_as_allow] ${id} — room sync must stay future_gate (Gate H)`,
+        );
+      }
+      // TECH-23: Secure Device admission contract invariants. Raw evidence,
+      // device identifiers, assessment history, app inventory, and posture
+      // elevation must NEVER be allowed; ScreenShield/Bunker/trusted-provider
+      // gates must stay future_gate (Secure Device is external).
+      if (SECURE_DEVICE_NEVER_ALLOWED_PREFIXES.some((p) => spec.id.startsWith(p)) && allowed) {
+        violations.push(
+          `[externalized_component_marked_implemented] ${id} — Secure Device evidence/identifier/history/inventory/elevation must never be allowed in core`,
+        );
+      }
+      if (SECURE_DEVICE_FUTURE_GATE_SPEC_IDS.includes(spec.id) && effect !== "future_gate") {
+        violations.push(
+          `[future_gate_treated_as_allow] ${id} — Secure Device ScreenShield/Bunker/trusted-provider gate must stay future_gate (external project)`,
         );
       }
       if (

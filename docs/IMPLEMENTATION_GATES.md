@@ -9,7 +9,7 @@
 
 Hard preconditions between design and implementation. A gate is **closed** until every criterion is met; work belonging behind a closed gate does not begin, regardless of schedule pressure. Gates encode the project rule that every major feature follows **research → design → implementation → tests → audit** — they are the checkpoints where that order is enforced.
 
-Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when* work happens; gates define *whether it may*.
+Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule _when_ work happens; gates define _whether it may_.
 
 ## Current status
 
@@ -19,7 +19,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Gate A — Foundation
 
-*Opens: workspace implementation (Phase 1).*
+_Opens: workspace implementation (Phase 1)._
 
 - [x] Monorepo exists and builds: 12 packages + 4 apps compile with strict TypeScript (verified locally)
 - [x] CI green: typecheck/lint/test/build + all four guards passing on hosted GitHub Actions (verified 2026-07-08 — [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md))
@@ -31,7 +31,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Gate B — Policy Engine
 
-*Opens: any side-effectful feature (Phase 2 exit).*
+_Opens: any side-effectful feature (Phase 2 exit)._
 
 - [ ] Policy schema: Privacy Modes expressed as a versioned schema in `packages/privacy`
 - [ ] Core operation pipeline implemented: validate → classify → resolve policies → decide → execute → audit
@@ -41,7 +41,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Gate C — Storage
 
-*Opens: any feature that persists data (Phase 2/7).* **Status: PARTIAL — the policy/barrier half is done (TECH-05); real persistence remains blocked by Gate F.**
+_Opens: any feature that persists data (Phase 2/7)._ **Status: PARTIAL — the policy/barrier half is done (TECH-05); real persistence remains blocked by Gate F.**
 
 - [x] Write barrier implemented: all persistence through StoragePolicy with exact-scope `PolicyDecision` ([ADR-0005](adr/ADR-0005-storage-selected-only-by-policy.md))
 - [x] StoragePolicy v0: 30 data classes × 7 modes, default deny, strictest wins, room tighten-only, ScreenShield/device-risk hooks
@@ -58,7 +58,7 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 
 ## Gate D — Network
 
-*Opens: any networked transport (Phase 4).*
+_Opens: any networked transport (Phase 4)._
 
 - [ ] NetworkPolicy defined and enforced through core ([NETWORK_MODEL.md — Network side-effect barrier](NETWORK_MODEL.md))
 - [ ] Zero-egress test for the default build: no network calls not explicitly user-initiated
@@ -67,11 +67,11 @@ Gates compose with the roadmap ([ROADMAP.md](ROADMAP.md)): phases schedule *when
 - [x] Transport leakage labels defined per transport — `describeNetworkMetadataLeakage` (TECH-08, [METADATA_MODEL.md](METADATA_MODEL.md))
 - [x] "Bunker: no direct-IP transport" test passing (WebRTC denied Private+, TECH-08)
 - [x] NetworkPolicy v0 + side-effect barrier + forbidden-network guard + runtime egress trap (TECH-08)
-- [x] Zero-egress *default-build* verification (TECH-09): source scan + build-artifact scan + runtime trap + dependency scan + service-worker audit + GitHub Actions egress audit ([audit](audits/TECH_09_ZERO_EGRESS_AUDIT.md)); full in-browser E2E deferred to AUDIT-HARD
+- [x] Zero-egress _default-build_ verification (TECH-09): source scan + build-artifact scan + runtime trap + dependency scan + service-worker audit + GitHub Actions egress audit ([audit](audits/TECH_09_ZERO_EGRESS_AUDIT.md)); full in-browser E2E deferred to AUDIT-HARD
 
 ## Gate M — Metadata Firewall (TECH-10)
 
-*Opens: any feature that could emit a metadata signal (receipts, typing, presence, notifications, previews, network timing).*
+_Opens: any feature that could emit a metadata signal (receipts, typing, presence, notifications, previews, network timing)._
 
 TECH-10 is complete only if all hold:
 
@@ -93,7 +93,7 @@ Enforcement reuses the existing WeakSet `PolicyDecision` provenance (Gate B item
 
 ## Gate N — Link Preview / External Asset Blocking (TECH-11)
 
-*Opens: any UI that renders user-provided URLs or could load a remote asset.*
+_Opens: any UI that renders user-provided URLs or could load a remote asset._
 
 TECH-11 is complete only if all hold:
 
@@ -112,7 +112,7 @@ A safe user-initiated preview remains a future design gate. Detail: [audits/TECH
 
 ## Gate O — Notification Privacy (TECH-12)
 
-*Opens: any feature that would show a notification, request permission, set a badge, or use push/service workers.*
+_Opens: any feature that would show a notification, request permission, set a badge, or use push/service workers._
 
 TECH-12 is complete only if all hold:
 
@@ -132,7 +132,7 @@ Any OS notification / push / service worker requires a future ADR/gate. Detail: 
 
 ## Gate P — Policy Matrix (TECH-13)
 
-*Opens: any change to privacy/security policy behavior (all future feature work consults this gate).*
+_Opens: any change to privacy/security policy behavior (all future feature work consults this gate)._
 
 TECH-13 is complete only if all hold:
 
@@ -150,7 +150,7 @@ Any policy-behavior PR must update the matrix in the same PR. Detail: [audits/TE
 
 ## Gate Q — Policy Conflict Gate (TECH-14)
 
-*Opens: permanently active — any policy-behavior PR must keep the conflict suite green.*
+_Opens: permanently active — any policy-behavior PR must keep the conflict suite green._
 
 TECH-14 is complete only if all hold:
 
@@ -166,7 +166,7 @@ TECH-14 is complete only if all hold:
 
 ## Gate T — RoomOS Foundation Gate (TECH-16)
 
-*Opens: any feature building on Sovereign Rooms (messaging UI, documents, tasks, decisions).*
+_Opens: any feature building on Sovereign Rooms (messaging UI, documents, tasks, decisions)._
 
 TECH-16 is complete only if all hold:
 
@@ -182,7 +182,7 @@ Sync remains **Gate H**; room content persistence remains **Gate F**; identity r
 
 ## Gate U — RoomOS Operation Log and Projection Gate (TECH-17)
 
-*Opens: any feature consuming the room event log (messaging views, documents, history UI).*
+_Opens: any feature consuming the room event log (messaging views, documents, history UI)._
 
 TECH-17 is complete only if all hold:
 
@@ -197,7 +197,7 @@ TECH-17 is complete only if all hold:
 
 ## Gate Z — RoomOS Room Policy Composition + Governance Gate (TECH-22)
 
-*Opens: any feature relying on composed room policy, minimum device posture, or room governance.*
+_Opens: any feature relying on composed room policy, minimum device posture, or room governance._
 
 TECH-22 is complete only if all hold:
 
@@ -211,15 +211,46 @@ TECH-22 is complete only if all hold:
 - [x] Guardrail + CI; 21 new tests (521 total); docs/PBOM(§27)/Trust Center updated
 - [x] No Secure Device provider / posture verification / ScreenShield runtime / signed-distributed governance implemented
 
-## Secure Device Integration Gate (future)
+## Secure Device Integration Gate (future) — expanded by TECH-23
 
-*Opens: any real device-posture verification or protected-presentation enforcement in FreeLayer.*
+_Opens: any real device-posture verification, trusted provider, or protected-presentation enforcement in FreeLayer. Until it opens, core is the **RATS Relying Party only** and no trusted provider exists._
 
-Future requirements before integration: the separate **Secure Device project is mature** and validated · integration ADR · provider trust model · posture **provenance** · **freshness/expiration** rules · **anti-replay** design · failure behavior (fail-closed) · native-permission audit · GrapheneOS/device-support assumptions reviewed · PBOM + Trust Center updates · **compromised-provider** threat model · **no claim of spyware-proof protection** · integration tests · rollback plan. Until it opens, core resolves posture to `unverified`/`at_risk` only, stricter room requirements deny content, and `activeProtectionClaim` stays `false`.
+TECH-23 defines the CONTRACT only (`packages/rooms/src/secure-device/`): roles, provider port, deterministic Null provider, normalized transient assessment, provenance, freshness, sensitive-room admission, transient session, and ProtectedContent intent. A **trusted provider may be implemented only after ALL** of the following:
+
+- [ ] The external **Secure Device project exists and is independently testable**
+- [ ] A dedicated **integration ADR**
+- [ ] Provider **trust and provenance** model (cryptographic — Gate F; today provenance is a non-cryptographic same-realm registry)
+- [ ] Posture **freshness and anti-replay** design (trusted clock / nonce / epoch — none exist today; freshness is current-process-only)
+- [ ] **Failure / degradation** behavior (fail-closed; recovery requires a fresh assessment + admission + authorization, never session restore)
+- [ ] Native **permission audit**
+- [ ] Privacy **data-flow audit** (no raw evidence, no device identifiers, no inventory, no history, no telemetry)
+- [ ] Supported-**platform matrix**
+- [ ] **Compromised-provider** threat model
+- [ ] **PBOM and Trust Center** update
+- [ ] **Regression and rollback** plan
+- [ ] Explicit prohibition of **spyware-proof / capture-proof** claims
+
+Until it opens, core resolves posture to `unverified`/`at_risk` only, stricter room requirements deny content, `activeProtectionClaim`/`screenShieldIntegrated`/`protectedSurfaceAvailable` stay `false`, and `trustedForPostureElevation` is structurally `false`.
+
+## Gate Z2 — RoomOS Sensitive Room Admission + Secure Device Contract Gate (TECH-23)
+
+_Opens: any operation relying on a normalized posture assessment or a sensitive-room admission session._
+
+TECH-23 is complete only if all hold:
+
+- [x] FreeLayer modeled as **RATS Relying Party only**; Attester/Verifier external (`secure-device-roles.ts`)
+- [x] Versioned provider **port** + deterministic **Null provider**; no trusted production provider (`ready_future` is coerced to `unavailable`)
+- [x] Versioned normalized **assessment**; raw evidence / identifiers / inventory / history **structurally forbidden and rejected**
+- [x] Untrusted posture **cannot elevate**; `at_risk` can only **tighten**; freshness is **current-process-only**; **revision rollback rejected**
+- [x] Admission **actions/outcomes explicit + fail-closed**; minimum posture enforced; unavailable/stale provider denies gated content; ScreenShield/Bunker deny safely; **no silent downgrade**; redacted summary separately gated
+- [x] Admission **never replaces** membership / capability / `PolicyDecision`; sessions transient + current-process; **invalidate** on posture/provider/policy/membership/mode/lifecycle/action change; recovery requires fresh assessment/admission/authorization
+- [x] `check:no-secure-device-core-implementation` guardrail + fixture + CI; new privacy/security regression suites; **sentinel** leak + side-effect traps
+- [x] Policy Matrix (195 specs → 1365 rules), PBOM, Trust Center, and endpoint-boundary docs updated
+- [x] **No** network / attestation / GrapheneOS management / MDM / anti-spyware / ScreenShield / Bunker runtime in core
 
 ## Gate Y — RoomOS Local Revocation + Authorization Regression Gate (TECH-21)
 
-*Opens: any feature that grants a member a capability and later relies on it staying revoked (permission UIs, capability-scoped operations after membership changes).*
+_Opens: any feature that grants a member a capability and later relies on it staying revoked (permission UIs, capability-scoped operations after membership changes)._
 
 TECH-21 is complete only if all hold:
 
@@ -238,7 +269,7 @@ TECH-21 is complete only if all hold:
 
 ## Gate X — RoomOS Membership + Capability Scaffolding Gate (TECH-20)
 
-*Opens: any feature relying on room membership or capability-informed authorization (permission UIs, member management, capability-scoped operations).*
+_Opens: any feature relying on room membership or capability-informed authorization (permission UIs, member management, capability-scoped operations)._
 
 TECH-20 is complete only if all hold:
 
@@ -256,7 +287,7 @@ TECH-20 is complete only if all hold:
 
 ## Gate W — RoomOS Query Model Gate (TECH-19)
 
-*Opens: any feature reading room data for display (message views, task boards, search).*
+_Opens: any feature reading room data for display (message views, task boards, search)._
 
 TECH-19 is complete only if all hold:
 
@@ -275,7 +306,7 @@ TECH-19 is complete only if all hold:
 
 ## Gate V — RoomOS Object Model and Local Mutations Gate (TECH-18)
 
-*Opens: any feature consuming concrete room objects (message views, task boards, decision logs).*
+_Opens: any feature consuming concrete room objects (message views, task boards, decision logs)._
 
 TECH-18 is complete only if all hold:
 
@@ -292,11 +323,11 @@ TECH-18 is complete only if all hold:
 
 ## Room Event Schema Evolution Gate (future)
 
-*Opens: any change to the room event schema beyond v1.* Requires: research note · migration design (no automatic/lossy upcasting) · test vectors · backward-compatibility fixtures · privacy review of retained historical payloads · hostile-input review if external import (Gate E) is involved. Until it opens, unknown schema versions fail closed.
+_Opens: any change to the room event schema beyond v1._ Requires: research note · migration design (no automatic/lossy upcasting) · test vectors · backward-compatibility fixtures · privacy review of retained historical payloads · hostile-input review if external import (Gate E) is involved. Until it opens, unknown schema versions fail closed.
 
 ## Gate S — Contributor Workflow Gate (TECH-15)
 
-*Opens: permanently active — the governance surface must stay intact (`check:contributor-workflow` in CI).*
+_Opens: permanently active — the governance surface must stay intact (`check:contributor-workflow` in CI)._
 
 TECH-15 is complete only if all hold:
 
@@ -311,7 +342,7 @@ TECH-15 is complete only if all hold:
 
 ## Gate R — Endpoint Defense / Anti-spyware Integration Gate
 
-*Opens: only when the standalone anti-spyware project is completed and its integration is proposed.*
+_Opens: only when the standalone anti-spyware project is completed and its integration is proposed._
 
 The anti-spyware / Endpoint Defense / ScreenShield **implementation is externalized** to a separate project; FreeLayer core keeps **policy hooks only** (ScreenShield levels as tightening inputs, endpoint data classes/metadata events, `future_gate` matrix rows). Integration requires ALL of:
 
@@ -326,7 +357,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate E — Capsule Parser
 
-*Opens: processing any externally-produced capsule (Phase 4).*
+_Opens: processing any externally-produced capsule (Phase 4)._
 
 - [ ] Capsule wire format draft complete in `packages/protocol` with version + algorithm identifiers
 - [ ] Hostile-input parser: strict schema validation, no unbounded structures ([CAPSULENET.md](CAPSULENET.md))
@@ -339,7 +370,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate F — Crypto
 
-*Opens: any cryptographic implementation (Phases 4–5).*
+_Opens: any cryptographic implementation (Phases 4–5)._
 
 - [ ] [CRYPTO_DESIGN.md](CRYPTO_DESIGN.md) specifies the construction with cited prior art
 - [ ] Design reviewed per [ADR-0004](adr/ADR-0004-no-crypto-implementation-before-review.md) / [ADR-0009](adr/ADR-0009-security-sensitive-pr-review-rules.md) — no implementation before review
@@ -350,7 +381,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate G — Identity
 
-*Opens: Identity Firewall implementation (Phase 3 exit).*
+_Opens: Identity Firewall implementation (Phase 3 exit)._
 
 - [ ] No phone/email anywhere in the identity model (hard constraint, verified in design review)
 - [ ] Local identity model documented (multiple identities per install, ephemeral identities)
@@ -361,7 +392,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate H — Rooms
 
-*Opens: Sovereign Rooms implementation (Phase 6).*
+_Opens: Sovereign Rooms implementation (Phase 6)._
 
 - [ ] Operation/CRDT model chosen via formal evaluation memo, recorded in a new ADR ([SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md))
 - [ ] Out-of-order convergence tests defined and passing on the prototype
@@ -372,7 +403,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate I — AI
 
-*Opens: any local AI feature (Phase 8). Mirrors the AI implementation gate in [LOCAL_AI.md](LOCAL_AI.md).*
+_Opens: any local AI feature (Phase 8). Mirrors the AI implementation gate in [LOCAL_AI.md](LOCAL_AI.md)._
 
 - [ ] AIPolicy implemented in the policy engine
 - [ ] AI Privacy Guard implemented (mode check, room-scoped input, provenance labels, storage-policy routing)
@@ -385,7 +416,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate K — Endpoint Defense / ScreenShield
 
-*Opens in stages (ADR-0012). ProtectedContent/ScreenShield design precedes serious messaging UI.*
+_Opens in stages (ADR-0012). ProtectedContent/ScreenShield design precedes serious messaging UI._
 
 **Required before protected messaging UI:**
 
@@ -420,7 +451,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Gate J — Release
 
-*Opens: any public release, including alpha (Phase 11).*
+_Opens: any public release, including alpha (Phase 11)._
 
 - [ ] [TRUST_CENTER.md](TRUST_CENTER.md) updated and accurate for the release
 - [ ] [PBOM.md](PBOM.md) updated and shipped as a release artifact
@@ -433,7 +464,7 @@ Until this gate opens, any endpoint-monitoring dependency or active-protection c
 
 ## Infra Gate 1 — Public Repository and Live CI
 
-*Infrastructure gate (separate from the technical A–J ladder). Opens: accepting external contributions at scale.*
+_Infrastructure gate (separate from the technical A–J ladder). Opens: accepting external contributions at scale._
 
 - [x] Public repository exists (<https://github.com/XGiammyX/freelayer>)
 - [x] README is complete and honest (landing page with status warnings, comparison, architecture)

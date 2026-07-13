@@ -63,7 +63,7 @@ Binding on every feature, in every phase, with no exceptions short of a supersed
 12. No feature may parse capsule/room/document input outside the approved protocol parser ([CAPSULENET.md](CAPSULENET.md)).
 13. No feature may weaken the active device mode or room policy ([PRIVACY_MODEL.md — Policy conflict rule](PRIVACY_MODEL.md)).
 14. No feature may bypass the PBOM update requirement ([PBOM.md](PBOM.md), [ADR-0010](adr/ADR-0010-documentation-updated-with-code.md)).
-15. Sensitive content must never be rendered directly by app views — future UI renders it only through `<ProtectedContent />` or an equivalent policy-controlled surface ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md), [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md)). *(Documented now; component is a Gate K deliverable.)*
+15. Sensitive content must never be rendered directly by app views — future UI renders it only through `<ProtectedContent />` or an equivalent policy-controlled surface ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md), [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md)). _(Documented now; component is a Gate K deliverable.)_
 
 ### Operation pipeline
 
@@ -108,7 +108,7 @@ Reviewers enforce these rules through [SECURITY_REVIEW_CHECKLIST.md](SECURITY_RE
 
 **RoomOS foundation (TECH-16).** `packages/rooms` implements Sovereign Rooms as **policy-controlled local state transitions**: room state is created only through the factory, mutated only through operations that pass `assertRoomOperationAllowed` (authentic `PolicyDecision`, exact `room.*` scope), and projected as derived, rebuildable, redacted state. RoomOS does not bypass storage/network/metadata policies — its v1 invariants (no persistence, no sync, no side effects) are matrix rows the validators pin. Sync (Gate H), crypto (Gate F), identity (Gate G) stay deferred; anti-spyware stays externalized. See [SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md).
 
-**Policy Conflict Regression Suite (TECH-14) as the safety layer.** Policy modules must agree with the matrix — and now a contradiction *anywhere* (engine vs matrix, room loosening, gate treated as executable, docs/PBOM overclaim, forbidden dependency) fails tests or `check:policy-conflicts`. Endpoint-defense integration is an **external system behind a dedicated gate** ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md) Gate R), not an active core module: core ships hooks and compatibility contracts only.
+**Policy Conflict Regression Suite (TECH-14) as the safety layer.** Policy modules must agree with the matrix — and now a contradiction _anywhere_ (engine vs matrix, room loosening, gate treated as executable, docs/PBOM overclaim, forbidden dependency) fails tests or `check:policy-conflicts`. Endpoint-defense integration is an **external system behind a dedicated gate** ([IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md) Gate R), not an active core module: core ships hooks and compatibility contracts only.
 
 **Policy Matrix v1 (TECH-13) as the central contract.** The domain-specific policy engines (Storage/Network/Metadata/LinkPreview/ExternalAsset/Notification) now align with one canonical matrix ([POLICY_MATRIX.md](POLICY_MATRIX.md)) — a typed table and test oracle, deliberately NOT a DSL or policy runtime. Features call the policy layer, never ad-hoc checks; agreement between the matrix and each engine is test-enforced, and `evaluatePolicyMatrix` fails closed on anything without a rule. At Gate B the core operation pipeline should consume matrix rows when issuing `PolicyDecision`s.
 
@@ -118,9 +118,9 @@ Reviewers enforce these rules through [SECURITY_REVIEW_CHECKLIST.md](SECURITY_RE
 
 **Metadata Firewall (TECH-10) as a core side-effect gate.** Alongside the storage write barrier and the network side-effect barrier, metadata-producing behavior now passes a third gate: `assertMetadataOperationAllowed` (`packages/privacy`) requires an authentic, exactly-scoped `PolicyDecision` before any receipt/typing/presence/notification/preview/log/audit signal. MetadataPolicy composes with StoragePolicy and NetworkPolicy under strictest-policy-wins; apps cannot emit metadata signals directly (they go through core → policy → the barrier). The barrier reuses the existing WeakSet `PolicyDecision` provenance registry (below) — it is trusted foundation and is **not** replaced. See [METADATA_MODEL.md](METADATA_MODEL.md).
 
-**Mechanical enforcement upgrade (stabilize/harden pass):** the non-bypassable rules are now enforced by **ESLint AST rules**, not only regex scanners — `no-restricted-globals` bans direct storage/network browser globals in shipped `apps/**`+`packages/**` source, and `no-restricted-imports` bans apps importing side-effect packages (rules 1/7/8/12). And `PolicyDecision` is now **unforgeable**: authenticity is a module-private `WeakSet` of issued decisions (not the old, forgeable `Symbol.for` mark), so a structurally-perfect forgery is rejected (rule 6, tested). The CI regex scanners remain as belt-and-suspenders for build output and non-TS surfaces. Remaining Gate-B item: compile-time restriction on provider/transport *construction* ([PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md)).
+**Mechanical enforcement upgrade (stabilize/harden pass):** the non-bypassable rules are now enforced by **ESLint AST rules**, not only regex scanners — `no-restricted-globals` bans direct storage/network browser globals in shipped `apps/**`+`packages/**` source, and `no-restricted-imports` bans apps importing side-effect packages (rules 1/7/8/12). And `PolicyDecision` is now **unforgeable**: authenticity is a module-private `WeakSet` of issued decisions (not the old, forgeable `Symbol.for` mark), so a structurally-perfect forgery is rejected (rule 6, tested). The CI regex scanners remain as belt-and-suspenders for build output and non-TS surfaces. Remaining Gate-B item: compile-time restriction on provider/transport _construction_ ([PLATFORM_STATE_ANALYSIS.md](PLATFORM_STATE_ANALYSIS.md)).
 
-**Current enforcement status (Phase 1 baseline):** `scripts/check-boundaries.mjs` statically verifies rules 1/12 (apps may import only `ui`/`sdk`/`core`/`privacy`; per-package allowed-import lists encode the layering) and runs in CI plus `pnpm audit:privacy`, alongside the external-assets, telemetry, and forbidden-storage guards (rules 7–10). Side-effect scaffolding in `@freelayer/storage` and `@freelayer/transports` rejects calls without a valid `PolicyDecision` at runtime (rule 6), verified by unit tests. One structural note: the `PolicyDecision` *contract* is defined in `packages/privacy` — so side-effect modules can verify decisions without importing core (dependencies stay downward) — and `packages/core` re-exports it for apps and the SDK. These guardrails are a baseline, not a security proof: they catch accidental bypass, not determined circumvention.
+**Current enforcement status (Phase 1 baseline):** `scripts/check-boundaries.mjs` statically verifies rules 1/12 (apps may import only `ui`/`sdk`/`core`/`privacy`; per-package allowed-import lists encode the layering) and runs in CI plus `pnpm audit:privacy`, alongside the external-assets, telemetry, and forbidden-storage guards (rules 7–10). Side-effect scaffolding in `@freelayer/storage` and `@freelayer/transports` rejects calls without a valid `PolicyDecision` at runtime (rule 6), verified by unit tests. One structural note: the `PolicyDecision` _contract_ is defined in `packages/privacy` — so side-effect modules can verify decisions without importing core (dependencies stay downward) — and `packages/core` re-exports it for apps and the SDK. These guardrails are a baseline, not a security proof: they catch accidental bypass, not determined circumvention.
 
 > **TODO (mechanical enforcement — planned at Gate A, completed by Phase 10, [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)):**
 >
@@ -130,7 +130,7 @@ Reviewers enforce these rules through [SECURITY_REVIEW_CHECKLIST.md](SECURITY_RE
 
 ## Endpoint Defense Layer / ScreenShield
 
-*(Official pillar — [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md). Design only; implementation blocked by Gate K.)*
+_(Official pillar — [ADR-0012](adr/ADR-0012-endpoint-defense-layer.md). Design only; implementation blocked by Gate K.)_
 
 **ScreenShield protects sensitive content at the moment it is rendered, copied, input, previewed, cached or exposed to the local device environment.** It covers: screen rendering; screen capture/recording; task switcher thumbnails; remote screen sharing; external displays/casting; clipboard; keyboard/autocomplete/cache; overlays/tapjacking; browser extensions; OS-level capture APIs; protected content rendering; panic/auto-redact flows; and device risk assessment. Design: [ENDPOINT_DEFENSE_MODEL.md](ENDPOINT_DEFENSE_MODEL.md), [SCREENSHIELD.md](SCREENSHIELD.md).
 
@@ -150,39 +150,39 @@ Honest scope: exposure reduction, never capture-proof claims — a compromised e
 
 ## Apps
 
-| App | Role | Notes |
-| --- | --- | --- |
-| `apps/web` | React + Vite client, PWA-capable | No external assets; strict CSP; offline-first |
+| App            | Role                                | Notes                                                                                 |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
+| `apps/web`     | React + Vite client, PWA-capable    | No external assets; strict CSP; offline-first                                         |
 | `apps/desktop` | Tauri shell wrapping the web client | Adds OS keychain access, filesystem capsule import/export, future Ghost Vault support |
-| `apps/docs` | Documentation site | Static, no analytics, no external fonts |
-| `apps/relay` | Optional self-hostable blind relay | Store-and-forward of opaque ciphertext only; never required; anyone can run one |
+| `apps/docs`    | Documentation site                  | Static, no analytics, no external fonts                                               |
+| `apps/relay`   | Optional self-hostable blind relay  | Store-and-forward of opaque ciphertext only; never required; anyone can run one       |
 
 ## Packages
 
-| Package | Responsibility |
-| --- | --- |
-| `core` | Wires policy engines to features; owns the operation pipeline (validate → policy check → execute → audit) |
-| `crypto` | Facade over vetted primitives; key derivation, sealing/unsealing capsules — **design only until [CRYPTO_DESIGN.md](CRYPTO_DESIGN.md) is reviewed** |
-| `protocol` | Capsule wire format, schema versioning, canonical encoding |
-| `capsules` | Capsule lifecycle: create, bundle, spool, inbox, deduplication |
-| `rooms` | Sovereign Rooms object model: messages, notes, docs, tasks, decisions, polls, operation log |
-| `storage` | Storage policy engine: encrypted persistent / memory-only / null backends, cache rules, emergency wipe |
-| `transports` | `Transport` interface + adapters: relay, QR, file, LAN; future Tor/proxy/radio |
-| `privacy` | Privacy Modes engine and metadata firewall policies |
-| `security` | Hardening utilities, input validation helpers, regression guards, audit hooks |
-| `ai` | Optional local-AI adapters behind AIPolicy; disabled by default |
-| `ui` | Shared components (Tailwind, shadcn/ui-compatible), no remote assets |
-| `sdk` | Public, stable surface for third-party tools building on FreeLayer |
+| Package      | Responsibility                                                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core`       | Wires policy engines to features; owns the operation pipeline (validate → policy check → execute → audit)                                          |
+| `crypto`     | Facade over vetted primitives; key derivation, sealing/unsealing capsules — **design only until [CRYPTO_DESIGN.md](CRYPTO_DESIGN.md) is reviewed** |
+| `protocol`   | Capsule wire format, schema versioning, canonical encoding                                                                                         |
+| `capsules`   | Capsule lifecycle: create, bundle, spool, inbox, deduplication                                                                                     |
+| `rooms`      | Sovereign Rooms object model: messages, notes, docs, tasks, decisions, polls, operation log                                                        |
+| `storage`    | Storage policy engine: encrypted persistent / memory-only / null backends, cache rules, emergency wipe                                             |
+| `transports` | `Transport` interface + adapters: relay, QR, file, LAN; future Tor/proxy/radio                                                                     |
+| `privacy`    | Privacy Modes engine and metadata firewall policies                                                                                                |
+| `security`   | Hardening utilities, input validation helpers, regression guards, audit hooks                                                                      |
+| `ai`         | Optional local-AI adapters behind AIPolicy; disabled by default                                                                                    |
+| `ui`         | Shared components (Tailwind, shadcn/ui-compatible), no remote assets                                                                               |
+| `sdk`        | Public, stable surface for third-party tools building on FreeLayer                                                                                 |
 
 ## Future platform direction
 
 - **Desktop first** (Tauri) because Ghost Vault and filesystem transports need OS integration.
 - **PWA** for reach, with documented limitations (storage eviction, weaker isolation).
-- **Mobile** is a research item — likely Tauri mobile or native shells over the same packages. *(TODO research)*
+- **Mobile** is a research item — likely Tauri mobile or native shells over the same packages. _(TODO research)_
 
 ## Risks
 
-- **Policy-engine bypass**: a feature performing side effects without consulting core policy. Mitigation: side-effect capable modules (storage, transports, ai) accept operations only from `core`; enforced by lint rules and reviews. *(TODO: enforce mechanically)*
+- **Policy-engine bypass**: a feature performing side effects without consulting core policy. Mitigation: side-effect capable modules (storage, transports, ai) accept operations only from `core`; enforced by lint rules and reviews. _(TODO: enforce mechanically)_
 - **Layer erosion**: apps reaching into low-level packages. Mitigation: dependency-direction lint in CI.
 - **Relay centralization drift**: convenience pushing users toward a handful of relays, recreating a de-facto center. Mitigation: first-class non-relay transports, relay diversity documentation.
 - **Storage-policy bypass**: a feature writing outside the barrier. Mitigation: forbidden-storage CI guard, exact-scope decisions, default-deny matrix, regression tests.
@@ -210,3 +210,18 @@ Honest scope: exposure reduction, never capture-proof claims — a compromised e
 - [ ] Dependency-direction lint rule in CI (mechanical enforcement of the non-bypassable rules)
 - [ ] Per-package README with responsibility statements (done at scaffold level; expand per phase)
 - [x] Architecture decision records directory ([docs/adr/](adr/)) — established in Phase 0.5
+
+## Secure Device admission contract (TECH-23)
+
+FreeLayer core is the future **RATS Relying Party** (RFC 9334) for device posture; it is not a Secure Device provider (that project is external). The data flow is one-directional and fail-closed:
+
+```
+future external Secure Device adapter
+  → SecureDeviceProviderPortV1 (versioned port; only the Null provider ships)
+  → DevicePostureAssessmentV1 (normalized, transient, evidence-free, provenance-checked)
+  → resolveSensitiveRoomAdmissionV1 (deterministic 14-step, fail-closed)
+  → prepared authorization + exact-scope PolicyDecision (TECH-21)
+  → protected operation
+```
+
+Admission is an **additional** gate; it never replaces membership, capability, or `PolicyDecision`. Core never parses attestation Evidence, appraises firmware, or infers posture from user agent / OS name / device model / membership. No provider is integrated, so effective posture is `unverified` (or `at_risk`) only.

@@ -11,7 +11,6 @@ import {
   resolveEffectiveDevicePostureV1,
   resolveProtectedPresentationStatusV1,
   resolveRoomPolicyDocumentDefaultsV1,
-  resolveSensitiveRoomAdmissionV1,
   createRoomLocalId,
   type DevicePostureSignalV1,
   type EffectiveDevicePostureV1,
@@ -190,44 +189,11 @@ describe("Composition: deny-overrides + strictest-wins (§29: 3-14)", () => {
   });
 });
 
-describe("Sensitive-room admission (§24, §29: 27-31, 70)", () => {
-  const eff = unverified();
-  it("basic+ denies content; summary allowed; at_risk denies; deterministic", () => {
-    const a = resolveSensitiveRoomAdmissionV1({
-      roomPolicy: doc("standard", { minimumDevicePosture: "basic" }),
-      effectiveDevicePosture: eff,
-      action: "room.open_content",
-      privacyMode: "standard",
-    });
-    expect(a.allowed).toBe(false);
-    expect(a.reasonCode).toBe("posture_requirement_unmet");
-    // Summary still allowed.
-    const sum = resolveSensitiveRoomAdmissionV1({
-      roomPolicy: doc("standard", { minimumDevicePosture: "basic" }),
-      effectiveDevicePosture: eff,
-      action: "room.open_summary",
-      privacyMode: "standard",
-    });
-    expect(sum.allowed).toBe(true);
-    // ScreenShield-required content denies.
-    const ss = resolveSensitiveRoomAdmissionV1({
-      roomPolicy: doc("bunker"),
-      effectiveDevicePosture: eff,
-      action: "room.open_content",
-      privacyMode: "bunker",
-    });
-    expect(ss.allowed).toBe(false);
-    expect(ss.reasonCode).toMatch(/protected_presentation_unavailable|posture_requirement_unmet/);
-    // Deterministic.
-    const again = resolveSensitiveRoomAdmissionV1({
-      roomPolicy: doc("standard", { minimumDevicePosture: "basic" }),
-      effectiveDevicePosture: eff,
-      action: "room.open_content",
-      privacyMode: "standard",
-    });
-    expect(again).toEqual(a);
-  });
-});
+// NOTE (TECH-23): sensitive-room admission graduated to the canonical
+// `secure-device` module. Its full behavior (posture/at_risk/protected-content/
+// provider/freshness/session gating) is covered by
+// tests/privacy-regression/rooms/secure-device-contract/ and
+// tests/security-regression/rooms/secure-device-contract/.
 
 describe("Cross-mode matrix (§30)", () => {
   const modes: PrivacyMode[] = [

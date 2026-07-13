@@ -57,20 +57,20 @@ Stated plainly, because pretending otherwise would be a lie:
 
 ## Endpoint Defense controls
 
-| Control | Role |
-| --- | --- |
-| **ScreenShield Mode** | User/room-facing protection levels (off → bunker) governing all endpoint behavior ([SCREENSHIELD.md](SCREENSHIELD.md)) |
-| **Protected View / Sealed View** | Rendering surfaces for sensitive content: redaction-first, hold-to-view, time-limited reveal |
-| **Capture-Aware Rooms** | Rooms that react to capture state (redact when `isCaptured`-class signals fire; audit locally) |
-| **ProtectedContent component** | The only lawful rendering path for sensitive content ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md)) |
-| **Secure Surface adapters** | Per-platform adapters wrapping FLAG_SECURE / display-affinity / capture-detection APIs, reporting real capabilities honestly ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)) |
-| **Clipboard Firewall** | Policy-gated copy: deny, allow-with-expiry, or allow, per ScreenShield level |
-| **Secure Input Firewall** | Sensitive input fields opt out of autocorrect/predictive/keyboard-cache learning where the platform allows |
-| **Anti-Overlay/Tapjacking Guard** | Touch-filtering-class defenses on sensitive actions (reveal, send, wipe, key operations) |
-| **Device Risk Engine** | Local-only risk assessment feeding policy ([DEVICE_RISK_MODEL.md](DEVICE_RISK_MODEL.md)) |
-| **Panic / Auto-Redact / Decoy** | One-gesture blur/redact; auto-redact on focus loss; future decoy surfaces |
-| **Leak Canary / Dynamic Watermark** | Optional per-reveal watermarking to make leaked captures attributable (never on by default; policy-controlled) |
-| **PWA Low-Assurance Mode** | Web builds honestly labeled low assurance; sealed/bunker content restricted or denied on web |
+| Control                             | Role                                                                                                                                                                              |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ScreenShield Mode**               | User/room-facing protection levels (off → bunker) governing all endpoint behavior ([SCREENSHIELD.md](SCREENSHIELD.md))                                                            |
+| **Protected View / Sealed View**    | Rendering surfaces for sensitive content: redaction-first, hold-to-view, time-limited reveal                                                                                      |
+| **Capture-Aware Rooms**             | Rooms that react to capture state (redact when `isCaptured`-class signals fire; audit locally)                                                                                    |
+| **ProtectedContent component**      | The only lawful rendering path for sensitive content ([PROTECTED_CONTENT_POLICY.md](PROTECTED_CONTENT_POLICY.md))                                                                 |
+| **Secure Surface adapters**         | Per-platform adapters wrapping FLAG_SECURE / display-affinity / capture-detection APIs, reporting real capabilities honestly ([PLATFORM_LIMITATIONS.md](PLATFORM_LIMITATIONS.md)) |
+| **Clipboard Firewall**              | Policy-gated copy: deny, allow-with-expiry, or allow, per ScreenShield level                                                                                                      |
+| **Secure Input Firewall**           | Sensitive input fields opt out of autocorrect/predictive/keyboard-cache learning where the platform allows                                                                        |
+| **Anti-Overlay/Tapjacking Guard**   | Touch-filtering-class defenses on sensitive actions (reveal, send, wipe, key operations)                                                                                          |
+| **Device Risk Engine**              | Local-only risk assessment feeding policy ([DEVICE_RISK_MODEL.md](DEVICE_RISK_MODEL.md))                                                                                          |
+| **Panic / Auto-Redact / Decoy**     | One-gesture blur/redact; auto-redact on focus loss; future decoy surfaces                                                                                                         |
+| **Leak Canary / Dynamic Watermark** | Optional per-reveal watermarking to make leaked captures attributable (never on by default; policy-controlled)                                                                    |
+| **PWA Low-Assurance Mode**          | Web builds honestly labeled low assurance; sealed/bunker content restricted or denied on web                                                                                      |
 
 All controls are **policy-enforced through core** (ADR-0002): a ScreenShield restriction is a `PolicyDecision` outcome, not a UI preference.
 
@@ -112,3 +112,16 @@ Data in development → GitHub Trust Pipeline
 - [ ] ProtectedContent rendering contract (TECH-EDL-03)
 - [ ] Secure Surface adapter interfaces (TECH-EDL-04)
 - [ ] Unified capture-state model across platforms (Gate K design)
+
+## TECH-23 — Secure Device integration contract (external boundary)
+
+Secure Device / Endpoint Defense remains **external**. TECH-23 adds only the CONTRACT through which a future external provider could one day supply a normalized posture result (`packages/rooms/src/secure-device/`):
+
+- **Roles (RFC 9334 RATS):** the Attester (produces Evidence) and Verifier (appraises Evidence) are external; FreeLayer core is the **Relying Party** only and consumes a normalized result — it never parses Evidence, appraises firmware, or inspects measurements.
+- **Provider port + Null provider:** a versioned `SecureDeviceProviderPortV1`; the only shipped implementation is the deterministic, side-effect-free `NullSecureDeviceProviderV1` (reports `not_integrated`, returns `unverified`).
+- **Normalized transient assessment:** `DevicePostureAssessmentV1` carries no raw evidence, no device identifiers, no OS fingerprint, no app inventory, no history — those fields are forbidden and rejected. Provenance is a module-private registry (non-cryptographic — Gate F).
+- **Freshness:** current-process-only; no trusted clock, nonce, or epoch; revision rollback is rejected; no replay-resistance claim.
+- **Admission + session:** deterministic, fail-closed `resolveSensitiveRoomAdmissionV1`; a transient current-process session that invalidates on any posture/provider/policy/membership/mode/lifecycle/action change; recovery requires a fresh assessment + admission + authorization.
+- **ProtectedContent / Bunker:** data-only intent types; core never renders content, blocks screenshots, or claims capture protection. Any future-required protection **denies** content (no silent downgrade).
+
+Core still implements **none** of: anti-spyware/malware scanning, phone-wide firewall, Device Owner/MDM, GrapheneOS installation/management, custom ROM, app-inventory scanning, Accessibility scanning, screenshot/screen-recording detection, clipboard/overlay/keyboard/process monitoring, hardware attestation, Play Integrity, endpoint telemetry, or a native ScreenShield / Bunker Session Mode. See the **Secure Device Integration Gate** in docs/IMPLEMENTATION_GATES.md.

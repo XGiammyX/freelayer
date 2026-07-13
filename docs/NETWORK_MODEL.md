@@ -29,7 +29,7 @@ Plus: broadened **remote-asset scan** (`check:no-external-assets`), a **service-
 **Honest scope — two distinct things:**
 
 - **App runtime egress = zero** (verified above).
-- **Development/CI egress exists and is expected:** `pnpm install` contacts the npm registry; GitHub Actions/CodeQL/Dependabot contact GitHub. This is *not* app behavior and is documented separately ([PBOM.md](PBOM.md)). Neither TECH-09 nor anything else can stop the OS, browser, extensions, package manager, or GitHub infrastructure from using the network.
+- **Development/CI egress exists and is expected:** `pnpm install` contacts the npm registry; GitHub Actions/CodeQL/Dependabot contact GitHub. This is _not_ app behavior and is documented separately ([PBOM.md](PBOM.md)). Neither TECH-09 nor anything else can stop the OS, browser, extensions, package manager, or GitHub infrastructure from using the network.
 
 **Why not just scan minified JS for `fetch(`?** Because React DOM embeds `fetch(`/`createElement('script')` dormantly for its resource APIs — token-scanning would flag every React app falsely. The runtime trap is the real proof. **Deferred:** full in-browser render egress verification (AUDIT-HARD, Playwright).
 
@@ -39,12 +39,12 @@ Plus: broadened **remote-asset scan** (`check:no-external-assets`), a **service-
 
 - **Taxonomy** (`packages/transports`): 13 `NetworkOperationKind`s, 12 `TransportClass`es, `NetworkCapability`, `MetadataExposureLevel`/`MetadataSensitivity`, `NetworkRequest`.
 - **`resolveNetworkPolicy`** — default deny; strictest wins; room policy tightens only; unknown operation/transport/mode **fail closed**.
-- **Barrier** — `assertNetworkOperationAllowed(request, decision, policy)` requires a `PolicyDecision` scoped to *exactly* the operation (network/directTransport capability; `generic` rejected); precise errors for telemetry, external assets, link previews, and direct peer connections.
+- **Barrier** — `assertNetworkOperationAllowed(request, decision, policy)` requires a `PolicyDecision` scoped to _exactly_ the operation (network/directTransport capability; `generic` rejected); precise errors for telemetry, external assets, link previews, and direct peer connections.
 - **Transports** — only `NoopTransport` (validates, does nothing) and `MockNetworkTransport` (test-only, in-memory); both declare `performsRealNetwork: false`. **No fetch, WebSocket, WebRTC, EventSource, sendBeacon, or Tauri HTTP anywhere.**
 - **Always denied, every mode:** telemetry, external assets, automatic link previews, remote AI, update checks (ADR-0008).
 - **Direct peer connections (WebRTC):** denied in Standard/Private/Ghost/Bunker — a page can read your real IP via ICE/STUN with no prompt (research).
 - **Offline Capsule and Emergency:** all network denied. **Ghost/Bunker:** direct network denied. **HTTP/WebSocket/LAN:** forbidden until an approved transport exists. **QR/file/USB:** offline transports, not network operations.
-- **Endpoint validation** (`validateNetworkEndpoint`) — misuse detector rejecting insecure scheme, credentials-in-URL, private/loopback hosts, `file:`/`data:`/`blob:`, suspicious query keys, and the network sentinel; never enough on its own to *allow*, and never echoes the endpoint.
+- **Endpoint validation** (`validateNetworkEndpoint`) — misuse detector rejecting insecure scheme, credentials-in-URL, private/loopback hosts, `file:`/`data:`/`blob:`, suspicious query keys, and the network sentinel; never enough on its own to _allow_, and never echoes the endpoint.
 - **Metadata leakage labels** (`describeNetworkMetadataLeakage`) — honest per-transport exposure (IP/timing/size/relationship/third-party) with plain-language summaries.
 - **Forbidden-network guardrail** (`check:no-forbidden-network`) — source scan for `fetch(`/`WebSocket`/`RTCPeerConnection`/`sendBeacon`/`http:`/Tauri HTTP/Node net libs/HTTP client libs, with fixture self-tests; wired into CI and `audit:privacy`.
 - **Runtime trap** — proves the policy layer and mock transports touch no network API; positive controls prove the trap fires.
@@ -80,31 +80,37 @@ TODO (Gate D — [IMPLEMENTATION_GATES.md](IMPLEMENTATION_GATES.md)):
 ## Transport classes
 
 ### Relay transport (optional)
+
 Self-hostable store-and-forward node (`apps/relay`). Holds ciphertext capsules addressed by opaque routing hints until collected. Anyone can run one; clients can use several simultaneously.
 
 - Risks: relay sees arrival/pickup timing, capsule sizes (mitigated by padding), client IPs (mitigated by future Tor/proxy support). A popular relay becomes a metadata concentration point — relay diversity is a health metric, not an afterthought.
 
 ### QR transport
+
 Capsules encoded as QR code sequences for fully air-gapped, in-person or camera-relayed exchange.
 
-- Risks: low bandwidth (fine for keys/invites/short messages; poor for media); shoulder-surfing at exchange time; multi-frame protocol needed for larger capsules *(TODO design)*.
+- Risks: low bandwidth (fine for keys/invites/short messages; poor for media); shoulder-surfing at exchange time; multi-frame protocol needed for larger capsules _(TODO design)_.
 
 ### File / bundle transport
+
 Capsules exported as files — moved by USB drive, shared folder, cloud drive, or any file channel. Bundles pack many capsules (a room's pending updates) into one artifact.
 
 - Risks: the file channel's own metadata (names, timestamps, accounts); stale-bundle replay (protocol must handle duplicates idempotently); users forgetting exported bundles on media.
 
 ### External app / email courier
+
 Capsule blobs sent through existing channels (any messenger, email).
 
 - Risks: **the courier's metadata is fully visible to that provider** — sender, recipient, time. Content stays sealed, but the relationship leaks to the courier. UI must label this honestly.
 
 ### LAN transport
+
 Discovery and transfer on a local network for same-site sync (e.g. desktop ↔ laptop).
 
 - Risks: presence broadcast reveals a FreeLayer device on the LAN — discovery must be off in Bunker; local attackers can observe transfers (still ciphertext).
 
 ### Future transports (research)
+
 - **Tor / proxy layering** for relay connections — IP protection.
 - **Radio adapters** (e.g. LoRa-class links) — extreme latency/bandwidth constraints; capsule format must already fit this envelope, which is why size discipline matters now.
 - **Offline courier ("sneakernet") workflows** — first-class UX for moving bundles via people, not networks.
@@ -118,7 +124,7 @@ Discovery and transfer on a local network for same-site sync (e.g. desktop ↔ l
 
 - Serverless delivery is **slower and less reliable** than centralized push. This is a real trade-off, accepted deliberately and stated openly.
 - Spam/abuse control without a central authority is hard (see [CAPSULENET.md](CAPSULENET.md) — anti-spam future).
-- Multi-transport operation multiplies the metadata story; per-transport leakage labels are required UX *(TODO)*.
+- Multi-transport operation multiplies the metadata story; per-transport leakage labels are required UX _(TODO)_.
 - NAT traversal for any future direct mode conflicts with IP-privacy goals; direct connections stay policy-gated.
 
 ## Open questions
@@ -143,7 +149,7 @@ Network behavior is metadata-producing behavior. The per-transport leakage label
 
 ### TECH-11 — link previews and external assets are network side effects
 
-Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favicons/OpenGraph images/tracking pixels) are network side effects and are denied in every mode. Connection hints — `preconnect`, `dns-prefetch`, `preload`, `prefetch` to remote origins — produce DNS/TCP metadata *before* any content is fetched and are likewise forbidden. `LinkPreviewPolicy`/`ExternalAssetPolicy` agree with NetworkPolicy's `link.preview`/`asset.fetch` denials. Future transports must not reintroduce preview fetches; a future preview must be user-initiated through an IP-protecting transport with `Referrer-Policy: no-referrer` ([WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md)).
+Automatic link previews and remote assets (images/fonts/scripts/CSS/avatars/favicons/OpenGraph images/tracking pixels) are network side effects and are denied in every mode. Connection hints — `preconnect`, `dns-prefetch`, `preload`, `prefetch` to remote origins — produce DNS/TCP metadata _before_ any content is fetched and are likewise forbidden. `LinkPreviewPolicy`/`ExternalAssetPolicy` agree with NetworkPolicy's `link.preview`/`asset.fetch` denials. Future transports must not reintroduce preview fetches; a future preview must be user-initiated through an IP-protecting transport with `Referrer-Policy: no-referrer` ([WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md)).
 
 ### TECH-13 — network behavior is summarized in the Policy Matrix
 
@@ -179,3 +185,7 @@ Push notifications (Web Push / APNs / FCM-like systems) require a push service, 
 - [ ] Relay protocol draft with blinded addressing (Phase 4)
 - [ ] Per-transport metadata leakage annex to THREAT_MODEL.md
 - [ ] Capsule expiry/retention policy design
+
+## Secure Device provider — zero network (TECH-23)
+
+A Secure Device provider in core makes **no network calls**. The only shipped provider (`NullSecureDeviceProviderV1`) is side-effect-free: no storage, no network, no native calls. Posture assessments never egress, are never fetched remotely, and emit no telemetry. The core-boundary guardrail flags any network primitive used with provider/assessment/posture identifiers.

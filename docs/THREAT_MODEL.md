@@ -11,7 +11,7 @@ Define what FreeLayer protects, against whom, and — just as importantly — wh
 
 ## Current status
 
-**Initial draft.** Written before implementation, so it describes the *intended* security posture. Nothing here is a guarantee until implemented, tested, and externally reviewed.
+**Initial draft.** Written before implementation, so it describes the _intended_ security posture. Nothing here is a guarantee until implemented, tested, and externally reviewed.
 
 ## Assets to protect
 
@@ -24,16 +24,16 @@ Define what FreeLayer protects, against whom, and — just as importantly — wh
 
 ## Attacker classes
 
-| Attacker | Capabilities | Posture |
-| --- | --- | --- |
-| Transport operator (relay host, email provider, messaging app used as courier) | Reads, stores, drops, delays, replays everything it carries | **Assumed hostile.** Sees only ciphertext capsules; correctness must not depend on courier honesty |
-| Passive network observer (local network, ISP) | Observes traffic patterns, sizes, timing, endpoints | Content protected; metadata only partially — honest limitation |
-| Active network attacker | MitM, blocking, spoofing, capsule injection/replay | Authenticity and replay protection are protocol requirements |
-| Other room members / insiders | Full plaintext access to rooms they belong to; can leak, screenshot, exfiltrate | **Out of scope for confidentiality**; in scope for authenticity (no forging others' messages) and future membership revocation |
-| Device thief (device at rest) | Physical access to a powered-off or locked device | Encrypted-at-rest storage, no-persistence modes, emergency wipe |
-| Device compromiser (malware, forensic access to unlocked device) | Reads memory, keylogs, screenshots | **Largely out of scope** — see limitations. Ghost Vault reduces (does not eliminate) exposure |
-| Global passive adversary | Correlates traffic across the entire network | **Out of scope.** FreeLayer does not claim to defeat this adversary |
-| Supply-chain attacker | Malicious dependency, compromised CI, poisoned release | In scope: dependency review, CI hardening, future signed releases and SBOM |
+| Attacker                                                                       | Capabilities                                                                    | Posture                                                                                                                        |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Transport operator (relay host, email provider, messaging app used as courier) | Reads, stores, drops, delays, replays everything it carries                     | **Assumed hostile.** Sees only ciphertext capsules; correctness must not depend on courier honesty                             |
+| Passive network observer (local network, ISP)                                  | Observes traffic patterns, sizes, timing, endpoints                             | Content protected; metadata only partially — honest limitation                                                                 |
+| Active network attacker                                                        | MitM, blocking, spoofing, capsule injection/replay                              | Authenticity and replay protection are protocol requirements                                                                   |
+| Other room members / insiders                                                  | Full plaintext access to rooms they belong to; can leak, screenshot, exfiltrate | **Out of scope for confidentiality**; in scope for authenticity (no forging others' messages) and future membership revocation |
+| Device thief (device at rest)                                                  | Physical access to a powered-off or locked device                               | Encrypted-at-rest storage, no-persistence modes, emergency wipe                                                                |
+| Device compromiser (malware, forensic access to unlocked device)               | Reads memory, keylogs, screenshots                                              | **Largely out of scope** — see limitations. Ghost Vault reduces (does not eliminate) exposure                                  |
+| Global passive adversary                                                       | Correlates traffic across the entire network                                    | **Out of scope.** FreeLayer does not claim to defeat this adversary                                                            |
+| Supply-chain attacker                                                          | Malicious dependency, compromised CI, poisoned release                          | In scope: dependency review, CI hardening, future signed releases and SBOM                                                     |
 
 ## What FreeLayer tries to protect
 
@@ -45,7 +45,7 @@ Define what FreeLayer protects, against whom, and — just as importantly — wh
 
 ## What FreeLayer does NOT protect against (honest limitations)
 
-- **Compromised devices.** If an endpoint is compromised, plaintext, keys, and future messages are exposed. Ghost Vault (offline identity keys) limits *key* exposure on the online device but cannot protect content the online device processes.
+- **Compromised devices.** If an endpoint is compromised, plaintext, keys, and future messages are exposed. Ghost Vault (offline identity keys) limits _key_ exposure on the online device but cannot protect content the online device processes.
 - **Malicious room members.** Encryption does not protect you from the people you invited.
 - **Global or well-positioned traffic analysis.** Timing/size correlation can reveal communication relationships even with encrypted capsules. Mitigations (padding, batching, dead drops) reduce, not eliminate, this.
 - **Transport-side metadata.** Using email or a messaging app as a courier exposes that courier's own metadata (sender, recipient, timestamps) to that provider. Documented per-transport in [NETWORK_MODEL.md](NETWORK_MODEL.md).
@@ -152,7 +152,8 @@ Screen-observing AI agents (OS assistants, GUI automation, Recall-class recorder
 ## Component-specific risk notes
 
 ### Transports
-Untrusted by design. Risks: dropped/delayed capsules (availability is best-effort), replay (protocol must include replay protection — *TODO design*), capsule flooding/spam (see [CAPSULENET.md](CAPSULENET.md) anti-spam future work).
+
+Untrusted by design. Risks: dropped/delayed capsules (availability is best-effort), replay (protocol must include replay protection — _TODO design_), capsule flooding/spam (see [CAPSULENET.md](CAPSULENET.md) anti-spam future work).
 
 ### Local AI (threat annex placeholder)
 
@@ -168,14 +169,16 @@ Prompts and outputs are derived plaintext. This placeholder becomes a full annex
 Constraint: AI runs only under AIPolicy, disabled by default, unavailable in Ghost/Bunker (see [LOCAL_AI.md](LOCAL_AI.md), [ADR-0007](adr/ADR-0007-local-ai-disabled-by-default.md)).
 
 ### Ghost / Bunker modes
+
 Reduce persistence and network exposure but cannot make a device forensically clean: OS swap, filesystem journaling, and hardware behavior are outside app control. These modes are **harm reduction, not guarantees**.
 
 ### Sovereign Rooms sync
+
 Merging state from multiple devices creates ordering/consistency attack surface: a malicious member may attempt history manipulation. Operation-log authentication is a design requirement (see [SOVEREIGN_ROOMS.md](SOVEREIGN_ROOMS.md)).
 
 ## Open questions
 
-- Formal protocol verification: which properties, which tooling? *(TODO research)*
+- Formal protocol verification: which properties, which tooling? _(TODO research)_
 - Deniability vs. non-repudiation: do room decisions need signatures (proof-of-agreement) while chat stays deniable?
 - Multi-device identity: how do device keys relate to identity keys without a server to mediate?
 
@@ -227,3 +230,7 @@ Notifications leak content (message preview / room name / sender alias / title /
 - [ ] STRIDE (or similar) pass over the capsule lifecycle
 - [ ] Define security invariants testable in `tests/security-regression/`
 - [ ] Revisit this document at the end of every roadmap phase
+
+## Secure Device contract residual risk (TECH-23)
+
+Device posture in FreeLayer is advisory and local. Honest residual risks that core cannot mitigate: a compromised provider/OS/kernel, a camera recording the display, a hostile keyboard or Accessibility service, external capture, and a physical attacker. Core has **no endpoint guarantee, no spyware-proof guarantee, and no capture-proof guarantee**; no trusted provider or evidence verification exists. Detailed analysis: docs/audits/TECH_23_SECURE_DEVICE_CONTRACT_THREAT_MODEL.md.

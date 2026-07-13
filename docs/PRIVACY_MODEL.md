@@ -25,15 +25,15 @@ Define FreeLayer's privacy goals and the mechanisms that enforce them: Privacy M
 
 Modes are policy objects evaluated by core for every side-effectful operation. Each mode defines, at minimum: persistence, notifications, external assets, link previews, direct connections (WebRTC), metadata signals (receipts/typing/presence), local AI, media cache, room sync, and allowed transports.
 
-| Mode | Intent | Key policy effects (initial direction) |
-| --- | --- | --- |
-| **Standard** | Sensible private defaults | Encrypted local persistence; no telemetry; no external assets; previews off by default but user-enableable |
-| **Private** | Hardened daily use | Receipts/typing/presence off; previews and external assets hard-off; media cache minimized |
-| **Ghost** | Leave minimal traces | Memory-only storage; no notifications with content; no direct connections; AI off; nothing written to disk |
-| **Bunker** | Assume active local/network adversary | Ghost + only high-assurance transports (no direct IP exposure); strict capsule size padding; sync minimized |
-| **Offline Capsule** | Air-gapped exchange | Network fully disabled; QR/file/USB transports only; spool-and-carry workflow |
-| **Emergency** | Rapid risk reduction | One action: wipe designated data, revoke device material where possible, drop to a safe mode |
-| **Sovereign Room** | Per-room constitution | The room itself carries a policy that binds all members' clients for that room's content (research: enforcement limits — a hostile client can ignore it; this bounds honest clients, not attackers) |
+| Mode                | Intent                                | Key policy effects (initial direction)                                                                                                                                                              |
+| ------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Standard**        | Sensible private defaults             | Encrypted local persistence; no telemetry; no external assets; previews off by default but user-enableable                                                                                          |
+| **Private**         | Hardened daily use                    | Receipts/typing/presence off; previews and external assets hard-off; media cache minimized                                                                                                          |
+| **Ghost**           | Leave minimal traces                  | Memory-only storage; no notifications with content; no direct connections; AI off; nothing written to disk                                                                                          |
+| **Bunker**          | Assume active local/network adversary | Ghost + only high-assurance transports (no direct IP exposure); strict capsule size padding; sync minimized                                                                                         |
+| **Offline Capsule** | Air-gapped exchange                   | Network fully disabled; QR/file/USB transports only; spool-and-carry workflow                                                                                                                       |
+| **Emergency**       | Rapid risk reduction                  | One action: wipe designated data, revoke device material where possible, drop to a safe mode                                                                                                        |
+| **Sovereign Room**  | Per-room constitution                 | The room itself carries a policy that binds all members' clients for that room's content (research: enforcement limits — a hostile client can ignore it; this bounds honest clients, not attackers) |
 
 Rules:
 
@@ -45,7 +45,7 @@ Rules:
 
 When device mode, room policy, transport policy, storage policy, metadata policy, and AI policy apply to the same operation and disagree:
 
-**Strictest policy wins.** *(Locked — [ADR-0002](adr/ADR-0002-core-enforced-policy-engine.md).)*
+**Strictest policy wins.** _(Locked — [ADR-0002](adr/ADR-0002-core-enforced-policy-engine.md).)_
 
 Examples:
 
@@ -93,7 +93,7 @@ ScreenShield ([SCREENSHIELD.md](SCREENSHIELD.md), ADR-0012) adds endpoint-exposu
 
 - `screenShieldLevel` — `off | standard | protected | sealed | bunker`
 - `allowClipboard`
-- `allowScreenshots` *(where the platform can enforce; otherwise detection/redaction)*
+- `allowScreenshots` _(where the platform can enforce; otherwise detection/redaction)_
 - `allowScreenRecording`
 - `allowTaskSwitcherPreview`
 - `allowAccessibilityExposure` ([ACCESSIBILITY_PRIVACY_TRADEOFFS.md](ACCESSIBILITY_PRIVACY_TRADEOFFS.md))
@@ -194,7 +194,7 @@ Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_M
 
 **Policy Conflict Regression Suite (TECH-14).** Privacy-mode consistency is now regression-protected: table-driven tests compare every concrete engine against the Policy Matrix, so a contradiction (one layer allowing what another denies) fails CI. Room and feature policies cannot loosen the device mode — proven per mode, per domain. Endpoint-defense integration is **deferred/externalized** (hooks only; [audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md](audits/ANTISPYWARE_EXTERNALIZATION_AUDIT.md)).
 
-**Policy Matrix v1 (TECH-13) is canonical.** The privacy modes are now *defined* through matrix behavior: [POLICY_MATRIX.md](POLICY_MATRIX.md) (94 specs → 658 rules) is the single contract for what each mode permits/denies/redacts/future-gates, with strictest-policy-wins and deny-overrides composition. Undefined behavior defaults deny. Any PR that changes policy behavior must update the matrix in the same PR ([CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md)).
+**Policy Matrix v1 (TECH-13) is canonical.** The privacy modes are now _defined_ through matrix behavior: [POLICY_MATRIX.md](POLICY_MATRIX.md) (94 specs → 658 rules) is the single contract for what each mode permits/denies/redacts/future-gates, with strictest-policy-wins and deny-overrides composition. Undefined behavior defaults deny. Any PR that changes policy behavior must update the matrix in the same PR ([CONTRIBUTING_SECURITY.md](CONTRIBUTING_SECURITY.md)).
 
 **Notifications (TECH-12):** notification content is denied in strict modes (and, in v0, never shown on any OS surface in any mode). Ghost/Bunker deny badge/sound/vibration by default (all denied in v0). Permission prompts are explicit user actions only — never automatic. Push is not implemented and denied. The notification-content storage class is born denied in strict modes and never plaintext in audit. Only a generic, content-free, memory-only in-app indicator may exist (Standard/Private); room policy cannot loosen device notification policy.
 
@@ -204,3 +204,7 @@ Details and the full event × sink matrix live in [METADATA_MODEL.md](METADATA_M
 - [ ] Define the first 10 privacy-regression test cases
 - [ ] In-product mode descriptions with explicit non-guarantees
 - [x] Conflict-resolution rule decided: strictest policy wins (Policy conflict rule, Phase 0.5)
+
+## Device posture minimization (TECH-23)
+
+Device posture is an **environment attribute**, never identity or authority. FreeLayer minimizes it aggressively: the normalized `DevicePostureAssessmentV1` carries **no raw evidence, no device identifiers/serials, no OS build fingerprint, no installed-app inventory, no measurement log, no persistent history, and no telemetry** (evidence-bearing objects are rejected). Assessments are transient (current-process only). An untrusted signal follows the **strictest**-wins rule: it may tighten to `at_risk` but can never elevate posture. No provider is integrated, so effective posture is `unverified` unless tightened.
