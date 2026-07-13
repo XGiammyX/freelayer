@@ -195,6 +195,25 @@ TECH-17 is complete only if all hold:
 - [x] Policy integration (matrix rows incl. `room.project.snapshot` future gate; Storage/Metadata agreement; Emergency wipe-direction clear)
 - [x] Docs/PBOM (§22)/Trust Center updated; 30 new tests (399 total); no sync/crypto/identity implemented
 
+## Gate W — RoomOS Query Model Gate (TECH-19)
+
+*Opens: any feature reading room data for display (message views, task boards, search).*
+
+TECH-19 is complete only if all hold:
+
+- [x] Explicit query taxonomy (unknown query/view/filter/sort deny)
+- [x] Query policy (deny-by-default; requested view downgrade-only; history/cache/index structurally `false`)
+- [x] Exact-scope authorization (`room.query.*`; object IDs/actor refs confer no authority; list≠detail≠search≠count; mutation/storage cannot authorize a query)
+- [x] Immutable, defensively-cloned snapshots (never the operation log)
+- [x] Privacy-safe views (summaries content-free; content detail only where policy allows; redacted/tombstoned content never reappears)
+- [x] Structured filters + deterministic sorts (object-ID tie-breaker; source never mutated)
+- [x] Bounded cursor model (local, content-free, non-authority, not persisted)
+- [x] No query history/cache/persistent index
+- [x] Exact case-sensitive in-memory search (no index/regex/fuzzy/snippet; term never logged)
+- [x] Leak tests (sentinel absent from errors/summaries/counts/console) + zero-side-effect traps
+- [x] Guardrail + CI; 28 new tests (460 total); docs/PBOM(§24)/Trust Center updated
+- [x] No sync/crypto/identity/AI/endpoint implementation; endpoint defense externalized
+
 ## Gate V — RoomOS Object Model and Local Mutations Gate (TECH-18)
 
 *Opens: any feature consuming concrete room objects (message views, task boards, decision logs).*

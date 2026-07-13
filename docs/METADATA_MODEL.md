@@ -177,6 +177,10 @@ URLs are **content-adjacent metadata**; remote assets are **network side effects
 
 Agrees with MetadataPolicy (`link.preview`/`asset.remote_fetch`/`avatar.remote_fetch` denied), NetworkPolicy (`link.preview`/`asset.fetch` denied), and StoragePolicy (preview/thumbnail caches denied) — proven by `tests/privacy-regression/link-preview/`. A real, user-initiated preview is a **future gate**. Detail: [research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md](research/LINK_PREVIEW_EXTERNAL_ASSET_BLOCKING_RESEARCH.md), [WEB_SECURITY_HEADERS.md](WEB_SECURITY_HEADERS.md).
 
+## TECH-19 — query metadata
+
+Queries add metadata surfaces, all governed: query existence, query kind, query term, filters, cursor, result count, search hits, object kinds returned, timestamps, revisions, actor refs, task assignees, poll/file-reference existence. Rules: **no query telemetry, no query audit by default, no query history, no persisted cursor, no result cache, no search index**; the query term never appears in diagnostics; strict-mode counts require permission; actor/relationship metadata require permission. Any future query auditing would require its own redacted audit decision and must never include the term/content/result IDs — not implemented in TECH-19. Query timing is not recorded and v1 makes no constant-time claim.
+
 ## TECH-18 — object-model metadata
 
 Object mutations add metadata surfaces, all governed via `RoomObjectSummaryV1` (metadata-only; NEVER carries content):

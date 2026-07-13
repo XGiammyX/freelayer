@@ -45,3 +45,8 @@ export * from "./room-log";
 //      policy-gated, deterministic mutations. Local-only; no transport, no
 //      collaborative editing, no sync, no crypto, no identity, no persistence.
 export * from "./objects";
+
+// ---- TECH-19: privacy-safe local query model — a side-effect-free, policy-
+//      gated read boundary over an immutable snapshot. No history/cache/index,
+//      no network/AI, no UI, no persistent search engine.
+export * from "./query";

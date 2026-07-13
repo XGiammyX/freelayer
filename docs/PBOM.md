@@ -282,6 +282,26 @@ Governed by `RoomPolicy` + the matrix `room` domain ([SOVEREIGN_ROOMS.md](SOVERE
 | Tombstone forensic deletion     | Not claimed               |
 | Endpoint Defense                | Externalized / hooks only |
 
+## 24. RoomOS local query behavior (TECH-19)
+
+| Behavior                  | Status                                  |
+| ------------------------- | --------------------------------------- |
+| Local room summary query  | In-memory foundation                    |
+| Local object list query   | In-memory foundation                    |
+| Local object detail query | Policy-gated                            |
+| Exact plain-text search   | Direct memory scan only                 |
+| Search index              | Not implemented                         |
+| Query history             | Forbidden                               |
+| Result cache              | Forbidden                               |
+| Search snippets           | Not implemented                         |
+| Total counts              | Separately policy-gated                 |
+| Cursors                   | Local, content-free, non-authority      |
+| Remote query API          | Not implemented — Gate H                |
+| Semantic search           | Future AI gate (Gate I)                 |
+| Bunker content view       | Denied pending future presentation gate |
+| Query-side network / notification / AI | None                       |
+| Endpoint Defense          | Externalized / not integrated           |
+
 ## 23. RoomOS object model (TECH-18)
 
 | Behavior                                   | Status                    |

@@ -204,6 +204,19 @@ Storage is not only a content surface — its artifacts are metadata:
 - Preview/thumbnail existence is metadata; protected-content reveal state is metadata.
 - **Cache denial must align with MetadataPolicy.** StoragePolicy denies preview/thumbnail caches in Private+, AI caches everywhere, and reveal-state persistence in strict/sealed; MetadataPolicy denies the corresponding `preview.generated` / `cache.exists` / `ai.cache_exists` / `protected_content.revealed` events. Agreement is guarded by `tests/privacy-regression/metadata/metadata-integration.test.ts`. See [METADATA_MODEL.md](METADATA_MODEL.md).
 - **(TECH-11) Preview/favicon/OpenGraph/avatar/thumbnail caches are denied.** A preview cache would persist a URL, title, and image (content-adjacent); a favicon cache would persist browsing interests; a remote-avatar cache would persist contact-graph hints. `LinkPreviewPolicy` denies all preview caching (`cacheAllowed`/`thumbnailAllowed`/`faviconAllowed` false), and Ghost/Bunker deny any persistent URL/preview artifact. Agreement with StoragePolicy is guarded by `tests/privacy-regression/link-preview/`.
+- **(TECH-19) Query snapshots, results, cursors, and terms are memory-only; history/cache/index are denied.** The query layer introduces these logical data classes, all **memory-only and never persisted in v1**: `room_query_snapshot`, `room_query_result`, `room_query_cursor`, `room_query_term`. The query term is additionally **never logged, audited, or retained** (no history). `room_query_history`, `room_query_cache`, `room_search_index`, and `room_search_snippet` are **denied in every mode** (matrix rows `room.query.history`/`result_cache`/`search_index` → deny) — a persistent index would duplicate content; enabling any of them requires a future design gate. StoragePolicy, QueryPolicy, and the Policy Matrix agree (test-enforced).
+
+  | Logical data class     | Behavior (all modes)        |
+  | ---------------------- | --------------------------- |
+  | `room_query_snapshot`  | Memory-only; never persisted |
+  | `room_query_result`    | Memory-only; never persisted |
+  | `room_query_cursor`    | Memory-only; not authority; not persisted |
+  | `room_query_term`      | Memory-only; never logged/audited/retained |
+  | `room_query_history`   | Denied — future gate        |
+  | `room_query_cache`     | Denied — future gate        |
+  | `room_search_index`    | Denied — future gate        |
+  | `room_search_snippet`  | Denied — not implemented    |
+
 - **(TECH-18) Object content + object-event logs are memory/null only.** Concrete room objects (message/note/task/decision/poll/file_ref) hold content in memory only; the object mutation log ships exactly `InMemoryRoomObjectLog` + `NullRoomObjectLog`. **Persistent plaintext object content is denied in every mode** (`room.object.persist` → deny) until the encrypted backend exists (Gate F); Ghost/Bunker deny persistence (Bunker prefers null retention); Standard fails hard rather than falling back. File-reference objects store an opaque `localRefId` only — **no bytes, path, or URL** — and resolving/previewing them is future/forbidden (`room.object.file_resolve` future-gate; `file_preview`/`file_remote` deny).
 
   **Object data classes (TECH-18).** The object model introduces these logical data classes; they map onto the canonical coarse `StorageDataClass` taxonomy (`message_content` / `materialized_room_state`) and are **all denied for persistence in every privacy mode in v1** — the encrypted backend does not exist (Gate F). Behavior by mode is identical across them: Standard/Private/Sovereign/Offline = **in-memory only** (persist → fail hard, no fallback); Ghost/Bunker = **memory-only, no persistence** (Bunker prefers null retention); Emergency = **ordinary content denied**, only redact/tombstone.

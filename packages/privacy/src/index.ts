@@ -141,6 +141,15 @@ export type PolicySideEffectScope =
   | "room.object_log.append"
   | "room.object_log.read"
   | "room.object_log.clear"
+  // RoomOS Query Model scopes (TECH-19). Queries are side-effect-free, local,
+  // policy-gated reads; each decision is scoped to exactly one of these. A
+  // list decision cannot authorize detail, summary cannot authorize search,
+  // etc. Object IDs/actor refs confer no query authority.
+  | "room.query.summary"
+  | "room.query.list"
+  | "room.query.detail"
+  | "room.query.search"
+  | "room.query.count"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

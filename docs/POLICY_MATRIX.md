@@ -66,6 +66,10 @@ Composes with the device mode: room policy tightens, never loosens; strictest wi
 
 ¹ Standard content targets the unimplemented encrypted backend (fails hard). ² Relay send exists only as a user-initiated placeholder (`require_user_action`, performs no I/O). ³ Denied under ScreenShield sealed/bunker or critical device risk.
 
+## RoomOS query rows (TECH-19)
+
+Eleven rows joined the `room` domain for the query model: `room.query.summary` is `memory_only` (allowed minimally even in Emergency, redacted); `room.query.list`/`detail`/`count` are `memory_only` (Emergency denies; count also denied in Private/Ghost/Bunker by policy); `room.query.search` is `memory_only` (Offline/Emergency deny; Bunker denies by policy); `room.query.history`/`result_cache`/`search_index` are `deny` in every mode; `room.query.semantic`/`remote`/`bunker_content_view` are `future_gate` (Gates I/H + a protected-presentation gate). Per-mode view/field suppression is derived by `resolveRoomQueryPolicy`; these rows pin the class-level rule. Matrix is now **131 specs → 917 rules**.
+
 ## RoomOS object-model rows (TECH-18)
 
 Twelve rows joined the `room` domain for the object model: `room.object.create`/`update`/`archive` are `memory_only` (Emergency denies); `room.object.redact`/`tombstone` are `memory_only` in **every** mode (safe/wipe direction, Emergency included); `room.object.persist` is `deny` (persistent plaintext content — Gate F); `room.object_log.append` is `memory_only` (its own separate storage decision); `room.object.poll_vote`/`file_resolve`/`ai_memory`/`endpoint_hook` are `future_gate`; `room.object.file_preview`/`file_remote` are `deny`. Per-kind behavior is derived by `resolveRoomObjectMutationPolicy`; these rows pin the class-level rule. Matrix is now **120 specs → 840 rules**.
