@@ -57,7 +57,7 @@
     "@freelayer/security": "workspace:*",
     "@freelayer/storage": "workspace:*",
     "@freelayer/transports": "workspace:*",
-    "@types/node": "^24.0.0",
+    "@types/node": "^25.9.5",
     "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^10.7.0",
     "globals": "^17.7.0",
