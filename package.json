@@ -47,7 +47,7 @@
     "clean": "turbo run clean"
   },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
+    "@eslint/js": "^10.0.1",
     "@freelayer/ai": "workspace:*",
     "@freelayer/core": "workspace:*",
     "@freelayer/crypto": "workspace:*",
