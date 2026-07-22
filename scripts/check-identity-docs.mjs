@@ -56,10 +56,11 @@ const FORBIDDEN_CLAIMS = [
   "screenshield protects identity secrets",
 ];
 
-// Docs that MUST keep their honesty statements (phrase → file).
+// Docs that MUST keep their honesty statements (phrase → file). These invariants
+// hold before and after the TECH-ID-03 local (non-cryptographic) scaffolding.
 const MUST_MENTION = {
-  "docs/IDENTITY_FIREWALL.md": ["not started", "DevicePosture is not identity"],
-  "docs/IDENTITY_ARCHITECTURE.md": ["implementation NOT started", "DevicePosture is not identity"],
+  "docs/IDENTITY_FIREWALL.md": ["not safe for real secrets", "DevicePosture is not identity"],
+  "docs/IDENTITY_ARCHITECTURE.md": ["not implemented", "DevicePosture is not identity"],
 };
 
 for (const rel of CLAIM_DOCS) {
@@ -81,9 +82,9 @@ for (const [rel, phrases] of Object.entries(MUST_MENTION)) {
     violations.push(`missing required doc "${rel}"`);
     continue;
   }
-  const content = readFileSync(abs, "utf8");
+  const content = readFileSync(abs, "utf8").toLowerCase();
   for (const phrase of phrases) {
-    if (!content.includes(phrase)) {
+    if (!content.includes(phrase.toLowerCase())) {
       violations.push(`"${rel}" must state "${phrase}" (identity honesty statement)`);
     }
   }

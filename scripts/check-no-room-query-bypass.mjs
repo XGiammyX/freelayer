@@ -87,6 +87,8 @@ const OBJECTS_PKG = "packages/rooms/src/objects/";
 
 function isAllowlisted(rel) {
   return (
+    // The identity package has its own guard (check-no-identity-scaffolding-bypass).
+    rel.includes("packages/identity/") ||
     rel.endsWith(".test.ts") ||
     rel.endsWith(".test.tsx") ||
     rel.endsWith("check-no-room-query-bypass.mjs")

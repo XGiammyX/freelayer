@@ -39,7 +39,22 @@ const PRIVATE_PLUS = [
 ];
 // "room" graduated in TECH-16 (local RoomOS foundation rows exist); room SYNC
 // stays future-gated via the explicit check below.
-const DEFERRED_DOMAINS = ["crypto", "capsule", "identity"];
+// "identity" graduated in TECH-ID-03 (local scaffolding). Future identity
+// operations stay future_gate via the explicit spec-id check below.
+const DEFERRED_DOMAINS = ["crypto", "capsule"];
+const IDENTITY_FUTURE_GATE_SPEC_IDS = [
+  "identity.keys_future",
+  "identity.device_key_future",
+  "identity.device_passport_future",
+  "identity.alias_per_contact_future",
+  "identity.alias_per_room_future",
+  "identity.trust_notebook_future",
+  "identity.recovery_future",
+  "identity.invite",
+  "identity.verification",
+];
+// Identity behaviors that must never be allowed (public directory + persistent vault).
+const IDENTITY_NEVER_ALLOWED_SPEC_IDS = ["identity.public_directory", "identity.persistent_vault"];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.
 const NEVER_ALLOWED_PREFIXES = [
@@ -220,6 +235,18 @@ function checkMatrix(matrixPath) {
       if (spec.id === "room.sync" && effect !== "future_gate") {
         violations.push(
           `[future_gate_treated_as_allow] ${id} — room sync must stay future_gate (Gate H)`,
+        );
+      }
+      // TECH-ID-03: identity keys/aliases/device/trust/recovery/invite/verification
+      // must stay future_gate; a public directory and persistent vault must deny.
+      if (IDENTITY_FUTURE_GATE_SPEC_IDS.includes(spec.id) && effect !== "future_gate") {
+        violations.push(
+          `[future_gate_treated_as_allow] ${id} — identity keys/aliases/device/trust/recovery must stay future_gate (Gate F/E; ADR-0013)`,
+        );
+      }
+      if (IDENTITY_NEVER_ALLOWED_SPEC_IDS.includes(spec.id) && allowed) {
+        violations.push(
+          `[allow_vs_deny] ${id} — identity public directory / persistent vault must never be allowed (ADR-0013)`,
         );
       }
       // TECH-23: Secure Device admission contract invariants. Raw evidence,

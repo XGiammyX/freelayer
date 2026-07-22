@@ -2,7 +2,7 @@
 
 ## 1. Status
 
-**Accepted** (architecture decided; **implementation not started**). Supersedes nothing; establishes the identity architecture that TECH-ID-03 and all later Identity Firewall tasks must follow. Cryptography, wire formats, and synchronization remain deferred to Gates F, E, and H respectively. This ADR decides *structure and invariants*, not algorithms.
+**Accepted** (architecture decided). Local, non-cryptographic **scaffolding began in TECH-ID-03** (`@freelayer/identity`); keys/aliases/devices/invites/recovery/sync remain unimplemented (Gates F/E/H). Supersedes nothing; establishes the identity architecture that TECH-ID-03 and all later Identity Firewall tasks must follow. Cryptography, wire formats, and synchronization remain deferred to Gates F, E, and H respectively. This ADR decides *structure and invariants*, not algorithms.
 
 Evidence base: [RESEARCH-ID-01](../research/RESEARCH_ID_01_CONCLUSIONS.md) (standards, competitor matrix, threat model, terminology, decision inputs) and [TECH-ID-02 source validation](../research/TECH_ID_02_SOURCE_VALIDATION.md). Companion documents: [IDENTITY_ARCHITECTURE.md](../IDENTITY_ARCHITECTURE.md) (diagrams + entities), and the TECH-ID-02 [threat review](../audits/TECH_ID_02_IDENTITY_ARCHITECTURE_THREAT_REVIEW.md), [metadata review](../audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md), and [boundary audit](../audits/TECH_ID_02_IDENTITY_BOUNDARY_AUDIT.md).
 
