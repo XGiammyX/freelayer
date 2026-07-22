@@ -44,3 +44,7 @@ FreeLayer keeps **person**, **local identity / identity root**, **profile**, **a
 ## Identity scaffolding (TECH-ID-03)
 
 **`@freelayer/identity`** — local, non-cryptographic identity scaffolding. **LocalIdentityRoot** (private, memory/null, no keys), **Persona** (local context, not unlinkable), **PairwiseRelationship** / **RoomIdentityBinding** (placeholders), **IdentityLocalRevision** (positive local counter, not a clock/version/vector-clock). No crypto, no persistence, no aliases/recovery/invites yet. DevicePosture is not identity; a RoomMembershipId is not identity proof.
+
+## Ephemeral identity (TECH-ID-04)
+
+**Ephemeral identity** — an INDEPENDENT current-process identity root (`rootKind:"ephemeral_current_process"`), bounded local lifetime, process-epoch bound, no recovery/promotion/export/sync/persistence, destroyed fail-closed. **Process epoch** — an injected, non-persisted, non-peer-facing current-process marker (mismatch = expired). Not a persona, not an alias, not anonymity, not forensic erasure, not remote deletion. DevicePosture is not identity; not safe for real secrets.

@@ -224,3 +224,7 @@ Blocking binds to the **local relationship**, not the visible alias: a blocked r
 | Single `verified` boolean | simple | hides key/device/recovery nuance | **Rejected** |
 | DID method as initial requirement | interop story | complexity/metadata/correlation | **Rejected (v1)** |
 | Central reputation for abuse | Sybil resistance | universal identifier + surveillance | **Rejected** |
+
+## Ephemeral identity (TECH-ID-04)
+
+An **Ephemeral Identity** is *an independent local identity-root context whose authority exists only in the current application process, has a bounded local lifetime, has no recovery, cannot be promoted or exported, and is destroyed fail-closed when expired or explicitly ended.* Discriminant: `LocalIdentityRootKindV1 = "long_lived_local" | "ephemeral_current_process"`. Ephemeral roots live in a SEPARATE current-process vault (`EphemeralIdentityVaultStateV1`) with epoch-bound memory/null repositories — never in the long-lived vault. Lifecycle: `draft_current_process → active_current_process → expired_local | compromised_suspected → destroyed_tombstone` (terminal). Expiry (`evaluateEphemeralIdentityExpirationV1` / `assertEphemeralIdentityCurrentV1`) is fail-closed and checked before every protected operation. **Not implemented / forbidden:** recovery, promotion, parent/long-lived link, export, synchronization, persistence, peer-facing alias, crypto (Gate F). Not anonymity; not forensic erasure; not remote deletion. **DevicePosture is not identity.**

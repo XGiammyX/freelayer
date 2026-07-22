@@ -233,3 +233,7 @@ The Identity Firewall is decided by [ADR-0013](adr/ADR-0013-identity-firewall-ar
 ## Identity scaffolding package (TECH-ID-03)
 
 `@freelayer/identity` is the first Identity Firewall implementation: local, non-cryptographic, metadata-only scaffolding (roots/personas/relationship + room-binding placeholders, lifecycle validators, policy-gated commands via exact-scope `PolicyDecision`, pure reducer, memory/null repositories). It depends only on `@freelayer/privacy` and `@freelayer/security`; to avoid a cycle it uses narrow local `RoomLocalIdRef`/`RoomMembershipIdRef` brands rather than importing `@freelayer/rooms`. See [audits/IDENTITY_SCAFFOLDING_BOUNDARY_AUDIT.md](audits/IDENTITY_SCAFFOLDING_BOUNDARY_AUDIT.md).
+
+## Ephemeral identity (TECH-ID-04)
+
+`packages/identity/src/ephemeral/` implements an independent current-process ephemeral identity root (separate `EphemeralIdentityVaultStateV1` + epoch-bound memory/null repository, not the long-lived vault). Bounded lifetime via an injected clock, fail-closed expiration (epoch/deadline/rollback), atomic local destruction (no orphan; no media-sanitization/remote-deletion/forensic-erasure claim), exact-scope `PolicyDecision` enforcement. No recovery/promotion/export/synchronization/persistence. Depends only on `@freelayer/privacy` + `@freelayer/security`. See [audits/EPHEMERAL_IDENTITY_BOUNDARY_AUDIT.md](audits/EPHEMERAL_IDENTITY_BOUNDARY_AUDIT.md).

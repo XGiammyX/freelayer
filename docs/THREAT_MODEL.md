@@ -246,3 +246,7 @@ ADR-0013 maps the RESEARCH-ID-01 identity threats to concrete architecture decis
 ## Identity scaffolding (TECH-ID-03)
 
 Local identity scaffolding is fail-closed: unknown schema/lifecycle/command deny; dangerous prototype keys and authority/secret caller fields (`verified`/`privateKey`/`seed`/`email`/`did`/`devicePosture`/…) reject; every accepted operation requires an authentic exact-scope `PolicyDecision` (fake/wrong-scope/denied reject before mutation); an id/label/RoomMembershipId/DevicePosture grants no authority. Residual: this is scaffolding, not cryptographic identity — no verified identity, no key continuity, no recovery; not safe for real secrets.
+
+## Ephemeral identity (TECH-ID-04)
+
+Detailed analysis: [audits/TECH_ID_04_EPHEMERAL_IDENTITY_THREAT_MODEL.md](audits/TECH_ID_04_EPHEMERAL_IDENTITY_THREAT_MODEL.md). The ephemeral model is fail-closed: process-epoch binding + injected-clock deadlines (backward clock/invalid timestamp fail closed), expiry checked before every protected op, exact-scope `PolicyDecision` required, lifetime only shortenable, no promotion/recovery/export/sync command exists, atomic destruction with no orphan. Honest residual: no anonymity (network/timing/membership correlation, endpoint compromise), no remote deletion, no forensic erasure, no cryptographic unlinkability; not safe for real secrets.

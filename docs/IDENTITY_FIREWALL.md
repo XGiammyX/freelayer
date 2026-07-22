@@ -60,3 +60,7 @@ Root visibility, global vs. pairwise identifiers, alias uniqueness/scope, person
 - [Identity threat model](audits/RESEARCH_ID_01_IDENTITY_THREAT_MODEL.md)
 - [Architecture decision inputs (38 questions + candidate models + recovery/multi-device/Trust Notebook)](research/IDENTITY_ARCHITECTURE_DECISION_INPUTS.md)
 - [Research conclusions](research/RESEARCH_ID_01_CONCLUSIONS.md)
+
+## Ephemeral identity (TECH-ID-04)
+
+`@freelayer/identity` now includes an **independent, current-process, non-recoverable, non-cryptographic** ephemeral identity root context (`packages/identity/src/ephemeral/`). It is NOT a persona, alias, guest name, a normal root with a hidden flag, a recoverable short-lived account, an anonymity guarantee, or a remote-deletion mechanism. It binds to an injected **process epoch** (invalid across restarts), has a **bounded local lifetime** (injected clock; lifetime can only be shortened), **fail-closes on expiry** (epoch mismatch / passed deadline / backward clock), and is **atomically destroyed** locally — destruction claims **no media sanitization, no remote deletion, and no forensic erasure**. No recovery, no promotion to long-lived, no parent link, no export, no synchronization, no persistence, no peer-facing alias. **DevicePosture is not identity. Not safe for real secrets.**

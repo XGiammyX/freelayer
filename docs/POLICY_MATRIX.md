@@ -134,3 +134,7 @@ TECH-23 adds 24 `room`-domain rows (195 specs → 1365 rules): provider status/c
 ## TECH-ID-03 rows — local identity scaffolding
 
 The `identity` domain graduated from deferred in TECH-ID-03 (local, non-cryptographic scaffolding). 18 rows added (195 → **213 specs → 1491 rules**): root/persona/relationship/room-binding create + lifecycle (memory-only; Bunker/Emergency deny expansive creates; restrictive lifecycle allowed) and summary read; identity **keys/device-key/device-passport/per-contact-alias/per-room-alias/trust-notebook/recovery/invite/verification** stay **future_gate**; **public directory** and **persistent vault** deny. All rows are `persistentAllowed:false`, `networkAllowed:false`. IdentityPolicy (`@freelayer/identity`) agrees with these rows (test-enforced).
+
+## TECH-ID-04 rows — ephemeral identity
+
+13 rows added (**226 specs → 1582 rules**): ephemeral create/activate/persona-create/relationship-create/room-binding-create (memory-only; Bunker/Emergency deny expansive), restrictive lifecycle (shorten/mark/expire/destroy) + relationship-block + summary-read (memory-only; restrictive allowed in strict modes; summary/expansive deny in Emergency); and **promotion/recovery/export/synchronize/persistent-storage DENY**. All `persistentAllowed:false`, `networkAllowed:false`. IdentityPolicy/EphemeralIdentityPolicy agree (test-enforced).

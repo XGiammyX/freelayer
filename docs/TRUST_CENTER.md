@@ -265,3 +265,13 @@ The Identity Firewall **architecture** is now decided ([ADR-0013](adr/ADR-0013-i
 - `RoomMemberRef` is a local unverified placeholder, not identity; **DevicePosture is not identity**; a device is not a person.
 
 These remain consistent with the automated **policy conflict** overclaim scanner and the **externalized** Secure Device posture. Next: **TECH-ID-03 — Local Identity Scaffolding** (local, crypto-free).
+
+## Ephemeral identity — honest limits (TECH-ID-04)
+
+FreeLayer's ephemeral identity is a **local, current-process** convenience, not a privacy guarantee:
+
+- It is **not anonymity** — network/IP metadata, room membership, invite transport, timing, and reused display information can still correlate you; a compromised endpoint can reveal everything.
+- Expiration and destruction are **local only**: clearing current-process memory is **not** forensic erasure, and local destruction does **not** delete remote copies or prevent screenshots, logs, or external observation.
+- There is **no recovery**, **no promotion** to a long-lived identity, **no export**, **no synchronization**, and **no persistence** — a restart invalidates an ephemeral identity.
+- It is **not cryptographic** and provides no unlinkability yet (Gate F); local time is not trusted global time.
+- DevicePosture is not identity. **Not safe for real secrets.**

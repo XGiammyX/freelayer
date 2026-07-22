@@ -53,8 +53,17 @@ const IDENTITY_FUTURE_GATE_SPEC_IDS = [
   "identity.invite",
   "identity.verification",
 ];
-// Identity behaviors that must never be allowed (public directory + persistent vault).
-const IDENTITY_NEVER_ALLOWED_SPEC_IDS = ["identity.public_directory", "identity.persistent_vault"];
+// Identity behaviors that must never be allowed (public directory + persistent
+// vault; and — TECH-ID-04 — ephemeral promotion/recovery/export/sync/persistence).
+const IDENTITY_NEVER_ALLOWED_SPEC_IDS = [
+  "identity.public_directory",
+  "identity.persistent_vault",
+  "identity.ephemeral_promotion",
+  "identity.ephemeral_recovery",
+  "identity.ephemeral_export",
+  "identity.ephemeral_synchronize",
+  "identity.ephemeral_persistent_storage",
+];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.
 const NEVER_ALLOWED_PREFIXES = [

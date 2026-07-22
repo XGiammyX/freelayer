@@ -494,3 +494,26 @@ TECH-ID-03 implements `@freelayer/identity` — **local, non-cryptographic, meta
 | Secure Device | External / separate |
 
 Identity secrets do not exist in current production code. Storage is memory/null only. Not safe for real secrets.
+
+## TECH-ID-04 — Ephemeral identity status
+
+| Behavior | Status |
+| --- | --- |
+| Ephemeral identity model | Local v1 implementation |
+| Independent root context | Implemented locally |
+| Current-process lifetime | Implemented |
+| Deadline enforcement | Local injected-clock foundation |
+| Cross-restart validity | Forbidden |
+| Persistent storage | Forbidden |
+| Recovery | Forbidden |
+| Promotion to long-lived | Forbidden |
+| Export/import | Not implemented |
+| Synchronization | Not implemented |
+| Cryptographic unlinkability | Not implemented — Gate F |
+| Per-contact aliases | Not implemented — TECH-ID-05 |
+| Per-room aliases | Not implemented — TECH-ID-06 |
+| Remote deletion | Not provided |
+| Forensic erasure | Not guaranteed |
+| Secure Device protection | External / not integrated |
+
+Ephemeral state is current-process memory or null only; it never survives a restart. Not safe for real secrets.

@@ -36,6 +36,7 @@
     "check:no-device-posture-or-governance-bypass": "node scripts/check-no-device-posture-or-governance-bypass.mjs",
     "check:no-secure-device-core-implementation": "node scripts/check-no-secure-device-core-implementation.mjs",
     "check:no-identity-scaffolding-bypass": "node scripts/check-no-identity-scaffolding-bypass.mjs",
+    "check:no-ephemeral-identity-bypass": "node scripts/check-no-ephemeral-identity-bypass.mjs",
     "check:policy-matrix": "node scripts/validate-policy-matrix.mjs",
     "check:policy-docs": "node scripts/check-policy-docs-consistency.mjs",
     "check:identity-docs": "node scripts/check-identity-docs.mjs",
@@ -44,7 +45,7 @@
     "check:all": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:build-zero-egress && pnpm check:doc-links && pnpm check:contributor-workflow && pnpm check:policy-docs && pnpm audit:privacy && pnpm audit:security && pnpm audit:supply-chain",
     "check:doc-links": "node scripts/check-doc-links.mjs",
     "wiki:publish": "node scripts/publish-wiki.mjs",
-    "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:no-forbidden-network && pnpm run check:no-network-deps && pnpm run check:no-metadata-bypass && pnpm run check:no-notification-bypass && pnpm run check:no-roomos-bypass && pnpm run check:no-room-object-bypass && pnpm run check:no-room-query-bypass && pnpm run check:no-room-membership-bypass && pnpm run check:no-room-authorization-bypass && pnpm run check:no-device-posture-or-governance-bypass && pnpm run check:no-secure-device-core-implementation && pnpm run check:no-identity-scaffolding-bypass && pnpm run check:policy-matrix && pnpm run check:policy-conflicts && pnpm run check:boundaries",
+    "audit:privacy": "pnpm run check:no-external-assets && pnpm run check:no-telemetry && pnpm run check:no-forbidden-storage && pnpm run check:no-forbidden-network && pnpm run check:no-network-deps && pnpm run check:no-metadata-bypass && pnpm run check:no-notification-bypass && pnpm run check:no-roomos-bypass && pnpm run check:no-room-object-bypass && pnpm run check:no-room-query-bypass && pnpm run check:no-room-membership-bypass && pnpm run check:no-room-authorization-bypass && pnpm run check:no-device-posture-or-governance-bypass && pnpm run check:no-secure-device-core-implementation && pnpm run check:no-identity-scaffolding-bypass && pnpm run check:no-ephemeral-identity-bypass && pnpm run check:policy-matrix && pnpm run check:policy-conflicts && pnpm run check:boundaries",
     "audit:security": "node -e \"console.log('[audit:security] Baseline only: see audit:privacy checks and docs/SECURITY_REVIEW_CHECKLIST.md. Dedicated security-regression suite arrives with implementation phases (docs/ROADMAP.md Phase 10).'); process.exit(0)\"",
     "audit:supply-chain": "pnpm audit --audit-level=high || echo \"[audit:supply-chain] pnpm audit reported issues. Dependency rules: docs/DEPENDENCY_POLICY.md.\"",
     "clean": "turbo run clean"
