@@ -294,3 +294,7 @@ The decided classification (see [IDENTITY_ARCHITECTURE.md](IDENTITY_ARCHITECTURE
 ## Identity scaffolding storage (TECH-ID-03)
 
 `@freelayer/identity` stores nothing persistently: the `LocalIdentityVaultStateV1` lives in **memory or null** repositories only (`InMemoryLocalIdentityRepositoryV1` clones defensively; `NullLocalIdentityRepositoryV1` retains nothing). No disk/localStorage/IndexedDB/database/encrypted storage (encrypted persistence is Gate F). Records are metadata-only — no key/recovery/contact/device material. The matrix `identity.persistent_vault` row denies persistence.
+
+## Ephemeral identity storage (TECH-ID-04)
+
+Ephemeral identity state lives in **current-process memory or null** only (`InMemoryEphemeralIdentityRepositoryV1` is process-epoch bound + clones defensively; `NullEphemeralIdentityRepositoryV1` retains nothing). No disk/browser-storage/database/encrypted storage; no serialization/export helper; no cross-restart validity. The matrix `identity.ephemeral_persistent_storage` row denies persistence. Destruction claims no media sanitization.

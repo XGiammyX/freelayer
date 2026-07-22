@@ -29,3 +29,10 @@ export * from "./identity-repository";
 export * from "./identity-pipeline";
 export * from "./identity-summary";
 export * from "./identity-audit";
+
+// ---- TECH-ID-04: Ephemeral Identity — an INDEPENDENT current-process,
+//      non-recoverable, non-cryptographic ephemeral root context with bounded
+//      local lifetime, process-epoch binding, fail-closed expiration, and atomic
+//      local destruction. No recovery/promotion/export/sync/persistence; no
+//      forensic erasure / remote deletion / anonymity claim.
+export * from "./ephemeral";

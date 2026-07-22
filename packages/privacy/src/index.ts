@@ -183,6 +183,17 @@ export type PolicySideEffectScope =
   | "identity.room_binding.create"
   | "identity.room_binding.lifecycle"
   | "identity.summary.read"
+  // Ephemeral Identity scopes (TECH-ID-04). An independent current-process
+  // ephemeral root context; each decision is scoped to exactly one operation.
+  // An id / persona / RoomOS role / DevicePosture NEVER substitutes.
+  | "identity.ephemeral.create"
+  | "identity.ephemeral.lifecycle"
+  | "identity.ephemeral.destroy"
+  | "identity.ephemeral.persona.create"
+  | "identity.ephemeral.relationship.create"
+  | "identity.ephemeral.relationship.block"
+  | "identity.ephemeral.room_binding.create"
+  | "identity.ephemeral.summary.read"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

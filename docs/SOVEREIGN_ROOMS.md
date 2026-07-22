@@ -257,3 +257,7 @@ The Identity Firewall architecture ([ADR-0013](adr/ADR-0013-identity-firewall-ar
 ## Room identity binding scaffolding (TECH-ID-03)
 
 `@freelayer/identity` now provides a local `RoomIdentityBindingV1` placeholder binding a root/persona to one room via a narrow `RoomMembershipIdRef` (not `RoomMemberRef`, and not identity proof). It is memory/null only, room-scoped, exposes no room alias yet (TECH-ID-06), and does not import `@freelayer/rooms` (avoids a cycle). RoomOS membership remains separate from identity verification.
+
+## Ephemeral room binding (TECH-ID-04)
+
+An ephemeral identity may hold a local `EphemeralRoomIdentityBindingV1` placeholder (room-scoped, memory-only, no alias yet, `RoomMembershipIdRef` is not identity proof). Root expiry/destruction expires/clears the binding; RoomOS membership stays separate from identity verification; sensitive-room admission still applies; DevicePosture cannot establish the binding; no RoomOS membership mutation occurs automatically.

@@ -220,3 +220,7 @@ Decided architecture keeps the identity root private and local, uses pairwise pe
 ## Identity scaffolding privacy (TECH-ID-03)
 
 Local identity scaffolding is memory/null only, exposes no peer-facing root identifier, and minimizes summaries per mode (Private drops exact counts/timestamps/labels; Ghost/Bunker minimize to lifecycle+assurance; Emergency denies expansive creates + summaries). No phone/email, no public directory, no telemetry. Personas are organizational only (not guaranteed unlinkable).
+
+## Ephemeral identity (TECH-ID-04)
+
+Ephemeral identities are current-process memory/null only, minimize summaries per mode (Ghost is the primary intended mode: memory-only, conservative lifetime, no labels/counts/history; Private shortens lifetime + reduces summaries; Emergency denies expansive creation). No anonymity claim, no persistence, no recovery, no telemetry. Personas/relationships under an ephemeral root inherit no long-lived contact/trust/verification.

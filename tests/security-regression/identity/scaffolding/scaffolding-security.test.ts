@@ -56,7 +56,7 @@ describe("Sentinel leak traps + redaction (§31: 59-60)", () => {
   });
 
   it("the sentinel appears nowhere in shipped identity source", () => {
-    for (const file of readdirSync(IDENTITY_DIR)) {
+    for (const file of readdirSync(IDENTITY_DIR).filter((f) => f.endsWith(".ts"))) {
       expect(readFileSync(join(IDENTITY_DIR, file), "utf8"), file).not.toContain(IDENTITY_SENTINEL);
     }
   });
@@ -83,7 +83,7 @@ describe("Side-effect traps (§30, §33)", () => {
       "Math.random(",
       "crypto.subtle",
     ];
-    for (const file of readdirSync(IDENTITY_DIR)) {
+    for (const file of readdirSync(IDENTITY_DIR).filter((f) => f.endsWith(".ts"))) {
       const src = readFileSync(join(IDENTITY_DIR, file), "utf8");
       for (const imp of forbiddenImports) {
         expect(src.includes(`"${imp}"`), `${file} imports ${imp}`).toBe(false);

@@ -252,3 +252,7 @@ The decided architecture treats personas, pairwise relationships, room-identity 
 ## Identity scaffolding metadata (TECH-ID-03)
 
 Identity records (roots/personas/relationships/room-bindings), local labels, and revisions are sensitive local metadata: memory/null only, never emitted as telemetry, redacted in summaries (strict modes omit ids/labels/counts) and in audit events (content-free, `redacted:true`). Errors carry no identity content. No correlation-rich identifier is logged.
+
+## Ephemeral identity metadata (TECH-ID-04)
+
+Ephemeral roots, personas, relationships, room bindings, the process epoch, and expiration deadlines are sensitive current-process metadata: never persisted, never telemetry, redacted in summaries (strict modes omit ids/deadline/counts) and destruction results (content-free; `redacted:true`). The process epoch is never exposed to peers. Errors carry no ephemeral ids/labels.

@@ -22,6 +22,18 @@ import type {
 // Lifecycle + assurance unions (explicit; exhaustively switched elsewhere)
 // ---------------------------------------------------------------------------
 
+/**
+ * Root-kind discriminant (TECH-ID-04). Long-lived roots live in the
+ * `LocalIdentityVaultStateV1`; ephemeral roots are an INDEPENDENT current-process
+ * context in the separate ephemeral module. Unknown kinds fail closed.
+ */
+export type LocalIdentityRootKindV1 = "long_lived_local" | "ephemeral_current_process";
+
+export const LOCAL_IDENTITY_ROOT_KINDS: readonly LocalIdentityRootKindV1[] = [
+  "long_lived_local",
+  "ephemeral_current_process",
+];
+
 export type LocalIdentityRootLifecycleV1 =
   | "draft_local"
   | "active_local"
@@ -115,6 +127,8 @@ export const ROOM_IDENTITY_BINDING_LIFECYCLES: readonly RoomIdentityBindingLifec
 /** A PRIVATE local identity authority record — never peer-facing, no secrets. */
 export interface LocalIdentityRootV1 {
   readonly schemaVersion: 1;
+  /** Discriminant (TECH-ID-04): long-lived roots in this vault are always this. */
+  readonly rootKind: "long_lived_local";
   readonly rootId: LocalIdentityRootId;
   readonly revision: IdentityLocalRevision;
   readonly lifecycle: LocalIdentityRootLifecycleV1;

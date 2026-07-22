@@ -88,6 +88,7 @@ export function reduceLocalIdentityCommandV1(
       if (state.roots.some((r) => r.rootId === rootId)) throw new IdentityDuplicateError();
       const root: LocalIdentityRootV1 = {
         schemaVersion: 1,
+        rootKind: "long_lived_local",
         rootId,
         revision: FIRST_IDENTITY_REVISION,
         lifecycle: "draft_local",
