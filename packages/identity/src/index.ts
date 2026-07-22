@@ -36,3 +36,11 @@ export * from "./identity-audit";
 //      local destruction. No recovery/promotion/export/sync/persistence; no
 //      forensic erasure / remote deletion / anonymity claim.
 export * from "./ephemeral";
+
+// ---- TECH-ID-05: Per-Contact Aliases — relationship-scoped local presentation
+//      aliases + private local peer labels; Unicode NFC normalization + dangerous-
+//      control rejection; local reuse warnings; rotation preserving relationship
+//      continuity; policy-gated redacted display contexts; memory/null retention.
+//      No global usernames/directories/search, no remote exchange, no crypto
+//      binding, no verification, no synchronization, no persistence.
+export * from "./aliases";

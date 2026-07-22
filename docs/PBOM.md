@@ -517,3 +517,29 @@ Identity secrets do not exist in current production code. Storage is memory/null
 | Secure Device protection | External / not integrated |
 
 Ephemeral state is current-process memory or null only; it never survives a restart. Not safe for real secrets.
+
+## TECH-ID-05 — Per-contact alias status
+
+TECH-ID-05 implements per-contact aliases in `@freelayer/identity` (`packages/identity/src/aliases/`) — **local, relationship-scoped, non-cryptographic, metadata-only**. No keys, no persistence, no network sharing, no runtime dependency added.
+
+| Behavior | Status |
+| --- | --- |
+| Per-contact alias model | Local v1 implementation |
+| Pairwise presentation alias | Local, relationship-scoped, metadata-only (≤1 active per relationship) |
+| Local peer label | Private local note (`peerShared:false`); **never sent to the peer** |
+| Alias normalization | Unicode NFC + dangerous-control rejection only (retains ZWJ/ZWNJ) |
+| Case-fold / transliteration / whole-script block / confusable detection | Not performed |
+| Alias as identity / verification / authentication | Never |
+| Alias as public username | Never |
+| Cryptographic alias identifier | Not implemented — Gate F |
+| Remote alias sharing / exchange | Not implemented — Gate E |
+| Authenticated alias update | Future — Gate E/F |
+| Public alias directory | Forbidden |
+| Alias username search | Forbidden |
+| Alias persistence | Forbidden |
+| Alias history | Forbidden |
+| Per-room aliases | Not implemented — TECH-ID-06 |
+| Alias sync | Not implemented — Gate H |
+| Secure Device protection | External / not integrated |
+
+An alias is not identity, not verification, not authentication, not a public username, and not a cryptographic identifier; it does not prove a person controls a key. A local peer label is never sent to the peer. Normalization is not proof an alias is safe. Alias state is current-process memory or null only. Governed by the `identity.alias.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-contact-alias-bypass`. Not safe for real secrets.

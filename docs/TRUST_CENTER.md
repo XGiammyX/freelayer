@@ -275,3 +275,15 @@ FreeLayer's ephemeral identity is a **local, current-process** convenience, not 
 - There is **no recovery**, **no promotion** to a long-lived identity, **no export**, **no synchronization**, and **no persistence** — a restart invalidates an ephemeral identity.
 - It is **not cryptographic** and provides no unlinkability yet (Gate F); local time is not trusted global time.
 - DevicePosture is not identity. **Not safe for real secrets.**
+
+## Per-contact aliases — honest limits (TECH-ID-05)
+
+FreeLayer's per-contact aliases are a **local, relationship-scoped, non-cryptographic, metadata-only** convenience — not an identity, verification, or anti-impersonation feature:
+
+- An alias is **not identity, not verification, not authentication, not a public username, and not a cryptographic identifier**; it does **not** prove a person controls a key and does **not** make impersonation impossible.
+- Two classes only: a **pairwise presentation alias** (how you present within one relationship — local-only, `not_shared_tech_id_05`, not authenticated, not remotely updatable) and a **local peer label** (a private note about a contact). **A local peer label is NEVER sent to the peer.**
+- Normalization (Unicode NFC + trim, rejecting dangerous control / bidi-override / bidi-isolate / selected zero-width / NUL code points; ZWJ/ZWNJ retained) is **not** proof an alias is safe; it does not case-fold, transliterate, block scripts, or detect confusables (not UTS #39).
+- Reusing the same alias across relationships raises a **local privacy warning only** — it never denies, merges, or reveals other relationships. A unique value is not proof of unlinkability; a reused value is not proof identities are linked.
+- Policy is strictest-wins, memory/null retention: Bunker/Emergency deny expansive alias writes; Ghost/Bunker/Emergency deny local peer labels; Emergency allows only retire/clear/display_context.read. Remote sharing, public directories, global usernames, authentication, cryptographic binding, notifications, telemetry, and AI are **structurally unavailable** (7 `identity.alias.*` scopes; `check:no-contact-alias-bypass`; +15 Policy Matrix rows → 241 specs / 1687 rules; 61 new tests, 674 total).
+- Deferred: crypto (Gate F), wire formats/exchange (Gate E), the full Identity Firewall (Gate G), sync (Gate H). Secure Device / ScreenShield / anti-spyware is **externalized** — core keeps only contracts, policy inputs, and honest disclosures.
+- Room membership is not identity proof. **DevicePosture is not identity. Not safe for real secrets.**

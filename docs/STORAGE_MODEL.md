@@ -298,3 +298,7 @@ The decided classification (see [IDENTITY_ARCHITECTURE.md](IDENTITY_ARCHITECTURE
 ## Ephemeral identity storage (TECH-ID-04)
 
 Ephemeral identity state lives in **current-process memory or null** only (`InMemoryEphemeralIdentityRepositoryV1` is process-epoch bound + clones defensively; `NullEphemeralIdentityRepositoryV1` retains nothing). No disk/browser-storage/database/encrypted storage; no serialization/export helper; no cross-restart validity. The matrix `identity.ephemeral_persistent_storage` row denies persistence. Destruction claims no media sanitization.
+
+## Per-contact alias storage (TECH-ID-05)
+
+Per-contact alias text and local peer labels have a persistence class of **`memory_only` or null** — no persistent plaintext, no disk/browser-storage/database/encrypted storage (encrypted persistence is Gate F), no serialization/export path, and **no persistent alias history**. Rotation replaces the active presentation and retains **no remote copies**; clear/retire removes the record with **no retained text**. The matrix `identity.alias.persistence` and `identity.alias.history` rows deny persistence. An alias is non-cryptographic presentation metadata — not safe for real secrets.

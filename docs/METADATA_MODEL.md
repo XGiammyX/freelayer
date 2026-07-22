@@ -256,3 +256,7 @@ Identity records (roots/personas/relationships/room-bindings), local labels, and
 ## Ephemeral identity metadata (TECH-ID-04)
 
 Ephemeral roots, personas, relationships, room bindings, the process epoch, and expiration deadlines are sensitive current-process metadata: never persisted, never telemetry, redacted in summaries (strict modes omit ids/deadline/counts) and destruction results (content-free; `redacted:true`). The process epoch is never exposed to peers. Errors carry no ephemeral ids/labels.
+
+## Per-contact alias metadata (TECH-ID-05)
+
+Alias text and local peer labels are sensitive **LOCAL relationship metadata**: memory-only (or null), never emitted, never exposed, never networked, and never telemetry. A local peer label is **NEVER sent to the peer** (`local_only`, `peerShared:false`); alias/label text and ids are redacted in summaries and content-free in errors, and strict modes expose **no exact timestamps**. An alias is not identity; DevicePosture is not identity; room membership is not identity proof.

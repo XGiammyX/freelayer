@@ -52,9 +52,12 @@ const IDENTITY_FUTURE_GATE_SPEC_IDS = [
   "identity.recovery_future",
   "identity.invite",
   "identity.verification",
+  // TECH-ID-05: authenticated remote alias update needs Gates F/E.
+  "identity.alias_authenticated_update_future",
 ];
 // Identity behaviors that must never be allowed (public directory + persistent
-// vault; and — TECH-ID-04 — ephemeral promotion/recovery/export/sync/persistence).
+// vault; TECH-ID-04 ephemeral promotion/recovery/export/sync/persistence; and
+// TECH-ID-05 alias public directory / username search / persistence / history).
 const IDENTITY_NEVER_ALLOWED_SPEC_IDS = [
   "identity.public_directory",
   "identity.persistent_vault",
@@ -63,6 +66,10 @@ const IDENTITY_NEVER_ALLOWED_SPEC_IDS = [
   "identity.ephemeral_export",
   "identity.ephemeral_synchronize",
   "identity.ephemeral_persistent_storage",
+  "identity.alias_public_directory",
+  "identity.alias_username_search",
+  "identity.alias_persistence",
+  "identity.alias_history",
 ];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.

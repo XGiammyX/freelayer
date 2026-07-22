@@ -47,6 +47,7 @@ const FUTURE_GATED_SPEC_IDS = [
   "identity.recovery_future",
   "identity.invite",
   "identity.verification",
+  "identity.alias_authenticated_update_future",
 ];
 const ALLOWING_EFFECTS = ["allow", "memory_only", "redact", "coarsen", "delay", "batch"];
 const EFFECTS = [
