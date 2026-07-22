@@ -225,3 +225,7 @@ future external Secure Device adapter
 ```
 
 Admission is an **additional** gate; it never replaces membership, capability, or `PolicyDecision`. Core never parses attestation Evidence, appraises firmware, or infers posture from user agent / OS name / device model / membership. No provider is integrated, so effective posture is `unverified` (or `at_risk`) only.
+
+## Identity Firewall architecture (TECH-ID-02 / ADR-0013)
+
+The Identity Firewall is decided by [ADR-0013](adr/ADR-0013-identity-firewall-architecture.md) and detailed in [IDENTITY_ARCHITECTURE.md](IDENTITY_ARCHITECTURE.md): a **private local identity root** then optional **personas** (not guaranteed unlinkable) then **pairwise per-contact relationships** then **room-scoped aliases** (RoomIdentityBinding) then subordinate revocable **device authorizations** then a local **Trust Notebook** then **one-time invites** then **offline recovery**. Identity is independent of Secure Device: **DevicePosture may tighten an authorized device but never authorizes it or proves identity**. RoomOS membership (`RoomMemberRef`) is a local unverified placeholder, not identity. Cryptography (Gate F), wire formats (Gate E), and synchronization (Gate H) are deferred; **no identity code exists yet**.

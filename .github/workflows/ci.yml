@@ -97,6 +97,9 @@ jobs:
       - name: Policy docs consistency
         run: pnpm check:policy-docs
 
+      - name: Identity docs honesty (Identity Firewall ADR)
+        run: pnpm check:identity-docs
+
       - name: Policy conflict regression (cross-layer contradictions)
         run: pnpm check:policy-conflicts
 

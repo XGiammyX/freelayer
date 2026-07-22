@@ -479,25 +479,32 @@ Live results: [LIVE_CI_REPORT.md](LIVE_CI_REPORT.md). Also satisfied for Gate A:
 
 ---
 
-## Identity Architecture Gate (future) — opened for research by RESEARCH-ID-01
+## Identity Architecture Gate — architecture decided by TECH-ID-02 ([ADR-0013](adr/ADR-0013-identity-firewall-architecture.md))
 
 *Opens: any identity implementation (identity roots, personas, aliases, device keys, device passports, invites, verification, recovery, trust notebook, directory).*
 
-Identity is **Gate G** design work; identity cryptography is **Gate F**. RESEARCH-ID-01 produced the research package; **TECH-ID-02 — Identity Architecture ADR** must decide the model. No identity code may be written until **all** of the following are settled by the ADR:
+Identity is **Gate G** design work; identity cryptography is **Gate F**. RESEARCH-ID-01 produced the research package and **TECH-ID-02 (ADR-0013, Accepted)** decided the architecture. The **architecture-decision** prerequisites are now settled:
 
-- [ ] Terminology accepted (`identity root` / `persona` / `alias` / `member reference` / `device` / `device key` / `device passport` / `DevicePosture` / `verification` / `recovery` distinct — see [research/IDENTITY_TERMINOLOGY_MODEL.md](research/IDENTITY_TERMINOLOGY_MODEL.md))
-- [ ] Root / persona / alias model chosen (global vs. pairwise; per-contact/per-room scope; persona unlinkability)
-- [ ] Multi-device model chosen (device approval, subordinate device keys, removal & rotation, stale-device handling)
-- [ ] Recovery approach chosen — **no administrator or project-owned master key**; assurance reduction disclosed
-- [ ] Verification semantics defined (what a QR/code actually verifies = key control, not personhood; trust binding to keys)
-- [ ] One-time invite requirements defined (narrow, expiring, single-use, capability-limited, revocable)
-- [ ] Metadata / correlation analysis complete (no globally visible root; no directory enumeration; recovery/transparency metadata bounded)
-- [ ] Crypto dependencies identified (Gate F) — no algorithm selected in research
-- [ ] Storage policies identified (identity secrets never plaintext/logged; Ghost/Bunker persistence restrictions)
-- [ ] PBOM / Trust Center identity claims approved (no unsupported "verified identity" claims)
-- [ ] **No endpoint/identity conflation** — DevicePosture stays an external environment attribute, never identity
+- [x] Terminology accepted (`identity root` / `persona` / `alias` / `member reference` / `device` / `device key` / `device passport` / `DevicePosture` / `verification` / `recovery` distinct — [research/IDENTITY_TERMINOLOGY_MODEL.md](research/IDENTITY_TERMINOLOGY_MODEL.md), ADR-0013 §4)
+- [x] Root / persona / alias model chosen — private local root, pairwise per-contact, room-scoped aliases; **personas NOT guaranteed unlinkable** (ADR-0013 §7-10)
+- [x] Multi-device model chosen — subordinate revocable `DeviceAuthorization`, explicit approval, stale-device fail-closed (ADR-0013 §11)
+- [x] Recovery approach chosen — offline kit + existing-device approval; **no administrator or project-owned master key**; `recovered_reverification_required` (ADR-0013 §13)
+- [x] Verification semantics defined — claim-specific trust states, **no generic `verified` boolean** (ADR-0013 §12)
+- [x] One-time invite requirements defined — narrow, expiring, single-use, capability-limited, revocable (ADR-0013 §14)
+- [x] Metadata / correlation analysis complete ([metadata review](audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md))
+- [x] Storage policies identified — secrets never plaintext/logged; Ghost/Bunker restrictions (ADR-0013 §16)
+- [x] PBOM / Trust Center identity claims approved (honest; no "verified identity" claim)
+- [x] **No endpoint/identity conflation** — DevicePosture stays external, never identity ([boundary audit](audits/TECH_ID_02_IDENTITY_BOUNDARY_AUDIT.md))
 
-Until it opens: no identity keys, no recovery, no invites, no aliases/personas, no device passports, no key transparency, no QR verification, no directory; `RoomMemberRef` remains a local unverified placeholder; identity state fails closed.
+**Still required before implementation (the gate remains CLOSED for code):**
+
+- [ ] Crypto dependencies decided by **Gate F** (root/relationship/device keys, signatures, derivation, verification codes, recovery encryption) — no algorithm selected yet
+- [ ] Invite/QR/Capsule wire formats decided by **Gate E**
+- [ ] Multi-device identity synchronization decided by **Gate H**
+- [ ] A dedicated **recovery threat review** before recovery implementation
+- [ ] Secure Device gate before protected recovery rendering
+
+Until it opens for code: no identity keys, no recovery, no invites, no aliases/personas, no device passports, no key transparency, no QR verification, no directory; `RoomMemberRef` remains a local unverified placeholder; identity state fails closed. TECH-ID-03 (Local Identity Scaffolding) may implement **local, type-safe, crypto-free** scaffolding only.
 
 ## Rules
 

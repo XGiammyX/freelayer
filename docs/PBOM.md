@@ -440,3 +440,29 @@ Identity is **not implemented** in FreeLayer. RESEARCH-ID-01 is a research/archi
 | DevicePosture as identity | **never** — external environment attribute (Secure Device project) |
 
 Next: **TECH-ID-02 — Identity Architecture ADR**. This complements the anti-spyware **externalized** statements and the **Policy Matrix** claims elsewhere in this PBOM.
+
+## TECH-ID-02 — Identity architecture status (ADR-0013, decided; not implemented)
+
+The Identity Firewall architecture is **decided** by [ADR-0013](adr/ADR-0013-identity-firewall-architecture.md) (Accepted). **No identity code exists.** No runtime dependency was added.
+
+| Identity element | Status |
+| --- | --- |
+| Identity architecture | **ADR accepted** (ADR-0013) |
+| Local identity implementation | **not implemented** |
+| Identity keys | **not implemented** (Gate F) |
+| Pairwise identifiers | **planned** |
+| Room aliases | **planned** |
+| Device keys | **not implemented** (Gate F) |
+| Device passports | **not implemented** (future signed authorization) |
+| Trust Notebook | **planned** |
+| Verification | **not implemented** (claim-specific states designed) |
+| Recovery | **not implemented** (offline kit; no admin/master key) |
+| Public directory | **rejected for v1** |
+| Phone/email requirement | **none** |
+| DID method | **not selected** |
+| Verifiable Credentials | **out of scope (v1)** |
+| Passkeys/WebAuthn as identity root | **rejected** |
+| Key transparency | **deferred** |
+| Secure Device identity assurance | **not applicable** (DevicePosture is not identity) |
+
+Identity secrets do not exist in current production code. This complements the anti-spyware **externalized** statements, the **Null provider** Secure Device rows, and the **Policy Matrix** claims elsewhere in this PBOM.

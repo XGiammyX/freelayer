@@ -244,3 +244,7 @@ Device posture, provider status, room minimum-posture requirements, and admissio
 ## Identity metadata (RESEARCH-ID-01, research)
 
 No identity metadata is produced today. When identity is designed (TECH-ID-02), aliases, relationship graphs, invite links, verification events, device lists, and any key-transparency queries are **sensitive metadata** subject to minimization and correlation analysis. A globally visible identity root, a searchable directory, and unbounded recovery/transparency metadata are treated as anti-goals. Which identity metadata (if any) may ever synchronize is an open ADR question — see [research/IDENTITY_ARCHITECTURE_DECISION_INPUTS.md](research/IDENTITY_ARCHITECTURE_DECISION_INPUTS.md).
+
+## Identity metadata (TECH-ID-02 / ADR-0013)
+
+The decided architecture treats personas, pairwise relationships, room-identity bindings, device authorizations, trust-notebook entries, verification records, recovery configuration, invites, and block relationships as **sensitive local metadata** — no project server, no public directory, no analytics, no telemetry, strict-mode minimized. Identity secrets are never plaintext/logged. Full correlation and minimization analysis: [audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md](audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md). Any identity-metadata synchronization is deferred to Gate H (the local vault is authoritative only for itself).
