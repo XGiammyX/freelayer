@@ -194,6 +194,17 @@ export type PolicySideEffectScope =
   | "identity.ephemeral.relationship.block"
   | "identity.ephemeral.room_binding.create"
   | "identity.ephemeral.summary.read"
+  // Per-Contact Alias scopes (TECH-ID-05). Relationship-scoped local presentation
+  // aliases + private local peer labels; each decision is scoped to exactly one
+  // operation. An alias id / text / relationship id / RoomOS role / DevicePosture
+  // NEVER substitutes; alias text is never authority or verification.
+  | "identity.alias.presentation.create"
+  | "identity.alias.presentation.lifecycle"
+  | "identity.alias.presentation.rotate"
+  | "identity.alias.local_peer_label.write"
+  | "identity.alias.local_peer_label.clear"
+  | "identity.alias.display_context.read"
+  | "identity.alias.reuse_assessment.read"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

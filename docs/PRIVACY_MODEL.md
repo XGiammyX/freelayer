@@ -224,3 +224,7 @@ Local identity scaffolding is memory/null only, exposes no peer-facing root iden
 ## Ephemeral identity (TECH-ID-04)
 
 Ephemeral identities are current-process memory/null only, minimize summaries per mode (Ghost is the primary intended mode: memory-only, conservative lifetime, no labels/counts/history; Private shortens lifetime + reduces summaries; Emergency denies expansive creation). No anonymity claim, no persistence, no recovery, no telemetry. Personas/relationships under an ephemeral root inherit no long-lived contact/trust/verification.
+
+## Per-contact aliases (TECH-ID-05)
+
+Per-contact aliases and local peer labels are memory/null only and mode-minimized on a **strictest-wins** basis (strict modes use `null` retention). **Bunker/Emergency deny expansive alias writes**; **Ghost/Bunker/Emergency deny local peer labels**; retire/clear and display context (read) stay available in every mode; **Emergency allows only retire / clear / `identity.alias.display_context.read`**. Alias reuse assessment is a **local privacy warning** (user-visible, no ids/counts), never telemetry. An alias is not identity/verification/authentication and a local peer label is **NEVER sent to the peer**; no anonymity, no persistence, no recovery.

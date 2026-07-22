@@ -48,6 +48,9 @@ const EMERGENCY_DENY = { emergency: "deny" } as const;
 // TECH-ID-03: expansive identity creates are denied in Bunker + Emergency
 // (restrictive direction); restrictive lifecycle ops may still run.
 const IDENTITY_EXPANSIVE_DENY = { bunker: "deny", emergency: "deny" } as const;
+// TECH-ID-05: local peer labels are extra relationship metadata — Ghost also
+// denies them (plus Bunker/Emergency).
+const IDENTITY_LABEL_DENY = { ghost: "deny", bunker: "deny", emergency: "deny" } as const;
 
 /**
  * The canonical spec table. Every privacy-relevant behavior FreeLayer models
@@ -2681,6 +2684,202 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
       "Persistent ephemeral identity storage is denied; ephemeral state is current-process memory or null and never survives a restart.",
     testCoverage: "covered",
     docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+  // ---- TECH-ID-05: Per-Contact Aliases. Relationship-scoped local presentation
+  //      aliases + private local peer labels; memory/null only. Expansive writes
+  //      deny in Bunker/Emergency (labels also deny in Ghost); restrictive retire/
+  //      clear allowed everywhere. Remote sharing not_implemented; public directory
+  //      / username search / plaintext persistence / broad history DENY;
+  //      authenticated remote update future-gated. Alias is never verification. ----
+  {
+    id: "identity.alias_presentation_create",
+    domain: "identity",
+    operation: "identity.alias.presentation.create",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A pairwise presentation alias is relationship-scoped, local-only (not shared), memory-only; NFC-normalized with dangerous controls rejected. Not identity/verification. Denied in Bunker/Emergency (expansive).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/IDENTITY_FIREWALL.md"],
+  },
+  {
+    id: "identity.alias_presentation_activate",
+    domain: "identity",
+    operation: "identity.alias.presentation.activate",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Activating a draft presentation alias is memory-only; at most one active alias per relationship. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_presentation_rotate",
+    domain: "identity",
+    operation: "identity.alias.presentation.rotate",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Rotation retires the old alias + creates a new active-local-unshared one, preserving relationship id / block / trust; no remote deletion / authenticated update. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_presentation_retire",
+    domain: "identity",
+    operation: "identity.alias.presentation.retire",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Retiring a presentation alias is restrictive, memory-only; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_local_peer_label_set",
+    domain: "identity",
+    operation: "identity.alias.local_peer_label.set",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_LABEL_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A local peer label is PRIVATE relationship metadata (never sent to the peer); memory-only. Denied in Ghost/Bunker/Emergency to reduce relationship metadata.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
+  },
+  {
+    id: "identity.alias_local_peer_label_replace",
+    domain: "identity",
+    operation: "identity.alias.local_peer_label.replace",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_LABEL_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Replacing a local peer label overwrites text in place (no old plaintext retained); memory-only; Ghost/Bunker/Emergency deny.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_local_peer_label_clear",
+    domain: "identity",
+    operation: "identity.alias.local_peer_label.clear",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Clearing a local peer label removes the record (no retained text); restrictive; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_display_context_read",
+    domain: "identity",
+    operation: "identity.alias.display_context.read",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A display context returns trust SEPARATELY from alias text, never a generic verified flag, never a local peer label to peers; strict modes redact ids/labels. Needs its own decision.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_reuse_assessment_read",
+    domain: "identity",
+    operation: "identity.alias.reuse_assessment.read",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A local reuse assessment is a privacy WARNING only — no ids/counts exposed, no merge, no telemetry. Bunker/Emergency skip it (unknown).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_remote_sharing",
+    domain: "identity",
+    operation: "identity.alias.remote_sharing",
+    effect: "not_implemented",
+    reasonCode: "accepted_limitation",
+    rationale:
+      "Remote alias sharing/exchange is NOT implemented in TECH-ID-05; presentation aliases are local-only (Gate E/F).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_public_directory",
+    domain: "identity",
+    operation: "identity.alias.public_directory",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale: "A public alias/username directory is rejected for v1 (enumeration + correlation).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_username_search",
+    domain: "identity",
+    operation: "identity.alias.username_search",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "Alias/username search (incl. near-match) is denied; aliases are not globally unique or discoverable.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.alias_authenticated_update_future",
+    domain: "identity",
+    operation: "identity.alias.authenticated_update",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "An authenticated remote alias update requires crypto + a wire format (Gates F/E); not implemented — no key continuity / signature exists.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.alias_persistence",
+    domain: "identity",
+    operation: "identity.alias.persistence",
+    sink: "local_persistent_storage",
+    dataClass: "alias_normalized_text",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "Plaintext alias persistence is denied; alias state is memory/null only (encrypted persistence is Gate F).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "identity.alias_history",
+    domain: "identity",
+    operation: "identity.alias.history",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "A broad permanent alias history is denied; only a minimal in-memory retired tombstone exists, never exported, never a social-graph record.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
   },
   {
     id: "endpoint.tauri_desktop_permissions",
