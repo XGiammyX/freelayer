@@ -32,8 +32,22 @@ const MAJOR_DOMAINS = [
 ];
 // "room" graduated in TECH-16 (local RoomOS foundation rows exist); room SYNC
 // stays future-gated via the explicit spec-id check below.
-const DEFERRED_DOMAINS = ["crypto", "capsule", "identity"];
-const FUTURE_GATED_SPEC_IDS = ["room.sync"];
+// "identity" graduated in TECH-ID-03 (local, non-cryptographic scaffolding rows
+// exist). Identity keys/aliases/device/trust/recovery/invite/verification stay
+// future-gated via the explicit spec-id list below.
+const DEFERRED_DOMAINS = ["crypto", "capsule"];
+const FUTURE_GATED_SPEC_IDS = [
+  "room.sync",
+  "identity.keys_future",
+  "identity.device_key_future",
+  "identity.device_passport_future",
+  "identity.alias_per_contact_future",
+  "identity.alias_per_room_future",
+  "identity.trust_notebook_future",
+  "identity.recovery_future",
+  "identity.invite",
+  "identity.verification",
+];
 const ALLOWING_EFFECTS = ["allow", "memory_only", "redact", "coarsen", "delay", "batch"];
 const EFFECTS = [
   "allow",

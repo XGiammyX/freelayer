@@ -253,3 +253,7 @@ A sensitive room gates content by a **minimum device posture** and a **protected
 ## Room identity binding (TECH-ID-02 / ADR-0013)
 
 The Identity Firewall architecture ([ADR-0013](adr/ADR-0013-identity-firewall-architecture.md)) introduces a future `RoomIdentityBinding` that binds one local identity root/persona to one room to one **room-scoped alias** to one RoomOS membership. Room aliases are **not global**; room participants never receive the private root identifier; two room aliases are not linkable through reusable root material by default; RoomOS membership stays **separate from identity verification** and a RoomOS role does not prove identity ownership. Room export must not expose unrelated relationship identifiers. Not implemented — RoomOS membership today remains a local unverified placeholder.
+
+## Room identity binding scaffolding (TECH-ID-03)
+
+`@freelayer/identity` now provides a local `RoomIdentityBindingV1` placeholder binding a root/persona to one room via a narrow `RoomMembershipIdRef` (not `RoomMemberRef`, and not identity proof). It is memory/null only, room-scoped, exposes no room alias yet (TECH-ID-06), and does not import `@freelayer/rooms` (avoids a cycle). RoomOS membership remains separate from identity verification.

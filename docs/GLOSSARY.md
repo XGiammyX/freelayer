@@ -40,3 +40,7 @@ FreeLayer keeps **person**, **local identity / identity root**, **profile**, **a
 ## Identity architecture terms (TECH-ID-02 / ADR-0013)
 
 **Local identity root** (private local authority — never a public identifier) · **Persona** (presentation/policy context under one root — **not guaranteed unlinkable**) · **Independent identity root** (separate root; the real separation boundary) · **Pairwise relationship** (per-contact relationship + peer-facing pairwise identifier) · **Room identity binding** (root/persona to room to room alias to membership) · **Device authorization** (subordinate, revocable device grant) · **Device passport** (future signed root-to-device authorization; not attestation, not implemented) · **Trust Notebook** (local, non-authoritative observations) · **Recovery kit** (offline; no admin/master key; reduces assurance). Architecture decided by [ADR-0013](adr/ADR-0013-identity-firewall-architecture.md); **not implemented**. `RoomMemberRef` is not identity; **DevicePosture is not identity**.
+
+## Identity scaffolding (TECH-ID-03)
+
+**`@freelayer/identity`** — local, non-cryptographic identity scaffolding. **LocalIdentityRoot** (private, memory/null, no keys), **Persona** (local context, not unlinkable), **PairwiseRelationship** / **RoomIdentityBinding** (placeholders), **IdentityLocalRevision** (positive local counter, not a clock/version/vector-clock). No crypto, no persistence, no aliases/recovery/invites yet. DevicePosture is not identity; a RoomMembershipId is not identity proof.

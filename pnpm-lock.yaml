@@ -20,6 +20,9 @@ importers:
       '@freelayer/crypto':
         specifier: workspace:*
         version: link:packages/crypto
+      '@freelayer/identity':
+        specifier: workspace:*
+        version: link:packages/identity
       '@freelayer/privacy':
         specifier: workspace:*
         version: link:packages/privacy
@@ -154,6 +157,19 @@ importers:
         version: 5.9.3
 
   packages/crypto:
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  packages/identity:
+    dependencies:
+      '@freelayer/privacy':
+        specifier: workspace:*
+        version: link:../privacy
+      '@freelayer/security':
+        specifier: workspace:*
+        version: link:../security
     devDependencies:
       typescript:
         specifier: ^5.7.2

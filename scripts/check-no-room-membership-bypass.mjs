@@ -81,6 +81,9 @@ const MEMBERSHIP_PKG = "packages/rooms/src/membership/";
 
 function isAllowlisted(rel) {
   return (
+    // The identity package is a separate domain with its own guard; it
+    // legitimately lists rejected field names (e.g. phoneNumber) as data.
+    rel.includes("packages/identity/") ||
     rel.endsWith(".test.ts") ||
     rel.endsWith(".test.tsx") ||
     // The Policy Matrix legitimately NAMES denied operations (e.g. a

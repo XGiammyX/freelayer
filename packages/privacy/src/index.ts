@@ -170,6 +170,19 @@ export type PolicySideEffectScope =
   // Governance is tighten-only; a capability descriptor never substitutes.
   | "room.governance.update"
   | "room.governance_log.append"
+  // Identity Firewall scaffolding scopes (TECH-ID-03). Local, non-cryptographic
+  // identity operations are policy-gated LOCAL state transitions; each decision
+  // is scoped to exactly one. An id / label / RoomMemberRef / DevicePosture is
+  // NEVER a substitute — only an authentic exact-scope decision authorizes.
+  | "identity.root.create"
+  | "identity.root.lifecycle"
+  | "identity.persona.create"
+  | "identity.persona.lifecycle"
+  | "identity.relationship.create"
+  | "identity.relationship.lifecycle"
+  | "identity.room_binding.create"
+  | "identity.room_binding.lifecycle"
+  | "identity.summary.read"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

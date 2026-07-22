@@ -248,3 +248,7 @@ No identity metadata is produced today. When identity is designed (TECH-ID-02), 
 ## Identity metadata (TECH-ID-02 / ADR-0013)
 
 The decided architecture treats personas, pairwise relationships, room-identity bindings, device authorizations, trust-notebook entries, verification records, recovery configuration, invites, and block relationships as **sensitive local metadata** — no project server, no public directory, no analytics, no telemetry, strict-mode minimized. Identity secrets are never plaintext/logged. Full correlation and minimization analysis: [audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md](audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md). Any identity-metadata synchronization is deferred to Gate H (the local vault is authoritative only for itself).
+
+## Identity scaffolding metadata (TECH-ID-03)
+
+Identity records (roots/personas/relationships/room-bindings), local labels, and revisions are sensitive local metadata: memory/null only, never emitted as telemetry, redacted in summaries (strict modes omit ids/labels/counts) and in audit events (content-free, `redacted:true`). Errors carry no identity content. No correlation-rich identifier is logged.

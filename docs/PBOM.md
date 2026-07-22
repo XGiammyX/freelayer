@@ -466,3 +466,31 @@ The Identity Firewall architecture is **decided** by [ADR-0013](adr/ADR-0013-ide
 | Secure Device identity assurance | **not applicable** (DevicePosture is not identity) |
 
 Identity secrets do not exist in current production code. This complements the anti-spyware **externalized** statements, the **Null provider** Secure Device rows, and the **Policy Matrix** claims elsewhere in this PBOM.
+
+## TECH-ID-03 — Local identity scaffolding status
+
+TECH-ID-03 implements `@freelayer/identity` — **local, non-cryptographic, metadata-only** scaffolding. No keys, no persistence, no runtime dependency added.
+
+| Behavior | Status |
+| --- | --- |
+| Identity architecture | ADR accepted (ADR-0013) |
+| Local identity-root types | v1 scaffolding |
+| Persona types | v1 scaffolding |
+| Pairwise relationship types | placeholder scaffolding |
+| Room identity binding | placeholder scaffolding |
+| Identity keys | Not implemented — Gate F |
+| Pairwise cryptographic identifiers | Not implemented |
+| Per-contact aliases | Not implemented — TECH-ID-05 |
+| Per-room aliases | Not implemented — TECH-ID-06 |
+| Device keys | Not implemented — TECH-ID-07 |
+| Device passport | Not implemented — TECH-ID-08 |
+| Trust Notebook | Not implemented — TECH-ID-09 |
+| Invites | Not implemented — TECH-ID-10 |
+| QR verification | Not implemented — TECH-ID-11 |
+| Recovery | Not implemented — TECH-ID-12/13 |
+| Persistent identity vault | Not implemented (memory/null only) |
+| Phone/email identity | Not required |
+| Public directory | Rejected for v1 |
+| Secure Device | External / separate |
+
+Identity secrets do not exist in current production code. Storage is memory/null only. Not safe for real secrets.

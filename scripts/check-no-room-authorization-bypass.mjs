@@ -67,6 +67,8 @@ const EXTS = [".ts", ".tsx", ".mjs"];
 
 function isAllowlisted(rel) {
   return (
+    // The identity package has its own guard (check-no-identity-scaffolding-bypass).
+    rel.includes("packages/identity/") ||
     rel.endsWith(".test.ts") ||
     rel.endsWith(".test.tsx") ||
     rel.endsWith("check-no-room-authorization-bypass.mjs")

@@ -1,6 +1,6 @@
 # Identity Architecture (Identity Firewall)
 
-> **Status: architecture decided ([ADR-0013](adr/ADR-0013-identity-firewall-architecture.md)); implementation NOT started.** No identity keys, recovery, invites, aliases, personas, device keys, device passports, key transparency, QR verification, DID, or verified-identity exist in code. Cryptography is **Gate F**, wire formats **Gate E**, synchronization **Gate H**. Diagrams below label future components; none imply implemented crypto. This document is the normative companion to ADR-0013 for TECH-ID-03+.
+> **Status: local scaffolding implemented ([TECH-ID-03](adr/ADR-0013-identity-firewall-architecture.md)); NO cryptography.** `@freelayer/identity` now provides **local, non-cryptographic, metadata-only** roots/personas/relationships/room-bindings with lifecycle validators, policy-gated commands, a pure reducer, and memory/null repositories. Still **not implemented**: identity keys/signatures/derivation/fingerprints (Gate F), per-contact/per-room aliases (TECH-ID-05/06), device keys/passports (TECH-ID-07/08), Trust Notebook (TECH-ID-09), invites/QR (TECH-ID-10/11, Gate E), recovery (TECH-ID-12/13), synchronization (Gate H), DID, key transparency, verified identity. Diagrams below label future components; none imply implemented crypto. Normative companion to ADR-0013.
 
 ## Invariants (from ADR-0013 §8-equivalent)
 

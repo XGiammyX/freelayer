@@ -87,6 +87,10 @@ const EXTS = [".ts", ".tsx", ".mjs"];
 
 function isAllowlisted(rel) {
   return (
+    // The identity package is a separate domain with its own guard
+    // (check-no-identity-scaffolding-bypass); it legitimately lists rejected
+    // field names (e.g. __proto__) as data.
+    rel.includes("packages/identity/") ||
     rel.endsWith(".test.ts") ||
     rel.endsWith(".test.tsx") ||
     // The command validator legitimately NAMES dangerous keys to reject them.

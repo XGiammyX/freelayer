@@ -242,3 +242,7 @@ Identity is not implemented; these are threats the future Identity Firewall must
 ## Identity architecture threat review (TECH-ID-02)
 
 ADR-0013 maps the RESEARCH-ID-01 identity threats to concrete architecture decisions in [audits/TECH_ID_02_IDENTITY_ARCHITECTURE_THREAT_REVIEW.md](audits/TECH_ID_02_IDENTITY_ARCHITECTURE_THREAT_REVIEW.md): pairwise plus room-scoped identifiers reduce correlation; subordinate revocable device authorization limits lost-device blast radius; claim-specific verification plus key-change warnings resist silent key substitution; offline user-held recovery removes the server/admin backdoor class. Residual (honest): local root compromise reveals the local relationship mapping; recovery-material compromise is equivalent to identity compromise; distributed revocation is deferred (Gate H); endpoint compromise is external (Secure Device). No anti-impersonation or spyware-proof guarantee; assurance is self-asserted.
+
+## Identity scaffolding (TECH-ID-03)
+
+Local identity scaffolding is fail-closed: unknown schema/lifecycle/command deny; dangerous prototype keys and authority/secret caller fields (`verified`/`privateKey`/`seed`/`email`/`did`/`devicePosture`/…) reject; every accepted operation requires an authentic exact-scope `PolicyDecision` (fake/wrong-scope/denied reject before mutation); an id/label/RoomMembershipId/DevicePosture grants no authority. Residual: this is scaffolding, not cryptographic identity — no verified identity, no key continuity, no recovery; not safe for real secrets.

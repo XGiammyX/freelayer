@@ -45,6 +45,9 @@ const MODES: readonly PrivacyMode[] = [
 const STRICT_DENY = { ghost: "deny", bunker: "deny" } as const;
 const OFFLINE_EMERGENCY_DENY = { offline_capsule: "deny", emergency: "deny" } as const;
 const EMERGENCY_DENY = { emergency: "deny" } as const;
+// TECH-ID-03: expansive identity creates are denied in Bunker + Emergency
+// (restrictive direction); restrictive lifecycle ops may still run.
+const IDENTITY_EXPANSIVE_DENY = { bunker: "deny", emergency: "deny" } as const;
 
 /**
  * The canonical spec table. Every privacy-relevant behavior FreeLayer models
@@ -2278,6 +2281,234 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     rationale: "QR/short-code verification is designed at Gate G.",
     testCoverage: "deferred",
     docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  // ---- TECH-ID-03: Identity Firewall LOCAL SCAFFOLDING (ADR-0013). Local,
+  //      non-cryptographic, metadata-only identity operations. Memory/null only
+  //      (never persistent plaintext). Expansive creates deny in Bunker/Emergency
+  //      (restrictive direction); restrictive lifecycle ops may run everywhere.
+  //      Keys/aliases/device/trust/recovery/invite/verification stay future-gated;
+  //      a public directory and a persistent identity vault are denied. ----
+  {
+    id: "identity.root_create",
+    domain: "identity",
+    operation: "identity.root.create",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Creating a PRIVATE local identity root is a memory-only scaffolding op; it carries no keys/recovery/contact/device data and is never peer-facing. Denied in Bunker/Emergency (expansive).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/IDENTITY_FIREWALL.md"],
+  },
+  {
+    id: "identity.root_lifecycle",
+    domain: "identity",
+    operation: "identity.root.lifecycle",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Root lifecycle transitions (activate/lock/mark-compromised/tombstone) are memory-only, revision-guarded, exhaustively validated; restrictive ops may run even in Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.persona_create",
+    domain: "identity",
+    operation: "identity.persona.create",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A persona is a local presentation/policy context under one root; it is NOT guaranteed unlinkable and holds no username/public identifier. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.persona_lifecycle",
+    domain: "identity",
+    operation: "identity.persona.lifecycle",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale: "Persona archive/tombstone are memory-only, revision-guarded transitions.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.relationship_create",
+    domain: "identity",
+    operation: "identity.relationship.create",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A pairwise relationship placeholder belongs to one root/persona, starts unverified, exposes no peer content/alias/crypto. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.relationship_lifecycle",
+    domain: "identity",
+    operation: "identity.relationship.lifecycle",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Relationship block/mark-compromised/tombstone are memory-only; blocking binds to the relationship record, not a display alias.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_binding_create",
+    domain: "identity",
+    operation: "identity.room_binding.create",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A room identity binding scopes a root/persona to one room; it is not global identity and a RoomMembershipId is not identity proof. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "identity.room_binding_lifecycle",
+    domain: "identity",
+    operation: "identity.room_binding.lifecycle",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale: "Room binding suspend/tombstone are memory-only, revision-guarded transitions.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.summary_read",
+    domain: "identity",
+    operation: "identity.summary.read",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: EMERGENCY_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A redacted local identity summary read needs its OWN decision; strict modes omit ids/labels/counts. No content, no key state beyond 'not implemented'.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.keys_future",
+    domain: "identity",
+    operation: "identity.keys",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Identity/relationship/room key material, signatures, derivation and fingerprints are Gate F — not implemented in scaffolding.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.device_key_future",
+    domain: "identity",
+    operation: "identity.device_key",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale: "Subordinate device keys are TECH-ID-07 / Gate F; not implemented.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.device_passport_future",
+    domain: "identity",
+    operation: "identity.device_passport",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "A device passport (future signed root-to-device authorization) is TECH-ID-08 / Gate F; not attestation, not implemented.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.alias_per_contact_future",
+    domain: "identity",
+    operation: "identity.alias.per_contact",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale: "Per-contact aliases are TECH-ID-05; scaffolding exposes no peer-facing alias.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.alias_per_room_future",
+    domain: "identity",
+    operation: "identity.alias.per_room",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale: "Per-room aliases are TECH-ID-06; room bindings expose no alias yet.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.trust_notebook_future",
+    domain: "identity",
+    operation: "identity.trust_notebook",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale: "The Trust Notebook is TECH-ID-09; not implemented (no persistence).",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.recovery_future",
+    domain: "identity",
+    operation: "identity.recovery",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Recovery (offline kit; no admin/master key) is TECH-ID-12/13 / Gate F; not implemented — no fake recovery.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.public_directory",
+    domain: "identity",
+    operation: "identity.public_directory",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "A public searchable identity directory / global username lookup is rejected for v1 (enumeration + correlation).",
+    testCoverage: "covered",
+    docsRefs: [
+      "docs/IDENTITY_ARCHITECTURE.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.persistent_vault",
+    domain: "identity",
+    operation: "identity.persistent_vault",
+    sink: "local_persistent_storage",
+    dataClass: "identity_metadata",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "Persistent identity storage is denied; the identity vault is memory/null only (encrypted persistence is Gate F).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
   },
   {
     id: "endpoint.tauri_desktop_permissions",

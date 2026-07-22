@@ -290,3 +290,7 @@ No identity data is stored today (no identity roots, keys, aliases, personas, de
 ## Identity storage (TECH-ID-02 / ADR-0013)
 
 The decided classification (see [IDENTITY_ARCHITECTURE.md](IDENTITY_ARCHITECTURE.md)) keeps identity **secrets** (`identity_root_secret_future`, `relationship_secret_future`, `device_secret_future`, `recovery_material_future`, `invite_secret_future`) **never plaintext, never logged, never telemetry**, with encrypted persistence only after Gate F and Ghost/Bunker restrictions; **relationship/trust metadata** local and minimized; **recovery material** never in ordinary UI cache/clipboard/cloud. No identity storage is implemented in TECH-ID-02.
+
+## Identity scaffolding storage (TECH-ID-03)
+
+`@freelayer/identity` stores nothing persistently: the `LocalIdentityVaultStateV1` lives in **memory or null** repositories only (`InMemoryLocalIdentityRepositoryV1` clones defensively; `NullLocalIdentityRepositoryV1` retains nothing). No disk/localStorage/IndexedDB/database/encrypted storage (encrypted persistence is Gate F). Records are metadata-only — no key/recovery/contact/device material. The matrix `identity.persistent_vault` row denies persistence.

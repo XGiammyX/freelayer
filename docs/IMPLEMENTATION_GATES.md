@@ -504,7 +504,7 @@ Identity is **Gate G** design work; identity cryptography is **Gate F**. RESEARC
 - [ ] A dedicated **recovery threat review** before recovery implementation
 - [ ] Secure Device gate before protected recovery rendering
 
-Until it opens for code: no identity keys, no recovery, no invites, no aliases/personas, no device passports, no key transparency, no QR verification, no directory; `RoomMemberRef` remains a local unverified placeholder; identity state fails closed. TECH-ID-03 (Local Identity Scaffolding) may implement **local, type-safe, crypto-free** scaffolding only.
+Until it opens for code: no identity keys, no recovery, no invites, no aliases, no device passports, no key transparency, no QR verification, no directory; `RoomMemberRef` remains a local unverified placeholder; identity state fails closed. **TECH-ID-03 landed the permitted `local, type-safe, crypto-free` scaffolding** (`@freelayer/identity`: roots/personas/relationship + room-binding placeholders, lifecycle validators, policy-gated commands, memory/null repositories) — see [audits/TECH_ID_03_LOCAL_IDENTITY_SCAFFOLDING_AUDIT.md](audits/TECH_ID_03_LOCAL_IDENTITY_SCAFFOLDING_AUDIT.md). Keys/aliases/devices/invites/recovery/sync stay gated on F/E/H.
 
 ## Rules
 

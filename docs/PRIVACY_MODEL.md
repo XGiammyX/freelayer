@@ -216,3 +216,7 @@ Identity is not implemented. The future Identity Firewall targets **no phone/ema
 ## Identity architecture privacy (TECH-ID-02 / ADR-0013)
 
 Decided architecture keeps the identity root private and local, uses pairwise per-contact and room-scoped identifiers, and ships **no public directory and no phone/email** (v1) — giving strong default unlinkability. Personas are organizational only (not guaranteed unlinkable); **independent identity roots** provide the real separation and are recommended for ephemeral/Ghost use. Correlation surfaces and minimization are analyzed in [audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md](audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md). The unlinkability-versus-Sybil-resistance tension is documented, not pretended solved.
+
+## Identity scaffolding privacy (TECH-ID-03)
+
+Local identity scaffolding is memory/null only, exposes no peer-facing root identifier, and minimizes summaries per mode (Private drops exact counts/timestamps/labels; Ghost/Bunker minimize to lifecycle+assurance; Emergency denies expansive creates + summaries). No phone/email, no public directory, no telemetry. Personas are organizational only (not guaranteed unlinkable).
