@@ -37,6 +37,7 @@
     "check:no-secure-device-core-implementation": "node scripts/check-no-secure-device-core-implementation.mjs",
     "check:policy-matrix": "node scripts/validate-policy-matrix.mjs",
     "check:policy-docs": "node scripts/check-policy-docs-consistency.mjs",
+    "check:identity-docs": "node scripts/check-identity-docs.mjs",
     "check:policy-conflicts": "node scripts/check-policy-conflicts.mjs",
     "check:contributor-workflow": "node scripts/check-contributor-workflow.mjs",
     "check:all": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm check:build-zero-egress && pnpm check:doc-links && pnpm check:contributor-workflow && pnpm check:policy-docs && pnpm audit:privacy && pnpm audit:security && pnpm audit:supply-chain",

@@ -212,3 +212,7 @@ Device posture is an **environment attribute**, never identity or authority. Fre
 ## Identity privacy goals (RESEARCH-ID-01, research)
 
 Identity is not implemented. The future Identity Firewall targets **no phone/email**, **no globally visible identity root**, **no public searchable directory by default**, **per-contact and per-room aliases**, presentation separate from cryptographic identity, and **no administrator/master recovery key**. `RoomMemberRef` is a local unverified placeholder, never identity; DevicePosture is an environment attribute, never identity. Correlation, enumeration, and recovery-metadata risks are analyzed in [audits/RESEARCH_ID_01_IDENTITY_THREAT_MODEL.md](audits/RESEARCH_ID_01_IDENTITY_THREAT_MODEL.md). Decisions are deferred to **TECH-ID-02**.
+
+## Identity architecture privacy (TECH-ID-02 / ADR-0013)
+
+Decided architecture keeps the identity root private and local, uses pairwise per-contact and room-scoped identifiers, and ships **no public directory and no phone/email** (v1) — giving strong default unlinkability. Personas are organizational only (not guaranteed unlinkable); **independent identity roots** provide the real separation and are recommended for ephemeral/Ghost use. Correlation surfaces and minimization are analyzed in [audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md](audits/TECH_ID_02_IDENTITY_METADATA_REVIEW.md). The unlinkability-versus-Sybil-resistance tension is documented, not pretended solved.

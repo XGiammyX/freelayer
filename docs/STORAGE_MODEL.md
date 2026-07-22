@@ -286,3 +286,7 @@ There is no assessment persistence, no history, and no device-identifier storage
 ## Identity storage (RESEARCH-ID-01, research)
 
 No identity data is stored today (no identity roots, keys, aliases, personas, device passports, recovery material, or trust notebook). The future model must keep identity secrets **never in plaintext and never in logs**, treat the Trust Notebook as sensitive local data, and apply **Ghost/Bunker persistence restrictions** to identity data. Recovery material must never be cached insecurely and deleted identities must not remain trivially recoverable. Storage policy for identity is an open ADR question (TECH-ID-02).
+
+## Identity storage (TECH-ID-02 / ADR-0013)
+
+The decided classification (see [IDENTITY_ARCHITECTURE.md](IDENTITY_ARCHITECTURE.md)) keeps identity **secrets** (`identity_root_secret_future`, `relationship_secret_future`, `device_secret_future`, `recovery_material_future`, `invite_secret_future`) **never plaintext, never logged, never telemetry**, with encrypted persistence only after Gate F and Ghost/Bunker restrictions; **relationship/trust metadata** local and minimized; **recovery material** never in ordinary UI cache/clipboard/cloud. No identity storage is implemented in TECH-ID-02.

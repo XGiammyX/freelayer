@@ -252,3 +252,16 @@ FreeLayer does **not** have identity yet. Please read these limits before trusti
 - We make **no anti-impersonation guarantee** today.
 
 These statements are consistent with the automated **policy conflict** overclaim scanner and with the **externalized** Secure Device posture recorded across the Trust Center. RESEARCH-ID-01 is research only; the model is decided by **TECH-ID-02 — Identity Architecture ADR**.
+
+## Identity architecture decided, not built (TECH-ID-02 / ADR-0013)
+
+The Identity Firewall **architecture** is now decided ([ADR-0013](adr/ADR-0013-identity-firewall-architecture.md)), but **nothing is implemented**. Honest claims:
+
+- The identity root is **private and local** — there is no public root identifier, no phone/email, and no public searchable directory (v1).
+- **Personas are organizational only and are NOT guaranteed unlinkable** — independent identity roots are the real separation boundary.
+- **Verification is claim-specific** (e.g. control of a key over a channel), never real-world identity proof; there is no generic verified flag.
+- **Recovery** will be offline and user-held — **no administrator backdoor and no project-owned master key** — and recovery **reduces assurance** (contacts must re-verify).
+- No verified identity, device passport, key transparency, QR verification, recovery, DID, or secure identity storage exists today.
+- `RoomMemberRef` is a local unverified placeholder, not identity; **DevicePosture is not identity**; a device is not a person.
+
+These remain consistent with the automated **policy conflict** overclaim scanner and the **externalized** Secure Device posture. Next: **TECH-ID-03 — Local Identity Scaffolding** (local, crypto-free).
