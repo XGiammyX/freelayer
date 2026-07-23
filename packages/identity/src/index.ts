@@ -54,3 +54,15 @@ export * from "./aliases";
 //      username; no remote exchange, no authenticated binding, no historical-
 //      message relabelling, no persistence, no synchronization, no crypto.
 export * from "./room-aliases";
+
+// ---- TECH-ID-07: Device Key Model — a LOCAL, non-cryptographic, root-
+//      subordinate device-authorization model: opaque local device references,
+//      explicit scopes + capabilities (attenuation-only), purpose-separated EMPTY
+//      key slots, a current-installation bootstrap placeholder, and restrict/
+//      compromise/revoke lifecycle with stale-context invalidation; memory/null
+//      retention. NO real keys/signatures/derivation (Gate F), NO Device Passport
+//      / linking (TECH-ID-08), NO cross-signing, NO remote/cryptographic
+//      revocation (Gate H), NO hardware attestation, NO Secure Device. A DeviceKey
+//      is not DevicePosture; a device is not a person; a local authorization
+//      record is not a cryptographic proof.
+export * from "./devices";

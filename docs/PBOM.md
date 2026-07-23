@@ -567,3 +567,29 @@ TECH-ID-06 implements per-room aliases in `@freelayer/identity` (`packages/ident
 | Secure Device protection | External / not integrated |
 
 A room alias is not identity, not membership, not a role, not verification, not a `RoomMemberRef`, and not a global username; a room role is not proof of identity, and a collision is not proof of impersonation. Duplicate aliases within a room are permitted but require safe disambiguation — which is not verification — and baseline Unicode validation is not full spoofing prevention. There is no remote alias exchange or authentication, no historical sender-profile system, and no verification by alias; rotation does not change old messages or delete peer copies. Room aliases are memory/null only; cross-room reuse warnings expose no room graph; ephemeral aliases cannot outlive ephemeral roots. The binding's `roomAliasState` migrated from the `not_implemented_tech_id_06` placeholder to `RoomAliasBindingStateV1` (`none`/`local_alias_v1`/`retired`, default `none`) — the alias record is authoritative and the binding state is a derived hint. DevicePosture is not identity and Secure Device remains external. Governed by the `identity.room_alias.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-room-alias-bypass`. Not safe for real secrets.
+
+## TECH-ID-07 — Device key model status
+
+TECH-ID-07 implements the device key model in `@freelayer/identity` (`packages/identity/src/devices/`) — **local, non-cryptographic, root-subordinate device authorization**. A device authorization is a local record that a subordinate device is authorized under an identity root; devices are subordinate to identity roots. No real key material, signatures, or attestation exist. No keys, no persistence, no network, no runtime dependency added.
+
+| Behavior | Status |
+| --- | --- |
+| Device-key domain model | Local v1 foundation |
+| Local device references | Implemented, opaque |
+| Device authorization scopes | Local policy model |
+| Device capabilities | Local policy model |
+| Key-purpose slots | Descriptor only |
+| Real key generation | Not implemented — Gate F |
+| Current installation placeholder | Local/unverified |
+| Additional device linking | Not implemented — TECH-ID-08 |
+| Device Passport | Not implemented — TECH-ID-08/Gate F |
+| Cross-signing | Not implemented |
+| Device revocation | Local model only |
+| Remote revocation | Not implemented — Gate H |
+| Message/room key rotation | Not implemented |
+| Hardware attestation | Not implemented |
+| DevicePosture | External policy input |
+| Persistent device registry | Not implemented |
+| Secure Device | External / not integrated |
+
+A DeviceKey is not DevicePosture, DevicePosture is not identity, a device is not a person, a device reference is not a hardware identifier, a device label is not authority, a local authorization record is not a cryptographic proof, RoomOS membership is not device authorization, and device revocation is not remote erasure. No real key material, signatures, or attestation exist; devices are subordinate to identity roots; the current device is a local unverified placeholder; there is no second-device linking, no Device Passport, and no cross-signing / QR linking / history transfer. Lifecycle is local restrict / mark_compromised / revoke only — revocation is not remote or cryptographic and performs no data erase or room/message key rotation; device state is memory/null retention only. Deferred: crypto / real key generation (Gate F), Device Passport + linking (TECH-ID-08), wire/exchange formats (Gate E), multi-device sync (Gate H); Secure Device remains external. Governed by the 8 `identity.device.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-device-key-model-bypass`. Not safe for real secrets.

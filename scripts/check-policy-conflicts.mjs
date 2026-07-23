@@ -57,6 +57,10 @@ const IDENTITY_FUTURE_GATE_SPEC_IDS = [
   // TECH-ID-06: authenticated room-alias binding + room bundle export/import.
   "identity.room_alias_authenticated_binding_future",
   "identity.room_alias_bundle_export_import_future",
+  // TECH-ID-07: device addition/linking (TECH-ID-08) + remote revocation (Gate H).
+  "identity.device_add_future",
+  "identity.device_link_future",
+  "identity.device_remote_revoke_future",
 ];
 // Identity behaviors that must never be allowed (public directory + persistent
 // vault; TECH-ID-04 ephemeral promotion/recovery/export/sync/persistence; and
@@ -77,6 +81,9 @@ const IDENTITY_NEVER_ALLOWED_SPEC_IDS = [
   "identity.room_alias_remote_sharing",
   "identity.room_alias_persistence",
   "identity.room_alias_history",
+  // TECH-ID-07: device attestation (external/not_implemented) + broad device history.
+  "identity.device_attestation",
+  "identity.device_history",
 ];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.

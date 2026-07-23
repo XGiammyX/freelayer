@@ -116,7 +116,10 @@ function isAllowlisted(rel) {
     rel.endsWith(".test.tsx") ||
     rel.endsWith("check-no-secure-device-core-implementation.mjs") ||
     // The Policy Matrix legitimately names denied Secure Device operations (data).
-    rel.endsWith("packages/privacy/src/policyMatrix.ts")
+    rel.endsWith("packages/privacy/src/policyMatrix.ts") ||
+    // TECH-ID-07 device policy legitimately declares `hardwareAttestationAvailable:
+    // false` — an honest NOT-available contract disclosure, never an implementation.
+    rel.endsWith("packages/identity/src/devices/device-policy.ts")
   );
   // NOTE: fixtures live under tests/ and are not scanned by the default
   // apps/packages run; the guard's own regression test scans them explicitly.

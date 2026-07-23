@@ -78,7 +78,10 @@ function isAllowlisted(rel) {
     rel.endsWith("packages/privacy/src/policyMatrix.ts") ||
     // Type definitions legitimately declare the (future) enum literals.
     rel.endsWith("policy-composition/device-posture.ts") ||
-    rel.endsWith("policy-composition/protected-content.ts")
+    rel.endsWith("policy-composition/protected-content.ts") ||
+    // TECH-ID-07 device policy legitimately declares `hardwareAttestationAvailable:
+    // false` — an honest NOT-available disclosure, never an implementation.
+    rel.endsWith("packages/identity/src/devices/device-policy.ts")
   );
 }
 
