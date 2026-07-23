@@ -17,6 +17,7 @@ import type {
   RoomLocalIdRef,
   RoomMembershipIdRef,
 } from "../identifiers";
+import type { RoomAliasBindingStateV1 } from "../identity-types";
 import type { EphemeralProcessBindingV1 } from "./ephemeral-clock";
 
 export type EphemeralIdentityLifecycleV1 =
@@ -137,7 +138,7 @@ export interface EphemeralRoomIdentityBindingV1 {
   readonly revision: IdentityLocalRevision;
   readonly lifecycle: EphemeralRoomBindingLifecycleV1;
 
-  readonly roomAliasState: "not_implemented_tech_id_06";
+  readonly roomAliasState: RoomAliasBindingStateV1;
   readonly credentialState: "not_implemented_gate_f";
   readonly persistence: "forbidden";
   readonly export: "forbidden";
