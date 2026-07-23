@@ -543,3 +543,27 @@ TECH-ID-05 implements per-contact aliases in `@freelayer/identity` (`packages/id
 | Secure Device protection | External / not integrated |
 
 An alias is not identity, not verification, not authentication, not a public username, and not a cryptographic identifier; it does not prove a person controls a key. A local peer label is never sent to the peer. Normalization is not proof an alias is safe. Alias state is current-process memory or null only. Governed by the `identity.alias.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-contact-alias-bypass`. Not safe for real secrets.
+
+## TECH-ID-06 — Per-room alias status
+
+TECH-ID-06 implements per-room aliases in `@freelayer/identity` (`packages/identity/src/room-aliases/`) — **local, room-scoped, non-cryptographic, metadata-only**. Each room presentation alias is bound to ONE identity room binding (`RoomIdentityBindingV1`). No keys, no persistence, no network sharing, no runtime dependency added.
+
+| Behavior | Status |
+| --- | --- |
+| Per-room presentation alias | Local v1 foundation |
+| Room identity-binding integration | Local contract |
+| One active alias per binding | Enforced locally |
+| Unicode normalization | Reuses TECH-ID-05 baseline |
+| Duplicate-name detection | Local transient foundation |
+| Safe disambiguation requirement | Implemented as policy/domain result |
+| Full confusable detection | Not implemented |
+| Cross-room reuse warning | Local/redacted |
+| Remote alias exchange | Not implemented — Gates E/F/H |
+| Authenticated alias binding | Not implemented — Gate F |
+| Historical sender alias | Deferred to Messaging/RoomOS/Crypto |
+| Alias persistence | Memory/null only |
+| Room bundle alias import/export | Not implemented |
+| Verification by alias | Forbidden |
+| Secure Device protection | External / not integrated |
+
+A room alias is not identity, not membership, not a role, not verification, not a `RoomMemberRef`, and not a global username; a room role is not proof of identity, and a collision is not proof of impersonation. Duplicate aliases within a room are permitted but require safe disambiguation — which is not verification — and baseline Unicode validation is not full spoofing prevention. There is no remote alias exchange or authentication, no historical sender-profile system, and no verification by alias; rotation does not change old messages or delete peer copies. Room aliases are memory/null only; cross-room reuse warnings expose no room graph; ephemeral aliases cannot outlive ephemeral roots. The binding's `roomAliasState` migrated from the `not_implemented_tech_id_06` placeholder to `RoomAliasBindingStateV1` (`none`/`local_alias_v1`/`retired`, default `none`) — the alias record is authoritative and the binding state is a derived hint. DevicePosture is not identity and Secure Device remains external. Governed by the `identity.room_alias.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-room-alias-bypass`. Not safe for real secrets.

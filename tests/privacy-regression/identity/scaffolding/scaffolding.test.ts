@@ -403,7 +403,7 @@ describe("Room identity binding (§31: 32-37)", () => {
     const binding = bound.roomBindings[0]!;
     expect(binding.roomId).toBe("room-a");
     expect(binding.verificationState).toBe("unverified_local");
-    expect(binding.roomAliasState).toBe("not_implemented_tech_id_06");
+    expect(binding.roomAliasState).toBe("none");
 
     // Duplicate active binding for the same (persona, room) rejects.
     expect(() =>

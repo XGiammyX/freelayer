@@ -346,7 +346,7 @@ export function reduceEphemeralIdentityCommandV1(
         ...(command.membershipId !== undefined ? { membershipId: command.membershipId } : {}),
         revision: FIRST_IDENTITY_REVISION,
         lifecycle: "active_local_unverified",
-        roomAliasState: "not_implemented_tech_id_06",
+        roomAliasState: "none",
         credentialState: "not_implemented_gate_f",
         persistence: "forbidden",
         export: "forbidden",

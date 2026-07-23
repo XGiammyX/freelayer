@@ -2881,6 +2881,180 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     testCoverage: "covered",
     docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
   },
+
+  // ---- Identity: per-room aliases (TECH-ID-06). A room presentation alias is
+  //      LOCAL, room-scoped, non-cryptographic presentation bound to ONE identity
+  //      room binding — never identity/membership/role/verification, never a
+  //      RoomMemberRef or global username. Create/activate/rotate deny in Bunker/
+  //      Emergency (expansive); restrictive retire + display remain available;
+  //      collision/reuse assessments deny in Bunker/Emergency. Remote sharing
+  //      not_implemented; authenticated binding + room bundle export/import future-
+  //      gated; plaintext persistence + broad history DENY. A room role does not
+  //      authorize alias ops; a collision is not proof of impersonation. ----
+  {
+    id: "identity.room_alias_create",
+    domain: "identity",
+    operation: "identity.room_alias.create",
+    sink: "local_memory",
+    dataClass: "room_presentation_alias",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A room presentation alias is room-scoped, bound to one identity room binding, local-only (not shared), memory-only; NFC-normalized with dangerous controls rejected. Not identity/membership/role/verification. Denied in Bunker/Emergency (expansive).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "identity.room_alias_activate",
+    domain: "identity",
+    operation: "identity.room_alias.activate",
+    sink: "local_memory",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Activating a draft room alias is memory-only; at most one active alias per room binding. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_alias_rotate",
+    domain: "identity",
+    operation: "identity.room_alias.rotate",
+    sink: "local_memory",
+    dataClass: "room_alias_rotation_result",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Rotation retires the old alias + creates a new active-local-unshared one, preserving room binding / membership / role / assurance; no remote deletion, no authenticated update, no historical-message relabelling. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_alias_retire",
+    domain: "identity",
+    operation: "identity.room_alias.retire",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale: "Retiring a room alias is restrictive, memory-only; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_alias_display_context_read",
+    domain: "identity",
+    operation: "identity.room_alias.display_context.read",
+    sink: "local_memory",
+    dataClass: "room_member_display_context",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A room member display context returns role / membership state / assurance SEPARATELY from alias text, never a generic verified-member flag; duplicate aliases force safe disambiguation; strict modes redact ids/alias. Needs its own decision.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/SOVEREIGN_ROOMS.md"],
+  },
+  {
+    id: "identity.room_alias_collision_assessment_read",
+    domain: "identity",
+    operation: "identity.room_alias.collision_assessment.read",
+    sink: "local_memory",
+    dataClass: "room_alias_collision_assessment",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Room-local duplicate-name detection is a transient WARNING only — no colliding member ids, no exact count, no member graph. Duplicate is not impersonation. Bunker/Emergency skip it (not_evaluated).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_alias_reuse_assessment_read",
+    domain: "identity",
+    operation: "identity.room_alias.reuse_assessment.read",
+    sink: "local_memory",
+    dataClass: "room_alias_reuse_assessment",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A cross-room reuse assessment is a local correlation WARNING only — no room ids/counts exposed, no telemetry. Unique text does not imply unlinkability. Bunker/Emergency skip it.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
+  },
+  {
+    id: "identity.room_alias_remote_sharing",
+    domain: "identity",
+    operation: "identity.room_alias.remote_sharing",
+    effect: "not_implemented",
+    reasonCode: "accepted_limitation",
+    rationale:
+      "Remote room-alias sharing/exchange is NOT implemented in TECH-ID-06; room aliases are local-only (Gates E/F/H).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.room_alias_authenticated_binding_future",
+    domain: "identity",
+    operation: "identity.room_alias.authenticated_binding",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "An authenticated/cryptographic room-alias binding requires crypto (Gate F); not implemented — no room key / signature / continuity exists.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.room_alias_persistence",
+    domain: "identity",
+    operation: "identity.room_alias.persistence",
+    sink: "local_persistent_storage",
+    dataClass: "room_alias_normalized_text",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "Plaintext room-alias persistence is denied; room-alias state is memory/null only (encrypted persistence is Gate F).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "identity.room_alias_history",
+    domain: "identity",
+    operation: "identity.room_alias.history",
+    dataClass: "room_alias_history",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "A broad permanent room-alias history is denied; only a minimal in-memory retired tombstone exists, never exported. Historical sender presentation is deferred to Messaging/RoomOS/Crypto.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
+  },
+  {
+    id: "identity.room_alias_bundle_export_import_future",
+    domain: "identity",
+    operation: "identity.room_alias.bundle_export_import",
+    dataClass: "room_alias_remote_update_future",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Room bundle alias export/import requires an external wire format + crypto (Gates E/F/H); not implemented.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+
   {
     id: "endpoint.tauri_desktop_permissions",
     domain: "endpoint",

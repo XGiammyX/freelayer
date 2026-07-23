@@ -183,7 +183,14 @@ export interface PairwiseRelationshipV1 {
   readonly updatedAtLocal: string;
 }
 
-/** Binds a root/persona to one room via a room-scoped placeholder. No alias yet. */
+/**
+ * Derived hint on whether this binding currently has a TECH-ID-06 local room
+ * presentation alias. The authoritative alias record lives in the room-aliases
+ * module (RoomAliasStateV1); this is a convenience state, never authority.
+ */
+export type RoomAliasBindingStateV1 = "none" | "local_alias_v1" | "retired";
+
+/** Binds a root/persona to one room via a room-scoped placeholder. */
 export interface RoomIdentityBindingV1 {
   readonly schemaVersion: 1;
   readonly bindingId: RoomIdentityBindingId;
@@ -194,7 +201,7 @@ export interface RoomIdentityBindingV1 {
   readonly revision: IdentityLocalRevision;
   readonly lifecycle: RoomIdentityBindingLifecycleV1;
 
-  readonly roomAliasState: "not_implemented_tech_id_06";
+  readonly roomAliasState: RoomAliasBindingStateV1;
   readonly credentialState: "not_implemented_gate_f";
   readonly verificationState: "unverified_local";
 

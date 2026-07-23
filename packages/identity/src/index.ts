@@ -44,3 +44,13 @@ export * from "./ephemeral";
 //      No global usernames/directories/search, no remote exchange, no crypto
 //      binding, no verification, no synchronization, no persistence.
 export * from "./aliases";
+
+// ---- TECH-ID-06: Per-Room Aliases — room-scoped local presentation aliases
+//      bound to ONE identity room binding; reuses TECH-ID-05 normalization;
+//      room-local duplicate-name collision + safe disambiguation; cross-room
+//      reuse warnings; rotation preserving binding/membership/role/assurance;
+//      policy-gated redacted display contexts; memory/null retention. A room
+//      alias is not identity/membership/role/verification/RoomMemberRef/global
+//      username; no remote exchange, no authenticated binding, no historical-
+//      message relabelling, no persistence, no synchronization, no crypto.
+export * from "./room-aliases";

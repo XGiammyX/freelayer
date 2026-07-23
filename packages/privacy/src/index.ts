@@ -205,6 +205,16 @@ export type PolicySideEffectScope =
   | "identity.alias.local_peer_label.clear"
   | "identity.alias.display_context.read"
   | "identity.alias.reuse_assessment.read"
+  // Per-room alias scopes (TECH-ID-06). Room-scoped local presentation aliases
+  // bound to one identity room binding; each decision is scoped to exactly one
+  // operation. An alias id / text / binding id / room role / RoomMemberRef /
+  // DevicePosture NEVER substitutes; alias text is never authority or verification.
+  | "identity.room_alias.create"
+  | "identity.room_alias.lifecycle"
+  | "identity.room_alias.rotate"
+  | "identity.room_alias.display_context.read"
+  | "identity.room_alias.collision_assessment.read"
+  | "identity.room_alias.reuse_assessment.read"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
