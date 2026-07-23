@@ -51,6 +51,14 @@ const IDENTITY_EXPANSIVE_DENY = { bunker: "deny", emergency: "deny" } as const;
 // TECH-ID-05: local peer labels are extra relationship metadata — Ghost also
 // denies them (plus Bunker/Emergency).
 const IDENTITY_LABEL_DENY = { ghost: "deny", bunker: "deny", emergency: "deny" } as const;
+// TECH-ID-07: a local device label is extra device metadata — Private also
+// suppresses it (plus Ghost/Bunker/Emergency).
+const DEVICE_LABEL_DENY = {
+  private: "deny",
+  ghost: "deny",
+  bunker: "deny",
+  emergency: "deny",
+} as const;
 
 /**
  * The canonical spec table. Every privacy-relevant behavior FreeLayer models
@@ -2427,7 +2435,8 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     operation: "identity.device_key",
     effect: "future_gate",
     reasonCode: "deferred_gate",
-    rationale: "Subordinate device keys are TECH-ID-07 / Gate F; not implemented.",
+    rationale:
+      "The device-key MODEL is implemented in TECH-ID-07 (LOCAL, non-cryptographic, root-subordinate); real key generation / signatures / derivation stay Gate F — no key bytes exist.",
     testCoverage: "deferred",
     docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
   },
@@ -3053,6 +3062,198 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
       "docs/IMPLEMENTATION_GATES.md",
       "docs/adr/ADR-0013-identity-firewall-architecture.md",
     ],
+  },
+
+  // ---- Identity: device key model (TECH-ID-07). A LOCAL, non-cryptographic,
+  //      root-subordinate device-authorization model — never a key, never a
+  //      cryptographic proof, never identity, never DevicePosture. Bootstrap of
+  //      the current-installation placeholder denies in Bunker/Emergency
+  //      (expansive); restrict/compromise/revoke + redacted reads remain
+  //      available; local device labels deny in Private/Ghost/Bunker/Emergency.
+  //      Adding/linking a device + issuing a passport are future-gated
+  //      (TECH-ID-08); real key generation is Gate F; attestation is external/
+  //      not_implemented; remote revocation is Gate H; broad history DENY. A
+  //      device is not a person; RoomOS membership is not device authorization. ----
+  {
+    id: "identity.device_bootstrap",
+    domain: "identity",
+    operation: "identity.device.bootstrap",
+    sink: "local_memory",
+    dataClass: "device_authorization_record",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Bootstrapping the current-installation device placeholder is local/unverified, memory-only; at most one per root; creates only reserved (empty) key slots, no cryptography. Not a cryptographic proof. Denied in Bunker/Emergency (expansive).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.device_restrict",
+    domain: "identity",
+    operation: "identity.device.restrict",
+    sink: "local_memory",
+    dataClass: "device_authorization_record",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Restricting a device authorization only narrows scope + capabilities (attenuation-only), memory-only; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_mark_compromised",
+    domain: "identity",
+    operation: "identity.device.mark_compromised",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Marking a device compromised denies ordinary operations, memory-only; no key rotation / remote notification. Available in strict modes (safe direction).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_revoke",
+    domain: "identity",
+    operation: "identity.device.revoke",
+    sink: "local_memory",
+    dataClass: "device_revocation_result",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Revoking a device is a terminal LOCAL tombstone that invalidates local snapshots + marks key slots operationally revoked; NO remote deletion / session / message-key / room-key rotation / data erase. Available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "identity.device_label_set",
+    domain: "identity",
+    operation: "identity.device.label.set",
+    sink: "local_memory",
+    dataClass: "local_device_label",
+    effect: "memory_only",
+    effectOverrides: DEVICE_LABEL_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A local device label is a PRIVATE recognition note (authority none, never shared, never a model/OS identity); memory-only. Private/Ghost/Bunker/Emergency suppress it.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/METADATA_MODEL.md"],
+  },
+  {
+    id: "identity.device_label_clear",
+    domain: "identity",
+    operation: "identity.device.label.clear",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Clearing a local device label removes the record; restrictive; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_summary_list",
+    domain: "identity",
+    operation: "identity.device.summary.list",
+    sink: "local_memory",
+    dataClass: "device_authorization_record",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A device summary list returns coarse lifecycle/class/scope-kind with trust flags false; strict modes omit ids/labels/counts. No hardware/model/OS data. Needs its own decision.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_summary_detail",
+    domain: "identity",
+    operation: "identity.device.summary.detail",
+    sink: "local_memory",
+    dataClass: "device_authorization_record",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A device detail summary is memory-only + redacted in strict modes; never exposes hardware/key material/DevicePosture/room/relationship ids.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_key_slots_read_redacted",
+    domain: "identity",
+    operation: "identity.device.key_slots.read_redacted",
+    sink: "local_memory",
+    dataClass: "device_key_slot_descriptor",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A redacted key-slot read exposes purpose + lifecycle only — never slot ids, never key material (there is none), never an algorithm (Gate F). Needs its own decision.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.device_add_future",
+    domain: "identity",
+    operation: "identity.device.add",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Adding/linking a second device requires signed root-to-device authorization (TECH-ID-08 + Gates E/F); not implemented — no linking, QR, or one-time token exists.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.device_link_future",
+    domain: "identity",
+    operation: "identity.device.link",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Device linking (QR / one-time token / approval proof) is TECH-ID-08 + Gate E/F; not implemented.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.device_remote_revoke_future",
+    domain: "identity",
+    operation: "identity.device.remote_revoke",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Remote / distributed device revocation is Gate H; local revocation is not remote erasure — no remote sessions / keys are affected.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.device_attestation",
+    domain: "identity",
+    operation: "identity.device.attestation",
+    effect: "not_implemented",
+    reasonCode: "accepted_limitation",
+    rationale:
+      "Hardware attestation / Play Integrity / posture-as-authority is EXTERNALIZED to Secure Device and never authorizes a device; not implemented in core.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "identity.device_history",
+    domain: "identity",
+    operation: "identity.device.history",
+    dataClass: "device_history",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "A broad permanent device registry/history is denied; device authorization state is memory/null only, never a persistent list or social-graph record.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
   },
 
   {

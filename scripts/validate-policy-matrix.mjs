@@ -50,6 +50,9 @@ const FUTURE_GATED_SPEC_IDS = [
   "identity.alias_authenticated_update_future",
   "identity.room_alias_authenticated_binding_future",
   "identity.room_alias_bundle_export_import_future",
+  "identity.device_add_future",
+  "identity.device_link_future",
+  "identity.device_remote_revoke_future",
 ];
 const ALLOWING_EFFECTS = ["allow", "memory_only", "redact", "coarsen", "delay", "batch"];
 const EFFECTS = [

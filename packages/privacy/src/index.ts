@@ -215,6 +215,18 @@ export type PolicySideEffectScope =
   | "identity.room_alias.display_context.read"
   | "identity.room_alias.collision_assessment.read"
   | "identity.room_alias.reuse_assessment.read"
+  // Device-key-model scopes (TECH-ID-07). LOCAL, non-cryptographic, root-
+  // subordinate device authorization; each decision is scoped to exactly one
+  // operation. A device id / label / RoomOS role / DevicePosture NEVER
+  // authorizes; a local authorization record is never a cryptographic proof.
+  | "identity.device.bootstrap"
+  | "identity.device.restrict"
+  | "identity.device.mark_compromised"
+  | "identity.device.revoke"
+  | "identity.device.label.write"
+  | "identity.device.label.clear"
+  | "identity.device.summary.read"
+  | "identity.device.key_slots.read_redacted"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */
