@@ -8,6 +8,7 @@
  */
 
 import type {
+  IdentityAuthorityEpoch,
   IdentityPersonaId,
   IdentityVaultId,
   IdentityLocalRevision,
@@ -181,6 +182,22 @@ export interface PairwiseRelationshipV1 {
 
   readonly createdAtLocal: string;
   readonly updatedAtLocal: string;
+}
+
+/**
+ * Local identity-root authority-epoch state (TECH-ID-08). The current epoch is
+ * caller-resolved (via the passport approver/root context) — TECH-ID-08 does not
+ * store it on the root record. The epoch changes ONLY through explicit root
+ * lifecycle operations; there is NO administrative reset.
+ */
+export interface IdentityAuthorityEpochStateV1 {
+  readonly epoch: IdentityAuthorityEpoch;
+  readonly reason:
+    | "initial_local"
+    | "recovery_future"
+    | "root_rotation_future"
+    | "compromise_response"
+    | "administrative_reset_forbidden";
 }
 
 /**

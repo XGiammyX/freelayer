@@ -66,3 +66,14 @@ export * from "./room-aliases";
 //      is not DevicePosture; a device is not a person; a local authorization
 //      record is not a cryptographic proof.
 export * from "./devices";
+
+// ---- TECH-ID-08: Device Passport — a versioned, NON-cryptographic Device
+//      Passport contract + local approval lifecycle for FUTURE root-to-device
+//      authorization: bounded link requests, attenuated passport claims (scope +
+//      capabilities + root epoch + EMPTY key-slot commitments), local UNSIGNED
+//      approval, restriction, revocation — current-process memory/null. A local
+//      unsigned approval is NOT cryptographic authorization and grants NO
+//      operational device authority. NO signatures/verification (Gate F), NO
+//      QR/Capsule transport (Gate E), NO remote acceptance/revocation (Gate H),
+//      NO second active device, NO root-secret/history transfer, NO attestation.
+export * from "./device-passports";

@@ -3256,6 +3256,250 @@ export const POLICY_MATRIX_SPECS: readonly PolicyMatrixSpec[] = [
     docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
   },
 
+  // ---- Identity: Device Passport (TECH-ID-08). A versioned, NON-cryptographic
+  //      device passport contract + local UNSIGNED approval lifecycle for FUTURE
+  //      root-to-device authorization. A local unsigned approval grants NO
+  //      operational device authority. Link-request create/submit + passport
+  //      prepare/approve deny in Bunker/Emergency (expansive); reject/expire/
+  //      revoke/restrict/summary remain available. Signed issuance + verification
+  //      are Gate F; remote acceptance + QR transport are Gate E/F; history
+  //      transfer + plaintext persistence DENY; attestation is external/
+  //      not_implemented. A Device Passport is not DevicePosture / attestation /
+  //      proof-of-safety; a device is not a person. ----
+  {
+    id: "identity.passport_link_request_create",
+    domain: "identity",
+    operation: "identity.device_link_request.create",
+    sink: "local_memory",
+    dataClass: "device_link_request",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A device link request is a bounded, current-process, non-authoritative candidate request; memory-only; injected-clock lifetime (not cryptographic freshness). Grants no authority. Denied in Bunker/Emergency (expansive).",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.passport_link_request_submit",
+    domain: "identity",
+    operation: "identity.device_link_request.submit",
+    sink: "local_memory",
+    dataClass: "device_link_request",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Submitting a link request for local review is memory-only; grants no authority. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_link_request_reject",
+    domain: "identity",
+    operation: "identity.device_link_request.reject",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale: "Rejecting a link request is restrictive, memory-only; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_link_request_expire",
+    domain: "identity",
+    operation: "identity.device_link_request.expire",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Expiring a link request is restrictive, memory-only; deadline uses an untrusted injected clock.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_link_request_revoke",
+    domain: "identity",
+    operation: "identity.device_link_request.revoke",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Revoking a link request is a terminal local tombstone; restrictive; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_prepare",
+    domain: "identity",
+    operation: "identity.device_passport.prepare",
+    sink: "local_memory",
+    dataClass: "device_passport_draft",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "Preparing an UNSIGNED passport draft attenuates scope + capabilities against the approver; memory-only; grants no authority; no signature. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_approve_unsigned",
+    domain: "identity",
+    operation: "identity.device_passport.approve_unsigned",
+    sink: "local_memory",
+    dataClass: "device_passport_local_approval",
+    effect: "memory_only",
+    effectOverrides: IDENTITY_EXPANSIVE_DENY,
+    reasonCode: "default_deny",
+    reasonOverrides: { emergency: "emergency_mode" },
+    rationale:
+      "A local unsigned approval is a policy approval only — NOT a signature, NOT operational device authority, never activates a device. Denied in Bunker/Emergency.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/TRUST_CENTER.md"],
+  },
+  {
+    id: "identity.passport_restrict",
+    domain: "identity",
+    operation: "identity.device_passport.restrict",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Restricting a passport only narrows scope + capabilities (attenuation-only), memory-only; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_expire",
+    domain: "identity",
+    operation: "identity.device_passport.expire",
+    sink: "local_memory",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Expiring a passport draft is a terminal local tombstone; restrictive; available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_revoke",
+    domain: "identity",
+    operation: "identity.device_passport.revoke",
+    sink: "local_memory",
+    dataClass: "device_passport_revocation_result",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "Revoking a passport is a terminal LOCAL tombstone that invalidates local approval; NO remote device / session / message-key / room-key / data-erase effect; no cryptographic revocation. Available in strict modes.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+  {
+    id: "identity.passport_summary_read",
+    domain: "identity",
+    operation: "identity.device_passport.summary_read",
+    sink: "local_memory",
+    dataClass: "device_passport_summary",
+    effect: "memory_only",
+    reasonCode: "default_deny",
+    rationale:
+      "A passport summary reports exact lifecycle + authenticity with all crypto/operational/attestation flags false; never says trusted/valid/verified generically; strict modes redact scope/counts/deadlines. Needs its own decision.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_signed_issuance_future",
+    domain: "identity",
+    operation: "identity.device_passport.issue_signed",
+    dataClass: "device_passport_signature_future",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Cryptographic passport issuance (root-to-device signature) is Gate F; not implemented — no signing key / signature exists.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.passport_verification_future",
+    domain: "identity",
+    operation: "identity.device_passport.accept_verified",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Cryptographic passport verification + candidate acceptance is Gate F; not implemented — no verification exists.",
+    testCoverage: "deferred",
+    docsRefs: [
+      "docs/IMPLEMENTATION_GATES.md",
+      "docs/adr/ADR-0013-identity-firewall-architecture.md",
+    ],
+  },
+  {
+    id: "identity.passport_remote_acceptance_future",
+    domain: "identity",
+    operation: "identity.device_passport.remote_accept",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "Remote device acceptance / second-device activation requires crypto + transport (Gates E/F/H); not implemented — no device becomes active.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.passport_qr_transport_future",
+    domain: "identity",
+    operation: "identity.device_passport.qr_transport",
+    dataClass: "device_passport_wire_format_future",
+    effect: "future_gate",
+    reasonCode: "deferred_gate",
+    rationale:
+      "QR / Capsule passport transport requires an external wire format (Gate E); not implemented — a QR code is only a transport representation, never authorization.",
+    testCoverage: "deferred",
+    docsRefs: ["docs/IMPLEMENTATION_GATES.md"],
+  },
+  {
+    id: "identity.passport_history_transfer",
+    domain: "identity",
+    operation: "identity.device_passport.history_transfer",
+    effect: "deny",
+    reasonCode: "default_deny",
+    rationale:
+      "History transfer is NOT part of passport authority and is denied; a passport carries no history-transfer material.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md"],
+  },
+  {
+    id: "identity.passport_attestation_binding",
+    domain: "identity",
+    operation: "identity.device_passport.attestation",
+    dataClass: "device_attestation_evidence",
+    effect: "not_implemented",
+    reasonCode: "accepted_limitation",
+    rationale:
+      "Hardware attestation binding is EXTERNALIZED to Secure Device and is separate from passport authority; a passport carries no attestation/DevicePosture claim. Not implemented in core.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/ENDPOINT_DEFENSE_MODEL.md"],
+  },
+  {
+    id: "identity.passport_persistence",
+    domain: "identity",
+    operation: "identity.device_passport.persistence",
+    sink: "local_persistent_storage",
+    dataClass: "device_passport_claims",
+    effect: "deny",
+    reasonCode: "persistent_storage_forbidden",
+    rationale:
+      "Plaintext passport/request persistence is denied; passport state is current-process memory/null only.",
+    testCoverage: "covered",
+    docsRefs: ["docs/IDENTITY_ARCHITECTURE.md", "docs/STORAGE_MODEL.md"],
+  },
+
   {
     id: "endpoint.tauri_desktop_permissions",
     domain: "endpoint",

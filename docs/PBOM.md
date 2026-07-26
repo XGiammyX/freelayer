@@ -593,3 +593,29 @@ TECH-ID-07 implements the device key model in `@freelayer/identity` (`packages/i
 | Secure Device | External / not integrated |
 
 A DeviceKey is not DevicePosture, DevicePosture is not identity, a device is not a person, a device reference is not a hardware identifier, a device label is not authority, a local authorization record is not a cryptographic proof, RoomOS membership is not device authorization, and device revocation is not remote erasure. No real key material, signatures, or attestation exist; devices are subordinate to identity roots; the current device is a local unverified placeholder; there is no second-device linking, no Device Passport, and no cross-signing / QR linking / history transfer. Lifecycle is local restrict / mark_compromised / revoke only — revocation is not remote or cryptographic and performs no data erase or room/message key rotation; device state is memory/null retention only. Deferred: crypto / real key generation (Gate F), Device Passport + linking (TECH-ID-08), wire/exchange formats (Gate E), multi-device sync (Gate H); Secure Device remains external. Governed by the 8 `identity.device.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-device-key-model-bypass`. Not safe for real secrets.
+
+## TECH-ID-08 — Device passport status
+
+TECH-ID-08 adds a versioned, non-cryptographic Device Passport contract + local UNSIGNED approval lifecycle in `@freelayer/identity` (`packages/identity/src/device-passports/`) for FUTURE root-to-device authorization. No signatures, no verification, no persistence, no network, no runtime dependency added.
+
+| Behavior | Status |
+| --- | --- |
+| Device Passport data model | Local v1 foundation |
+| Device link request | Local current-process foundation |
+| Local passport approval | Unsigned policy approval only |
+| Scope/capability attenuation | Implemented locally |
+| Root authority epoch binding | Local foundation |
+| Candidate key commitments | Empty descriptors only |
+| Signed passport issuance | Not implemented — Gate F |
+| Signature verification | Not implemented — Gate F |
+| QR/Capsule transport | Not implemented — Gate E |
+| Remote device acceptance | Not implemented |
+| Second-device activation | Not implemented |
+| History transfer | Not included |
+| Root-secret transfer | Forbidden |
+| DevicePosture claim | Forbidden |
+| Hardware attestation | Separate / not implemented |
+| Remote revocation | Not implemented — Gate H |
+| Secure Device | External / not integrated |
+
+A Device Passport is not DevicePosture, not hardware attestation, not proof a device is safe, and not proof of real-world identity; a device is not a person, a passport id is not a hardware identifier, and a local unsigned approval is not cryptographic authorization; a QR code is only a transport representation, not authorization; room membership does not authorize a device; and DevicePosture may restrict use but cannot issue or validate a passport. Current passports are drafts or local unsigned approvals only — no signed, verified, or issued passport exists, no second device becomes active, and there is no QR/Capsule/network linking and no identity-root or history transfer. Scope and capabilities are attenuated; delegation and recovery authority are denied; each passport binds to one root authority epoch + candidate device, and candidate key commitments are empty descriptors only. The `IdentityAuthorityEpoch`/`IdentityAuthorityEpochStateV1` is local, changes only via root lifecycle, and has no administrative reset; root recovery or compromise invalidates passports locally — not remote and not cryptographic. Deferred: signed issuance / signature verification (Gate F), QR/Capsule transport (Gate E), sync / remote revocation (Gate H); Secure Device remains external. Governed by the 7 `identity.device_link_request.*` / `identity.device_passport.*` scopes and the [Policy Matrix](POLICY_MATRIX.md); machine-checked by `check:no-device-passport-bypass`. Not safe for real secrets.

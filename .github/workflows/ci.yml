@@ -106,6 +106,9 @@ jobs:
       - name: No device-key-model bypass (Device Key Model)
         run: pnpm check:no-device-key-model-bypass
 
+      - name: No device-passport bypass (Device Passport)
+        run: pnpm check:no-device-passport-bypass
+
       - name: Policy Matrix validation
         run: pnpm check:policy-matrix
 

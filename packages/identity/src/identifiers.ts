@@ -76,6 +76,39 @@ export function nextIdentityRevision(current: IdentityLocalRevision): IdentityLo
   return next as IdentityLocalRevision;
 }
 
+/**
+ * A LOCAL identity-root authority epoch (TECH-ID-08). A positive counter that
+ * changes ONLY through explicit root lifecycle operations (recovery / rotation /
+ * compromise response). It is NOT time, NOT a key version, NOT globally
+ * synchronized, and never caller-controlled. Device Passport claims bind to one
+ * epoch; a changed epoch invalidates stale drafts + future passports.
+ */
+export type IdentityAuthorityEpoch = number & { readonly __identityAuthorityEpoch: unique symbol };
+
+export const FIRST_IDENTITY_AUTHORITY_EPOCH = 1 as IdentityAuthorityEpoch;
+
+export function validateIdentityAuthorityEpoch(input: number): IdentityAuthorityEpoch {
+  if (
+    typeof input !== "number" ||
+    !Number.isSafeInteger(input) ||
+    input < 1 ||
+    input > MAX_IDENTITY_REVISION
+  ) {
+    throw new IdentityIdentifierError("invalid_authority_epoch");
+  }
+  return input as IdentityAuthorityEpoch;
+}
+
+export function nextIdentityAuthorityEpoch(
+  current: IdentityAuthorityEpoch,
+): IdentityAuthorityEpoch {
+  const next = (current as number) + 1;
+  if (next > MAX_IDENTITY_REVISION) {
+    throw new IdentityIdentifierError("authority_epoch_overflow");
+  }
+  return next as IdentityAuthorityEpoch;
+}
+
 // ---------------------------------------------------------------------------
 // Validation — conservative, ASCII-safe, bounded, prefix-tagged
 // ---------------------------------------------------------------------------

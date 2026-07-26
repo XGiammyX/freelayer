@@ -227,6 +227,18 @@ export type PolicySideEffectScope =
   | "identity.device.label.clear"
   | "identity.device.summary.read"
   | "identity.device.key_slots.read_redacted"
+  // Device Passport scopes (TECH-ID-08). A versioned, NON-cryptographic device
+  // passport contract + local unsigned approval; each decision is scoped to
+  // exactly one operation. A request/passport/device id, a root, a RoomOS role,
+  // or DevicePosture NEVER authorizes; a local unsigned approval is not a
+  // signature and grants no operational device authority.
+  | "identity.device_link_request.create"
+  | "identity.device_link_request.lifecycle"
+  | "identity.device_passport.prepare"
+  | "identity.device_passport.approve_unsigned"
+  | "identity.device_passport.restrict"
+  | "identity.device_passport.revoke"
+  | "identity.device_passport.summary.read"
   | "generic";
 
 /** Proof that core evaluated policy for one capability. Required by all side-effect modules. */

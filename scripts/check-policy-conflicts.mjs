@@ -61,6 +61,11 @@ const IDENTITY_FUTURE_GATE_SPEC_IDS = [
   "identity.device_add_future",
   "identity.device_link_future",
   "identity.device_remote_revoke_future",
+  // TECH-ID-08: signed issuance + verification (Gate F), remote acceptance + QR (Gate E/F).
+  "identity.passport_signed_issuance_future",
+  "identity.passport_verification_future",
+  "identity.passport_remote_acceptance_future",
+  "identity.passport_qr_transport_future",
 ];
 // Identity behaviors that must never be allowed (public directory + persistent
 // vault; TECH-ID-04 ephemeral promotion/recovery/export/sync/persistence; and
@@ -84,6 +89,10 @@ const IDENTITY_NEVER_ALLOWED_SPEC_IDS = [
   // TECH-ID-07: device attestation (external/not_implemented) + broad device history.
   "identity.device_attestation",
   "identity.device_history",
+  // TECH-ID-08: passport history transfer / attestation binding / plaintext persistence.
+  "identity.passport_history_transfer",
+  "identity.passport_attestation_binding",
+  "identity.passport_persistence",
 ];
 
 // Spec-id prefixes that may NEVER be allowed in any mode.
