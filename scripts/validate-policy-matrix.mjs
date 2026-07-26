@@ -53,6 +53,10 @@ const FUTURE_GATED_SPEC_IDS = [
   "identity.device_add_future",
   "identity.device_link_future",
   "identity.device_remote_revoke_future",
+  "identity.passport_signed_issuance_future",
+  "identity.passport_verification_future",
+  "identity.passport_remote_acceptance_future",
+  "identity.passport_qr_transport_future",
 ];
 const ALLOWING_EFFECTS = ["allow", "memory_only", "redact", "coarsen", "delay", "batch"];
 const EFFECTS = [
